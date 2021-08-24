@@ -1,0 +1,86 @@
+24-08-2021 16:27:51	This log contains information about the import schema operation into project 'JmeterPortalDatabase' on computer 'LAPTOP-36D2F4UA' by user 'sanka'.
+24-08-2021 16:27:52	Import of database schema has started.
+24-08-2021 16:27:56	Gathering database credentials
+24-08-2021 16:27:56	Gathering database options
+24-08-2021 16:27:56	Gathering generic database scoped configuration option
+24-08-2021 16:27:56	Gathering users
+24-08-2021 16:27:56	Gathering roles
+24-08-2021 16:27:56	Gathering application roles
+24-08-2021 16:27:56	Gathering role memberships
+24-08-2021 16:27:56	Gathering filegroups
+24-08-2021 16:27:56	Gathering full-text catalogs
+24-08-2021 16:27:56	Gathering assemblies
+24-08-2021 16:27:56	Gathering certificates
+24-08-2021 16:27:56	Gathering asymmetric keys
+24-08-2021 16:27:56	Gathering symmetric keys
+24-08-2021 16:27:56	Gathering encrypted symmetric keys
+24-08-2021 16:27:56	Gathering schemas
+24-08-2021 16:27:56	Gathering XML schema collections
+24-08-2021 16:27:56	Gathering user-defined data types
+24-08-2021 16:27:56	Gathering user-defined types
+24-08-2021 16:27:56	Gathering table types
+24-08-2021 16:27:56	Gathering unique keys for table types
+24-08-2021 16:27:56	Gathering primary keys for table types
+24-08-2021 16:27:56	Gathering indexes for table types
+24-08-2021 16:27:57	Gathering check constraints for table types
+24-08-2021 16:27:57	Gathering default constraints for table types
+24-08-2021 16:27:57	Gathering partition functions
+24-08-2021 16:27:57	Gathering partition schemes
+24-08-2021 16:27:57	Gathering functions
+24-08-2021 16:27:57	Gathering encrypted functions
+24-08-2021 16:27:57	Gathering aggregates
+24-08-2021 16:27:57	Gathering procedures
+24-08-2021 16:27:57	Gathering encrypted procedures
+24-08-2021 16:27:57	Gathering tables
+24-08-2021 16:27:57	Gathering primary keys
+24-08-2021 16:27:57	Gathering unique constraints
+24-08-2021 16:27:57	Gathering foreign keys
+24-08-2021 16:27:57	Gathering default constraints
+24-08-2021 16:27:57	Gathering check constraints
+24-08-2021 16:27:57	Gathering views
+24-08-2021 16:27:57	Gathering encrypted views
+24-08-2021 16:27:57	Gathering indexes
+24-08-2021 16:27:57	Gathering statistics
+24-08-2021 16:27:57	Gathering full-text index stoplists
+24-08-2021 16:27:57	Gathering search property lists
+24-08-2021 16:27:57	Gathering search properties
+24-08-2021 16:27:57	Gathering full-text indexes
+24-08-2021 16:27:57	Gathering column store indexes
+24-08-2021 16:27:57	Gathering spatial indexes
+24-08-2021 16:27:57	Gathering XML indexes
+24-08-2021 16:27:57	Gathering Selective XML indexes
+24-08-2021 16:27:57	Gathering encrypted triggers
+24-08-2021 16:27:57	Gathering triggers
+24-08-2021 16:27:57	Gathering encrypted and clr ddl triggers
+24-08-2021 16:27:57	Gathering ddl triggers
+24-08-2021 16:27:57	Creating edge constraints
+24-08-2021 16:27:57	Gathering synonyms
+24-08-2021 16:27:57	Gathering defaults
+24-08-2021 16:27:57	Gathering data constraint uddt bindings
+24-08-2021 16:27:57	Gathering rules
+24-08-2021 16:27:57	Gathering data constraint uddt bindings
+24-08-2021 16:27:57	Gathering message types
+24-08-2021 16:27:57	Gathering queues
+24-08-2021 16:27:57	Gathering contracts
+24-08-2021 16:27:57	Gathering services
+24-08-2021 16:27:57	Gathering event notifications
+24-08-2021 16:27:57	Gathering remote service bindings
+24-08-2021 16:27:57	Gathering broker priorities
+24-08-2021 16:27:57	Gathering signatures
+24-08-2021 16:27:57	Gathering data compression options
+24-08-2021 16:27:57	Gathering sequence types
+24-08-2021 16:27:57	Gathering security policies
+24-08-2021 16:27:57	Gather column encryption keys
+24-08-2021 16:27:57	Gathering column master keys
+24-08-2021 16:27:57	Gathering external data sources
+24-08-2021 16:27:57	Gathering external file formats
+24-08-2021 16:27:57	Gathering external tables
+24-08-2021 16:27:57	Gathering extended properties
+24-08-2021 16:27:57	Gathering credentials
+24-08-2021 16:27:57	Gathering logins
+24-08-2021 16:27:57	Gathering server audits
+24-08-2021 16:27:57	Scanning project for duplicate elements
+24-08-2021 16:27:57	Finished duplicate element processing
+24-08-2021 16:27:58	Finished importing database.
+24-08-2021 16:27:58	A summary of the import was saved to the following location: C:\Work\Codebase\JmeterPortal\JmeterPortalDatabase\JmeterPortalDatabase\Import Schema Logs\JmeterPortalDatabase_20210824105751.log
+24-08-2021 16:27:58	Click Finish to continue...

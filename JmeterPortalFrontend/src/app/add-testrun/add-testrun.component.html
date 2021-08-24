@@ -1,0 +1,6 @@
+<h1>Upload file</h1>
+<div>
+    <label for="">Select File</label>
+    <input type="file" (change)="OnUploadFile($event)">
+    <button (click)="Upload()" [disabled]="!file">Upload</button>
+</div>
