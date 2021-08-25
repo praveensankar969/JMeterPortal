@@ -27,7 +27,7 @@ export class CsvReaderComponent implements OnInit {
 
   GetCsvData() {
     let allRecords = atob(this.testRun.fileStreamData).split(/\r\n|\n/);   
-    for (let index = 1; index < allRecords.length/10-1; index++) {
+    for (let index = 1; index < allRecords.length/100-1; index++) {
       let records = allRecords[index].split(",");
       let data: CsvModel = {
         timeStamp: Number(records[0].trim()),
