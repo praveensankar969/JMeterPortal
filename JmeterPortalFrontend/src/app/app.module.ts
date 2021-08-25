@@ -4,11 +4,15 @@ import { HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AddTestrunComponent } from './add-testrun/add-testrun.component';
+import { CsvReaderComponent } from './csv-reader/csv-reader.component';
+import { ActualResponseChartComponent } from './actual-response-chart/actual-response-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddTestrunComponent
+    AddTestrunComponent,
+    CsvReaderComponent,
+    ActualResponseChartComponent
   ],
   imports: [
     BrowserModule,

@@ -33,5 +33,31 @@ namespace JmeterPortalAPI.PersistenceHandler
             connection.Close();
             return res;
         }
+
+        public async Task<TestRun> GetDataOfId(string id)
+        {
+            SqlConnection connection = new SqlConnection(config.GetConnectionString("DefaultConnection"));
+            await connection.OpenAsync();
+            SqlCommand cmd = new SqlCommand(@"dbo.[GetWithId]", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", SqlDbType.NVarChar).Value = id;
+            SqlDataReader reader = cmd.ExecuteReader();
+            if(reader.Read()){
+                return new TestRun{
+                    Id = reader.GetSqlGuid(0).ToString(),
+                    TestName = reader.GetString(1),
+                    TestRunID = reader.GetString(2),
+                    Environment = reader.GetString(3),
+                    FileName = reader.GetString(4),
+                    FileUploadDate = reader.GetDateTime(5),
+                    FileStreamData = (byte[])reader["FileStreamData"]
+                };
+            }
+            else{
+                return null;
+            }
+
+        }
+
     }
 }

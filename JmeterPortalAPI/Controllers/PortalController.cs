@@ -26,6 +26,17 @@ namespace JmeterPortalAPI.Controllers
             int res = await procedure.Insert(testRun);
             return Ok(res);
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TestRun>> GetWithID(string id){
+            SQLProcedure procedure = new SQLProcedure(this.config);
+            TestRun res = await procedure.GetDataOfId(id);
+            if(res !=null){
+                return res;
+            }
+            else{
+                return NotFound();
+            }
+        }
 
 
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FileuploadService } from '../fileupload.service';
+import { FileService } from '../file.service';
 
 @Component({
   selector: 'app-add-testrun',
@@ -15,7 +15,7 @@ export class AddTestrunComponent implements OnInit {
   fileUploadDate: Date = new Date();
   fileBase64: string = "";
   file: any;
-  constructor(private uploadService: FileuploadService) { }
+  constructor(private uploadService: FileService) { }
 
   ngOnInit(): void {
   }
@@ -47,7 +47,8 @@ export class AddTestrunComponent implements OnInit {
         fileName : this.fileName,
         fileUploadDate : this.fileUploadDate,
         fileStreamDataBase64 : base64String
-      }).subscribe(res=> console.log(res));
+      })
+      .subscribe(res=> console.log(res));
     }
     reader.readAsDataURL(this.file);
     

@@ -10,6 +10,7 @@
   </ItemGroup>
   <ItemGroup>
   <Compile Include="..\Model\TestRunDTO.cs" Link="TestRunDTO.cs" />
+  <Compile Include="..\Model\TestRun.cs" Link="TestRun.cs" />
   </ItemGroup>
 
 </Project>
