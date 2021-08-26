@@ -8,6 +8,7 @@ import { CsvReaderComponent } from './csv-reader/csv-reader.component';
 import { ActualResponseChartComponent } from './actual-response-chart/actual-response-chart.component';
 import { FormsModule } from '@angular/forms';
 import { ActualThreadChartComponent } from './actual-thread-chart/actual-thread-chart.component';
+import { RestimePercentileChartComponent } from './restime-percentile-chart/restime-percentile-chart.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ActualThreadChartComponent } from './actual-thread-chart/actual-thread-
     AddTestrunComponent,
     CsvReaderComponent,
     ActualResponseChartComponent,
-    ActualThreadChartComponent
+    ActualThreadChartComponent,
+    RestimePercentileChartComponent
   ],
   imports: [
     BrowserModule,

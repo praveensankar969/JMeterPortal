@@ -17,7 +17,7 @@ export class ActualThreadChartComponent implements OnInit {
   chart: any;
   xAxisLabel: number[] = [];
   yAxisFilter : number = 0;
-  constructor(private service : CsvreaderService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.SetupChartData(this.csvData);
@@ -29,21 +29,29 @@ export class ActualThreadChartComponent implements OnInit {
     
     
     for (let [key, value] of data) {
-      const r = Math.round(Math.random() * 255);
-      const g = Math.round(Math.random() * 255);
-      const b = Math.round(Math.random() * 255);
-      let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-      let d = value.sort((x,y)=> {return x.timeStamp-y.timeStamp}).map(x=> {
-        return [x.allThreads,x.elapsed]
-      });
-      let dataset: ChartDatasets = {
-        label: key,
-        data: d,
-        borderColor: color,
-        pointBorderColor : color
-      }
-      this.datasets.push(dataset);
-      this.xAxisLabel.push(...value.map(x=> {return x.allThreads}));
+      //if(key=="IPHR-HealthHistory-MedicationDetails-XHR-Set-01"){
+        const r = Math.round(Math.random() * 255);
+        const g = Math.round(Math.random() * 255);
+        const b = Math.round(Math.random() * 255);
+        let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+        let newV = value.sort((x,y)=> {return x.allThreads-y.allThreads});
+        let dataset: ChartDatasets = {
+          label: key,
+          data: [],
+          borderColor: color,
+          pointBorderColor : color
+        }
+        
+        for(let i=0;i<newV.length;i++){
+          let thread = newV[i].allThreads;
+          let elapsed = newV[i].elapsed;
+          dataset.data.push([thread, elapsed]);
+        }     
+        
+        this.datasets.push(dataset);
+        this.xAxisLabel.push(...value.map(x=> {return x.allThreads}));
+      //}
+      
     }
     this.xAxisLabel = this.xAxisLabel.sort((x,y)=> x-y).map(x=> {return x});
     this.xAxisLabel = [...new Set(this.xAxisLabel)];
@@ -61,10 +69,11 @@ export class ActualThreadChartComponent implements OnInit {
         datasets: this.datasets
       },
       options: {
+        animation :false,
         responsive: true,
         interaction: {
           mode: 'point',
-          intersect: false,
+          intersect: true,
         },
         plugins: {
           title: {

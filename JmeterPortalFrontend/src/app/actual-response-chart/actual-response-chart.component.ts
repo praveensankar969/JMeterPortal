@@ -62,11 +62,13 @@ export class ActualResponseChartComponent implements OnInit {
         datasets: this.datasets
       },
       options: {
+        // normalized :true,
+        // animation :false,
         responsive: true,
-        interaction: {
-          mode: 'point',
-          intersect: false,
-        },
+        // interaction: {
+        //   mode: 'point',
+        //   intersect: false,
+        // },
         plugins: {
           title: {
             display: true,
@@ -92,6 +94,7 @@ export class ActualResponseChartComponent implements OnInit {
         },
         scales: {
           x: {
+            // type : 'linear',
             title: {
               text: 'Elapsed Time (granularity: 1 min)',
               display: true
