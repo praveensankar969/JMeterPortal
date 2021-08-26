@@ -1,7 +1,7 @@
 export interface ChartDatasets {
     label : string;
-    data : any[][];
+    data : any[][2];
     borderColor : string;
-    backgroundColor : string;
+    pointBorderColor : string
 }
 

@@ -1,1 +1,3 @@
-<app-actual-response-chart *ngIf="dataLoaded" [data]="csvData" [jMeterTestScriptLabel]="jMeterTestScriptLabels"></app-actual-response-chart>
+<app-actual-response-chart *ngIf="dataLoaded" [csvData]="csvData"></app-actual-response-chart>
+<br><br><br>
+<app-actual-thread-chart *ngIf="dataLoaded" [csvData]="csvData"></app-actual-thread-chart>

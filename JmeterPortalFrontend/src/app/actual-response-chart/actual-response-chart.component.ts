@@ -11,57 +11,48 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 })
 export class ActualResponseChartComponent implements OnInit {
 
-  @Input() data: CsvModel[] = [];
-  @Input() jMeterTestScriptLabel: string[] = [];
-  xAxisLabel: string[] = [];
+  @Input() csvData : Map<string, CsvModel[]> = new Map<string, CsvModel[]>();
+  xAxisLabel: any[] = [];
   datasets: ChartDatasets[] = [];
   chart: any;
-  xAxisFilter: number = 0;
-  testRunStartDate : Date = new Date();
+  yAxisFilter!: number;
   constructor() { }
 
   ngOnInit(): void {
-    this.testRunStartDate = new Date(this.data[0].timeStamp);
-    this.SetupChartData(this.data, this.jMeterTestScriptLabel);  
+    this.SetupChartData(this.csvData);
   }
 
-  SetupChartData(data : CsvModel[], label : string[]) {
+  SetupChartData(data: Map<string, CsvModel[]>) {
     this.xAxisLabel = [];
     this.datasets = [];
-    for (let index = 0; index < label.length; index++) {
+    
+    
+    for (let [key, value] of data) {
       const r = Math.round(Math.random() * 255);
       const g = Math.round(Math.random() * 255);
       const b = Math.round(Math.random() * 255);
       let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+      let d = value.sort((x,y)=> {return x.timeStamp-y.timeStamp}).map(x=> {
+        return [this.ParseDate(x.timeStamp),x.elapsed]
+      });
       let dataset: ChartDatasets = {
-        label: this.jMeterTestScriptLabel[index],
-        data: [],
+        label: key,
+        data: d,
         borderColor: color,
-        backgroundColor: color
+        pointBorderColor : color
       }
       this.datasets.push(dataset);
+      this.xAxisLabel.push(...value.map(x=> {return x.timeStamp}));
     }
-
-    for (let index = 0; index < data.length; index++) {
-      let formatedTime =this.ParseDate(data[index].timeStamp);
-      this.xAxisLabel.push(formatedTime);
-      let d: any[] = [];
-      d.push(formatedTime);
-      d.push(data[index].elapsed);
-      this.datasets.find(x => x.label === data[index].label)?.data.push(d);
-    }
-
+    this.xAxisLabel = this.xAxisLabel.sort((x,y)=> x-y).map(x=> {return this.ParseDate(x)});
     this.xAxisLabel = [...new Set(this.xAxisLabel)];
-    // console.log(this.jMeterTestScriptLabel);
-    // console.log(this.xAxisLabel);
-    //console.log(this.datasets);
+    console.log(this.datasets);
     this.CreateChart();
-
   }
 
 
   CreateChart() {
-    
+
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
     this.chart = new Chart("actual-response-overtime", {
@@ -102,7 +93,7 @@ export class ActualResponseChartComponent implements OnInit {
         scales: {
           x: {
             title: {
-              text: 'Time',
+              text: 'Elapsed Time (granularity: 1 min)',
               display: true
             }
           },
@@ -110,8 +101,11 @@ export class ActualResponseChartComponent implements OnInit {
             type: 'linear',
             position: 'left',
             title: {
-              text: 'Response Time (ms)',
+              text: 'Actual Response Time (ms)',
               display: true
+            },
+            ticks : {
+              stepSize :300
             }
           },
           y: {
@@ -121,24 +115,28 @@ export class ActualResponseChartComponent implements OnInit {
       }
     });
   }
-  ApplyXFilter() {
-    let filterData : CsvModel[] = this.data;
-    let time = new Date(this.xAxisFilter).getTime();
-    filterData = filterData.filter(x=> {
-      return x.timeStamp >= time
-    });
-    let label = [];
-    for (let index = 0; index < filterData.length; index++) {
-      label.push(filterData[index].label);    
+
+  ApplyXFilter(time : number) {
+    let filterData:Map<string, CsvModel[]> = new Map(this.csvData);
+    for (let [key, value] of filterData) {
+      let newvalue = value.filter(x=> x.elapsed < time);
+      if(newvalue.length == 0){
+        filterData.delete(key);
+      }
+      else{
+        filterData.set(key, newvalue);
+      }  
     }
-    label = [...new Set(label)];
+    console.log(filterData);
+    
     this.chart.destroy();
-    this.SetupChartData(filterData, label);
+    this.SetupChartData(filterData);
   }
 
-  ClearFilter(){
+  ClearFilter() {
+    console.log(this.csvData)
     this.chart.destroy();
-    this.SetupChartData(this.data, this.jMeterTestScriptLabel);
+    this.SetupChartData(this.csvData);
   }
 
   ParseDate(inputDate: number) {
@@ -147,7 +145,8 @@ export class ActualResponseChartComponent implements OnInit {
     let timeH = date.getHours();
     let timeM = date.getMinutes();
     let timeS = date.getSeconds();
-    return `${day}, ${timeH}:${timeM}:${timeS}`;
+    let timeMM = date.getMilliseconds();
+    return `${day}, ${timeH}:${timeM}:${timeS}:${timeMM}`;
   }
 
   ResetZoom() {
