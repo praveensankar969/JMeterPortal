@@ -1,0 +1,8 @@
+<div class="chart">
+    <canvas id="actual-thread-over-response"></canvas>
+    <button (click)="ResetZoom()">Reset Zoom</button>
+    <label for="">Filter by time</label>
+    <input type="number" name="response" [(ngModel)]="yAxisFilter">
+    <button (click)="ApplyXFilter(yAxisFilter)">Apply filter</button>
+    <button (click)="ClearFilter()">Clear filters</button>
+</div>

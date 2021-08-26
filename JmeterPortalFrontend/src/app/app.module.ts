@@ -7,13 +7,15 @@ import { AddTestrunComponent } from './add-testrun/add-testrun.component';
 import { CsvReaderComponent } from './csv-reader/csv-reader.component';
 import { ActualResponseChartComponent } from './actual-response-chart/actual-response-chart.component';
 import { FormsModule } from '@angular/forms';
+import { ActualThreadChartComponent } from './actual-thread-chart/actual-thread-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddTestrunComponent,
     CsvReaderComponent,
-    ActualResponseChartComponent
+    ActualResponseChartComponent,
+    ActualThreadChartComponent
   ],
   imports: [
     BrowserModule,
