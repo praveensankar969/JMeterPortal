@@ -9,6 +9,8 @@ import { ActualResponseChartComponent } from './actual-response-chart/actual-res
 import { FormsModule } from '@angular/forms';
 import { ActualThreadChartComponent } from './actual-thread-chart/actual-thread-chart.component';
 import { RestimePercentileChartComponent } from './restime-percentile-chart/restime-percentile-chart.component';
+import { AverageResponseChartComponent } from './average-response-chart/average-response-chart.component';
+import { AverageThreadChartComponent } from './average-thread-chart/average-thread-chart.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { RestimePercentileChartComponent } from './restime-percentile-chart/rest
     CsvReaderComponent,
     ActualResponseChartComponent,
     ActualThreadChartComponent,
-    RestimePercentileChartComponent
+    RestimePercentileChartComponent,
+    AverageResponseChartComponent,
+    AverageThreadChartComponent
   ],
   imports: [
     BrowserModule,

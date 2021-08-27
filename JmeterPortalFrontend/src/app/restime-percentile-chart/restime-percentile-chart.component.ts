@@ -17,7 +17,7 @@ export class RestimePercentileChartComponent implements OnInit {
   chart: any;
   xAxisLabel: number[] = [];
   datasets: ChartDatasets[] = [];
-  maxValue : number[] = [];
+  maxValue: number[] = [];
   constructor(private service: CsvreaderService) { }
 
   ngOnInit(): void {
@@ -31,10 +31,6 @@ export class RestimePercentileChartComponent implements OnInit {
 
   GetPercentileData() {
     for (let [key, value] of this.csvData) {
-
-      const r = Math.round(Math.random() * 255);
-      const g = Math.round(Math.random() * 255);
-      const b = Math.round(Math.random() * 255);
       let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
       let dataset: ChartDatasets = {
         label: key,
@@ -44,7 +40,7 @@ export class RestimePercentileChartComponent implements OnInit {
       }
       let newvalue = value.map(x => x.elapsed);
       newvalue.sort((x, y) => x - y);
-      this.maxValue.push(newvalue[newvalue.length-1]);
+      this.maxValue.push(newvalue[newvalue.length - 1]);
       for (let index = 0; index < newvalue.length; index++) {
         let p = Number(((index / newvalue.length) * 100).toFixed(1));
         let q = newvalue[index];
@@ -53,7 +49,7 @@ export class RestimePercentileChartComponent implements OnInit {
       this.datasets.push(dataset);
 
     }
-    this.maxValue.sort((a,b)=> a-b)
+    this.maxValue.sort((a, b) => a - b)
     console.log(this.datasets);
     this.CreateChart();
   }
@@ -107,9 +103,13 @@ export class RestimePercentileChartComponent implements OnInit {
         },
         scales: {
           x: {
+            type: 'linear',
             title: {
               text: 'Percentile',
               display: true
+            },
+            ticks: {
+              stepSize: 5
             }
           },
           y0: {
@@ -120,7 +120,7 @@ export class RestimePercentileChartComponent implements OnInit {
               display: true
             },
             min: 0,
-            max : this.maxValue[this.maxValue.length-1]
+            max: this.maxValue[this.maxValue.length - 1]
           },
           y: {
             display: false

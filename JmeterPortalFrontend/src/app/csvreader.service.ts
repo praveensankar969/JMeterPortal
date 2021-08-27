@@ -13,7 +13,7 @@ export class CsvreaderService {
 
   GetCsvData(testRun : TestRunModel) {
     let allRecords = atob(testRun.fileStreamData).split(/\r\n|\n/);  
-    for (let index = 1; index < allRecords.length/2-1; index++) {
+    for (let index = 1; index < allRecords.length-1; index++) {
       let records = allRecords[index].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       let data: CsvModel = {
         timeStamp: Number(records[0].trim()),

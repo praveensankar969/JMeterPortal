@@ -1,21 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { ChartDatasets } from '../chart-datasets';
 import { CsvModel } from '../csv-model';
-import zoomPlugin from 'chartjs-plugin-zoom';
 
 @Component({
-  selector: 'app-actual-thread-chart',
-  templateUrl: './actual-thread-chart.component.html',
-  styleUrls: ['./actual-thread-chart.component.css']
+  selector: 'app-average-thread-chart',
+  templateUrl: './average-thread-chart.component.html',
+  styleUrls: ['./average-thread-chart.component.css']
 })
-export class ActualThreadChartComponent implements OnInit {
+export class AverageThreadChartComponent implements OnInit {
 
   @Input() csvData: Map<string, CsvModel[]> = new Map<string, CsvModel[]>();
   datasets: ChartDatasets[] = [];
   chart: any;
   xAxisLabel: number[] = [];
   yAxisFilter: number = 0;
+  totalThreads = 0;
   constructor() { }
 
   ngOnInit(): void {
@@ -25,32 +26,34 @@ export class ActualThreadChartComponent implements OnInit {
   SetupChartData(data: Map<string, CsvModel[]>) {
     this.xAxisLabel = [];
     this.datasets = [];
-
-
     for (let [key, value] of data) {
 
       let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
       let newV = value.sort((x, y) => { return x.allThreads - y.allThreads });
+      this.xAxisLabel.push(...newV.map(x=> x.allThreads));
+      let avgPoints: any[] = [];
+      this.totalThreads = newV[newV.length - 1].allThreads;
+
+      for (let index = 1; index <= this.totalThreads; index++) {
+        let allThreads = newV.filter(x => x.allThreads == index);
+        let allElapsed = allThreads.map(x => x.elapsed);
+        if(allElapsed.length>1){
+          let avg = (allElapsed.reduce((a, b) => a + b, 0))/allElapsed.length;
+          avgPoints.push([index, avg]);
+        }   
+      }
+
       let dataset: ChartDatasets = {
         label: key,
-        data: [],
+        data: avgPoints,
         borderColor: color,
         pointBorderColor: color
       }
-
-      for (let i = 0; i < newV.length; i++) {
-        let thread = newV[i].allThreads;
-        let elapsed = newV[i].elapsed;
-        dataset.data.push([thread, elapsed]);
-      }
-
       this.datasets.push(dataset);
-      this.xAxisLabel.push(...value.map(x => { return x.allThreads }));
-
-
+      
     }
-    this.xAxisLabel = this.xAxisLabel.sort((x, y) => x - y).map(x => { return x });
     this.xAxisLabel = [...new Set(this.xAxisLabel)];
+    console.log(this.xAxisLabel);
     console.log(this.datasets);
     this.CreateChart();
   }
@@ -58,19 +61,18 @@ export class ActualThreadChartComponent implements OnInit {
   CreateChart() {
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
-    this.chart = new Chart("actual-response-over-thread", {
+    this.chart = new Chart("average-response-over-thread", {
       type: 'line',
       data: {
         labels: this.xAxisLabel,
         datasets: this.datasets
       },
       options: {
-        animation: false,
         responsive: true,
         plugins: {
           title: {
             display: true,
-            text: 'Actual Response Time Over Thread Count'
+            text: 'Average Response Time Over Thread Count'
           },
           zoom: {
             zoom: {
@@ -96,13 +98,17 @@ export class ActualThreadChartComponent implements OnInit {
             title: {
               text: 'Thread Count',
               display: true
+            },
+            ticks :{
+              maxTicksLimit : this.totalThreads ,
+              stepSize : 5
             }
           },
           y0: {
             type: 'linear',
             position: 'left',
             title: {
-              text: 'Actual Response Time (ms)',
+              text: 'Average Response Time (ms)',
               display: true
             },
             ticks: {

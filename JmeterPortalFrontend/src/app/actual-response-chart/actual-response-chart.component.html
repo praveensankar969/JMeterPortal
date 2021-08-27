@@ -1,8 +1,15 @@
 <div class="chart">
+    <button (click)="PreviousPage()">Previous Page</button>
+    <button (click)="NextPage()">Next Page</button>
     <canvas id="actual-response-overtime"></canvas>
     <button (click)="ResetZoom()">Reset Zoom</button>
-    <label for="">Filter by time</label>
+    <label for="">Filter by response time</label>
+    <select name="opt" id="opt" [(ngModel)]="selectedValue">
+        <option  #opt1 [value]="opt1.value">Greater than</option>
+        <option #opt2 [value]="opt2.value">Less than</option>
+    </select>
+    <p>{{selectedValue}}</p>
     <input type="number" name="response" [(ngModel)]="yAxisFilter">
-    <button (click)="ApplyXFilter(yAxisFilter)">Apply filter</button>
+    <button (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
     <button (click)="ClearFilter()">Clear filters</button>
 </div>
