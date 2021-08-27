@@ -1,9 +1,9 @@
-<app-actual-response-chart *ngIf="dataLoaded" [csvData]="csvData"></app-actual-response-chart>
+<app-actual-response-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-response-chart>
 <br><br><br>
-<app-actual-thread-chart *ngIf="dataLoaded" [csvData]="csvData"></app-actual-thread-chart>
+<app-actual-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-thread-chart>
 <br><br><br>
-<app-restime-percentile-chart *ngIf="dataLoaded" [csvData]="csvData"></app-restime-percentile-chart>
+<app-restime-percentile-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-restime-percentile-chart>
 <br><br><br>
-<app-average-response-chart *ngIf="dataLoaded" [csvData]="csvData"></app-average-response-chart>
+<app-average-response-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-average-response-chart>
 <br><br><br>
-<app-average-thread-chart *ngIf="dataLoaded" [csvData]="csvData"></app-average-thread-chart>
+<app-average-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-average-thread-chart>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ChartService } from './chart.service';
 import { CsvModel } from './csv-model';
 import { TestRunModel } from './testrun-model';
 
@@ -8,7 +9,7 @@ import { TestRunModel } from './testrun-model';
 export class CsvreaderService {
 
   map : Map<string, CsvModel[]> = new Map<string, CsvModel[]>();
-  constructor() {
+  constructor(private chartService : ChartService) {
   }
 
   GetCsvData(testRun : TestRunModel) {
@@ -32,9 +33,8 @@ export class CsvreaderService {
     
     }
     console.log(this.map);
+    this.chartService.UpdateData(this.map);
+    
   }
 
-  CsvData(){
-    return this.map;
-  }
 }

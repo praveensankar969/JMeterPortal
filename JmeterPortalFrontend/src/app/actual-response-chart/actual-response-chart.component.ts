@@ -185,7 +185,6 @@ export class ActualResponseChartComponent implements OnInit {
   }
 
   ClearFilter() {
-    console.log(this.csvData)
     this.chart.destroy();
     this.SetupChartData(this.csvData);
   }
