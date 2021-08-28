@@ -1,0 +1,99 @@
+.wrapper {
+    position: relative;
+    height: 84vh;
+    width: 100%;
+}
+
+.custom-shape-divider-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.custom-shape-divider-bottom svg {
+    position: relative;
+    display: block;
+    width: calc(101% + 1.3px);
+    height: 83px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom .shape-fill {
+    fill: #FFFFFF;
+}
+
+.table-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.results {
+    border: 4px solid #555555;
+    background-color: #555555;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 15px 20px;
+}
+
+td {
+    font-size: 18px;
+    color: #FFFFFF;
+}
+
+tr:hover {
+    transform: scale(1.01);
+    background-color: #3b3b3b;
+}
+
+tr:nth-child(even) {
+    background: #606b6e;
+}
+
+tr:nth-child(even):hover {
+    transform: scale(1.01);
+    background-color: #3b3b3b;
+}
+
+thead {
+    background: #398AA4;
+}
+
+th {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.nav-btns {
+    padding: 10px;
+}
+
+.btn {
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    padding: 14px;
+    width: 150px;
+    margin: 7px;
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    font-family: "proxima-nova-soft", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover{
+    transform: scale(1.05);
+}

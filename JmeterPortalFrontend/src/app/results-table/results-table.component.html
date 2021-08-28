@@ -1,0 +1,44 @@
+<div class="wrapper">
+    <div class="custom-shape-divider-bottom">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path
+                d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+                class="shape-fill"></path>
+        </svg>
+    </div>
+    
+    <div class="table-wrapper">
+        <div class="nav-btns">
+            <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
+            <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>
+            <button class="btn" >Filter Fields</button>
+            <select name="field" [(ngModel)]="selectedValue">
+                <option  #opt1 [value]="opt1.value">Test Run Name</option>
+                <option  #opt2 [value]="opt2.value">Test Run ID</option>
+                <option  #opt3 [value]="opt3.value">Environment</option>
+                <option  #opt4 [value]="opt4.value">Results File Name</option>
+                <option  #opt5 [value]="opt5.value">File Upload Date</option>
+            </select>
+            <label for="">Enter value: </label>
+            <input type="text">
+        </div>
+        <table class="results">
+            <thead>
+                <th>Test Run Name</th>
+                <th>Test Run ID </th>
+                <th>Environment</th>
+                <th>Results File Name</th>
+                <th>File Upload Date</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of viewRuns" (click)="OnClick(item.id)">
+                    <td>{{item.testName}}</td>
+                    <td>{{item.testRunID}}</td>
+                    <td>{{item.environment}}</td>
+                    <td>{{item.fileName}}</td>
+                    <td>{{item.fileUploadDate}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
