@@ -38,6 +38,12 @@ namespace JmeterPortalAPI.Controllers
             }
         }
 
+        [HttpGet("all-results")]
+        public async Task<ActionResult<List<AllTestRunsDTO>>> GetResults(){
+            SQLProcedure procedure = new SQLProcedure(this.config);
+            return await procedure.GetResults();
+        }
+
 
     }
 }

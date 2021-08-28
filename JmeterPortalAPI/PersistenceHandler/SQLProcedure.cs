@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -56,7 +57,30 @@ namespace JmeterPortalAPI.PersistenceHandler
             else{
                 return null;
             }
+        }
 
+        public async Task<List<AllTestRunsDTO>> GetResults()
+        {
+            DataTable table = new DataTable();
+            List<AllTestRunsDTO> result = new List<AllTestRunsDTO>();
+            SqlConnection connection = new SqlConnection(config.GetConnectionString("DefaultConnection"));
+            await connection.OpenAsync();
+            SqlCommand cmd = new SqlCommand(@"dbo.[GetData]", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            var adapter = new SqlDataAdapter(cmd);
+            adapter.Fill(table);
+            foreach(DataRow row in table.Rows){
+                result.Add(new AllTestRunsDTO{
+                    Id = row["Id"].ToString(),
+                    TestName = row["TestName"].ToString(),
+                    TestRunID = row["TestRunID"].ToString(),
+                    Environment = row["Environment"].ToString(),
+                    FileName = row["FileName"].ToString(),
+                    FileUploadDate = DateTime.Parse(row["FileUploadDate"].ToString())
+                });
+            }
+
+            return result;
         }
 
     }
