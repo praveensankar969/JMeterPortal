@@ -1,0 +1,81 @@
+.application{
+    height: 84vh;
+    position: relative;
+}
+
+.custom-shape-divider-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.custom-shape-divider-bottom svg {
+    position: relative;
+    display: block;
+    width: calc(101% + 1.3px);
+    height: 83px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom .shape-fill {
+    fill: #FFFFFF;
+}
+
+.add-testrun{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80%;
+    padding: 25px;
+}
+
+.instruction{
+    font-size: 22px;
+    color : rgb(255, 255, 255);
+    font-weight: bolder;
+    flex : 2;
+}
+.behind{
+    color: rgb(109, 109, 109);
+    z-index: -99;
+    background-color: transparent;
+    font-size: 96px;
+}
+
+.add-form{
+    color: rgb(0, 0, 0);
+    padding: 50px;
+    padding-right: 0;
+    background-color: cadetblue;
+    box-shadow:0 6px 10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    border-radius: 20px;
+    flex : 3;
+    font-family:'Segoe UI','Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.form label{
+    display: inline-block;
+    text-align: right;
+    font-weight: bold;
+    width: 200px;
+}
+
+.row{
+    padding: 25px;
+    font-size: 20px;
+}
+
+.row input{
+    font-family: Verdana, Tahoma, sans-serif;
+    font-size: 22px;
+    width: 60%;
+    margin-left: 20px;
+}
+
+input[type="file"]{
+    padding: 15px;
+}
+

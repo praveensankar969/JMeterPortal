@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ChartService } from '../chart.service';
-import { CsvModel } from '../csv-model';
 import { CsvreaderService } from '../csvreader.service';
 import { FileService } from '../file.service';
 import { TestRunModel } from '../testrun-model';

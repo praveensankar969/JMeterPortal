@@ -11,6 +11,8 @@ import { ActualThreadChartComponent } from './actual-thread-chart/actual-thread-
 import { RestimePercentileChartComponent } from './restime-percentile-chart/restime-percentile-chart.component';
 import { AverageResponseChartComponent } from './average-response-chart/average-response-chart.component';
 import { AverageThreadChartComponent } from './average-thread-chart/average-thread-chart.component';
+import { HomeViewComponent } from './home-view/home-view.component';
+import { ResultsTableComponent } from './results-table/results-table.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { AverageThreadChartComponent } from './average-thread-chart/average-thre
     ActualThreadChartComponent,
     RestimePercentileChartComponent,
     AverageResponseChartComponent,
-    AverageThreadChartComponent
+    AverageThreadChartComponent,
+    HomeViewComponent,
+    ResultsTableComponent
   ],
   imports: [
     BrowserModule,

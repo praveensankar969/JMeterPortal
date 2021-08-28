@@ -4,6 +4,7 @@ import { TestRun } from './test-run';
 import { catchError, first} from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TestRunModel } from './testrun-model';
+import { AllTestRunModel } from './all-testruns-model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,10 @@ export class FileService {
   GetWithId(id: string){
     return this.http.get<TestRunModel>("https://localhost:5001/portal/"+id).
         pipe(catchError(err=> {return throwError(err)}), first());    
+  }
+
+  GetAllResults(){
+    return this.http.get<AllTestRunModel[]>("https://localhost:5001/portal/all-results").
+        pipe(catchError(err=> {return throwError(err)}), first());
   }
 }

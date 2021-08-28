@@ -1,0 +1,44 @@
+.section{
+    position: relative;
+    min-height: 100vh;
+    background-image: linear-gradient(rgb(0, 0, 0), rgb(156, 156, 156));
+}
+.navbar{
+    display: flex;
+    justify-content: space-between;
+}
+a{
+    text-decoration: none;
+}
+.logo{
+    margin: 0;
+    padding : 25px;
+    cursor: pointer;
+}
+.logo img{
+    height: 100px;
+}
+.logo::after{
+    content: 'Portal';
+    font-size: 46px;
+    position: absolute;
+    top :65px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+
+.nav-links{
+    padding: 50px;
+}
+.nav-links a{
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.nav-links a:hover{
+    background-color: rgb(222, 222, 222);
+    color : black;
+    border-radius: 10px;
+}
