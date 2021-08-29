@@ -79,3 +79,51 @@ input[type="file"]{
     padding: 15px;
 }
 
+.btn {
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    padding: 14px;
+    width: 150px;
+    margin: 7px;
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    font-family: "proxima-nova-soft", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover{
+    transform: scale(1.05);
+}
+
+.btn:disabled, .btn[disabled]{
+    color : rgb(223, 221, 221) !important;
+    transform: scale(1);
+}
+
+a{
+    cursor: pointer;
+}
+
+.success{
+    font-size: 18px;
+    width: 80%;
+    padding: 5px;
+    margin-left: 10%;
+    background-color: greenyellow;
+    color: green;
+    border-radius: 10px;
+}
+
+.failure{
+    font-size: 18px;
+    width: 80%;
+    padding: 5px;
+    margin-left: 10%;
+    background-color: rgb(255, 47, 47);
+    color: rgb(128, 0, 0);
+    border-radius: 10px;
+}

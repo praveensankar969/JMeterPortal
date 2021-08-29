@@ -1,4 +1,8 @@
 <section class="application">
+    <div class="message" *ngIf="showMsg">
+        <p class="success" *ngIf="successStatus">Data added <strong>Successfully</strong>!!</p>
+        <p class="failure" *ngIf="!successStatus">Data add <strong>Failed</strong>!!</p>
+    </div>
     <div class="custom-shape-divider-bottom">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
@@ -9,24 +13,27 @@
             <h1 class="behind">UPLOAD TEST RUN RESULTS</h1>
         </div>
         <div class="add-form">
-            <div class="form">
+            <form class="form" #form="ngForm">
                 <div class="row">
                     <label>Test Name </label>
-                    <input type="text">
+                    <input type="text" required [(ngModel)]="testName" name="testName">
                 </div>
                 <div class="row">
                     <label>Test Run ID </label>
-                    <input type="text">
+                    <input type="text" required [(ngModel)]="testRunID" name="runId">
                 </div>
                 <div class="row">
                     <label>Environment </label>
-                    <input type="text">
+                    <input type="text" required [(ngModel)]="environment" name="env">
                 </div>
                 <div class="row">
                     <label>Upload CSV file</label>
-                    <input type="file" id="upload">
+                    <input type="file" id="upload" required (change)="OnUploadFile($event)" #fileInput>
+                    <a (click)="Clear()" *ngIf="fileAdded">Clear</a>
                 </div>
-            </div>
+                <button class="btn" (click)="Upload(form)" [disabled]="!form.form.valid">Upload</button>
+                <button class="btn" (click)="Reset(form)">Reset</button>
+            </form>
         </div>
     </div>
 </section>
