@@ -39,6 +39,7 @@
     background-color: #555555;
     text-align: center;
     border-collapse: collapse;
+    width: 80%;
 }
 
 td, th {
@@ -76,24 +77,15 @@ th {
 
 .nav-btns {
     padding: 10px;
+    margin-right: auto;
+    margin-left: 200px;
 }
 
-.btn {
-    border: 0;
-    text-align: center;
-    display: inline-block;
-    padding: 14px;
-    width: 150px;
-    margin: 7px;
-    color: #000000;
-    background-color: #ffffff;
-    border-radius: 8px;
-    font-family: "proxima-nova-soft", sans-serif;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
+.filter-label{
+    padding:10px;
+    font-size: 18px;
 }
 
-.btn:hover{
-    transform: scale(1.05);
+.filter-input{
+    font-size: 18px;
 }

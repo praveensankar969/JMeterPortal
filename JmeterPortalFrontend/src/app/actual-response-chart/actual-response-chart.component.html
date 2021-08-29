@@ -1,15 +1,34 @@
 <div class="chart">
-    <button (click)="PreviousPage()">Previous Page</button>
-    <button (click)="NextPage()">Next Page</button>
-    <canvas id="actual-response-overtime"></canvas>
-    <button (click)="ResetZoom()">Reset Zoom</button>
-    <label for="">Filter by response time</label>
-    <select name="opt" id="opt" [(ngModel)]="selectedValue">
-        <option  #opt1 [value]="opt1.value">Greater than</option>
-        <option #opt2 [value]="opt2.value">Less than</option>
-    </select>
-    <p>{{selectedValue}}</p>
-    <input type="number" name="response" [(ngModel)]="yAxisFilter">
-    <button (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
-    <button (click)="ClearFilter()">Clear filters</button>
+    <div class="btn-wrapper">
+        <button class="btn range" (click)="PreviousPage()">Load Previous Time Range</button>
+        <button class="btn range" (click)="NextPage()">Load Next Time Range</button>
+        <button class="btn" (click)="ResetZoom()">Reset Zoom</button>
+        <div class="dropdown">
+            <div class="filter-label">
+                <button class="btn" (click)="dropdown =!dropdown">Filter scripts</button>
+            </div>
+            <div class="checkBoxes" *ngIf="dropdown">
+                <input style="width: 80%; margin: 5px;" type="text">
+                <ng-container *ngFor="let i of labels">
+                    <label>
+                        <input [id]="i" type="checkbox" (click)="SelectMultiple($event)"> {{i}}
+                    </label>
+                </ng-container>
+            </div>       
+        </div>
+        <button *ngIf="dropdown" class="btn apply" (click)="FilterLabel()">Apply</button>
+    </div>
+    <div class="canvas">
+        <canvas id="actual-response-overtime"></canvas>
+    </div>
+    <div class="btn-wrapper-bottom">
+        <label for="">Filter by response time</label>
+        <select name="opt" id="opt" [(ngModel)]="selectedValue">
+            <option #opt1 [value]="opt1.value">Greater than</option>
+            <option #opt2 [value]="opt2.value">Less than</option>
+        </select>
+        <input type="number" name="response" [(ngModel)]="yAxisFilter">
+        <button class="btn" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
+        <button class="btn" (click)="ClearFilter()">Clear filters</button>
+    </div>
 </div>

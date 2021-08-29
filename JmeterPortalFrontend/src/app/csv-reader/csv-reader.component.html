@@ -1,9 +1,12 @@
-<!-- <app-actual-response-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-response-chart>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="medium" type="line-scale-pulse-out">  
+    <p style="color: white">Downloading report and generating charts...</p>
+</ngx-spinner>
+<app-actual-response-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-response-chart>
 <br><br><br>
-<app-actual-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-thread-chart>
+<!-- <app-actual-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-actual-thread-chart>
 <br><br><br>
 <app-restime-percentile-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-restime-percentile-chart>
 <br><br><br>
 <app-average-response-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-average-response-chart>
-<br><br><br> -->
-<app-average-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-average-thread-chart>
+<br><br><br>
+<app-average-thread-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"></app-average-thread-chart> -->

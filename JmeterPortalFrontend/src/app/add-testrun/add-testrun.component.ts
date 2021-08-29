@@ -65,12 +65,12 @@ export class AddTestrunComponent implements OnInit {
         fileStreamDataBase64 : base64String
       }).pipe(catchError(err=> { 
         this.successStatus = !this.successStatus; return throwError(err)
-      })).subscribe(res=> {console.log(res); });
+      })).subscribe(res=> {this.Reset(form);});
     }
     reader.readAsDataURL(this.file);
-    this.showMsg = true;
-    this.Reset(form);
+    this.showMsg = true;  
     setTimeout(()=> {this.showMsg = false},1500);  
+    
   }
 
 }

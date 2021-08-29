@@ -28,13 +28,12 @@
 }
 
 .instructions{
-    font-size: 22px;
+    font-size: 18px;
 }
 .sample-chart{
     display: block;
-    height: 480px;
     width: 80%;
     background-color: honeydew;
     border-radius: 20px;
-    padding: 25px;
 }
+

@@ -6,21 +6,31 @@
                 class="shape-fill"></path>
         </svg>
     </div>
-    
+
     <div class="table-wrapper">
         <div class="nav-btns">
-            <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
-            <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>
-            <button class="btn" >Filter Fields</button>
-            <select name="field" [(ngModel)]="selectedValue">
-                <option  #opt1 [value]="opt1.value">Test Run Name</option>
-                <option  #opt2 [value]="opt2.value">Test Run ID</option>
-                <option  #opt3 [value]="opt3.value">Environment</option>
-                <option  #opt4 [value]="opt4.value">Results File Name</option>
-                <option  #opt5 [value]="opt5.value">File Upload Date</option>
-            </select>
-            <label for="">Enter value: </label>
-            <input type="text">
+            <button class="btn" (click)="filterFields = !filterFields">Filter Fields</button>
+            <ng-container *ngIf="filterFields">
+                <select name="field" [(ngModel)]="selectedField">
+                    <option value="testName">Test Run Name</option>
+                    <option value="testRunID">Test Run ID</option>
+                    <option value="environment">Environment</option>
+                    <option value="fileName">Results File Name</option>
+                    <option value="fileUploadDate">File Upload Date</option>
+                </select>
+                <ng-container *ngIf="selectedField">
+                    <ng-container *ngIf="selectedField !='fileUploadDate'; else elseLabel">
+                        <label class="filter-label" >Enter Value: </label>
+                        <input class="filter-input" type="text" name="filtervalue" [(ngModel)]="selectedValue">
+                    </ng-container>
+                    <ng-template #elseLabel>
+                        <label class="filter-label" >Select Date after: </label>
+                        <input class="filter-input" type="datetime-local" name="filtervalue" [(ngModel)]="selectedValue">
+                    </ng-template>           
+                    <button class="btn" (click)="SearchInput()">Search</button>
+                    <button class="btn" (click)="ClearFilter()" *ngIf="filtered">Clear Filter</button>
+                </ng-container>
+            </ng-container>
         </div>
         <table class="results">
             <thead>
@@ -31,7 +41,7 @@
                 <th>File Upload Date</th>
             </thead>
             <tbody>
-                <tr *ngFor="let item of viewRuns" (click)="OnClick(item.id)">
+                <tr *ngFor="let item of viewRuns" (click)="router.navigate(['view-result', item.id])">
                     <td>{{item.testName}}</td>
                     <td>{{item.testRunID}}</td>
                     <td>{{item.environment}}</td>
@@ -40,5 +50,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="btn-wrapper" style="display: inline;">
+            <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
+            <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>
+        </div>  
     </div>
 </div>

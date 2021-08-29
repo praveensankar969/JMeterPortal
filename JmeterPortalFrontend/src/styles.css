@@ -1,7 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css'; 
 body{
     margin: 0;
     padding: 0;  
     font-family: 'Courier New', Courier, monospace;
     color: white;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family:"Helvetica Neue", sans-serif; }
+
+canvas{
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.btn {
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    padding: 14px;
+    width: 150px;
+    margin: 7px;
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    font-family: "proxima-nova-soft", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover{
+    transform: scale(1.05);
+}
+
+.btn:disabled, .btn[disabled]{
+    color : rgb(223, 221, 221) !important;
+    transform: scale(1);
+}
+
+select{
+    font-size: 18px;
+    font-family: 'Courier New', Courier, monospace;
 }

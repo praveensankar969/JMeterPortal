@@ -18,11 +18,15 @@ export class ActualResponseChartComponent implements OnInit {
   yAxisFilter!: number;
   selectedValue = "";
   allTimeStamp: number[] = [];
+  labels : string[] = [];
   range: any[] = [];
   totalPages = 0;
   currentPage = 0;
   execStartTime = 0;
-  execEndTime = 0
+  execEndTime = 0;
+  selectedItem : string[]= [];
+  showAll = true;
+  dropdown : boolean = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -31,7 +35,9 @@ export class ActualResponseChartComponent implements OnInit {
   }
 
   Paging() {
+    
     for (let [key, value] of this.csvData) {
+      this.labels.push(key);
       let time = value.map(x => x.timeStamp);
       this.allTimeStamp.push(...time);
     }
@@ -94,6 +100,33 @@ export class ActualResponseChartComponent implements OnInit {
     this.SetupChartData(this.csvData);
   }
 
+  FilterLabel(){
+    this.dropdown = !this.dropdown;
+    let selected = this.selectedItem;
+    this.chart.data.datasets.forEach(function(ds: any) {
+      if(selected.find(x=> x==ds.label)!=undefined){
+        ds.hidden = !ds.hidden;
+      }
+    });
+    this.chart.update();
+  }
+
+  SelectMultiple(event : Event){
+    let val =(event.target as HTMLInputElement);
+    if(val.checked){
+      this.selectedItem.push(val.id);
+    }
+    else{
+      this.selectedItem = this.selectedItem.filter(x=> x != val.id);
+    }
+  }
+
+  LabelToggle(){
+    this.showAll =!this.showAll;
+  }
+  
+ 
+
 
   CreateChart() {
 
@@ -115,6 +148,9 @@ export class ActualResponseChartComponent implements OnInit {
           title: {
             display: true,
             text: 'Actual Response Time Over Time'
+          },
+          legend : {
+            display : this.showAll
           },
           zoom: {
             zoom: {

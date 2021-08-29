@@ -1,6 +1,54 @@
 .chart{
     display: block;
-    width: 80%;
-    padding: 30px;
-    /* background-color: rgb(75, 192, 100); */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.range{
+    width: 300px;
+    padding: 7px;
+}
+
+.apply{
+    width : 100px;
+    background: rgb(47, 206, 255);
+    color:white
+}
+
+.btn-wrapper, .btn-wrapper-bottom{
+    display: flex;
+}
+
+.canvas{
+    width : 80%; 
+}
+
+.checkBoxes {
+    position: absolute;
+    height: 500px;
+    width: 350px;
+    display: block;
+    overflow-y: auto;
+    border: 1px #8DF5E4 solid;
+    color : black;
+    background: rgb(172, 170, 170);
+}
+
+
+.checkBoxes label {
+    padding: 5px;
+    display: block;
+    text-align: left;
+}
+
+.checkBoxes label:hover {
+    background-color: #4F615E;
+    color : white;
+}
+
+.dropdown{
+    position: relative;
 }
