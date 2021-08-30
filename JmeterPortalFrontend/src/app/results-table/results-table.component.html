@@ -1,3 +1,6 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="medium" type="line-scale-pulse-out">  
+    <p style="color: white">Loading table...</p>
+</ngx-spinner>
 <div class="wrapper">
     <div class="custom-shape-divider-bottom">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -27,7 +30,7 @@
                         <label class="filter-label" >Select Date after: </label>
                         <input class="filter-input" type="datetime-local" name="filtervalue" [(ngModel)]="selectedValue">
                     </ng-template>           
-                    <button class="btn" (click)="SearchInput()">Search</button>
+                    <button class="btn" *ngIf="selectedValue" (click)="SearchInput()">Search</button>
                     <button class="btn" (click)="ClearFilter()" *ngIf="filtered">Clear Filter</button>
                 </ng-container>
             </ng-container>
@@ -50,7 +53,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="btn-wrapper" style="display: inline;">
+        <div class="btn-wrapper" style="display: inline;" *ngIf="viewRuns">
             <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
             <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>
         </div>  

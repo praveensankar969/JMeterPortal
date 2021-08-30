@@ -10,7 +10,7 @@
     </div>
     <div class="add-testrun">
         <div class="instruction">
-            <h1 class="behind">UPLOAD TEST RUN RESULTS</h1>
+            <span class="behind">UPLOAD RESULTS</span>
         </div>
         <div class="add-form">
             <form class="form" #form="ngForm">
@@ -29,7 +29,6 @@
                 <div class="row">
                     <label>Upload CSV file</label>
                     <input type="file" id="upload" required (change)="OnUploadFile($event)" #fileInput>
-                    <a (click)="Clear()" *ngIf="fileAdded">Clear</a>
                 </div>
                 <button class="btn" (click)="Upload(form)" [disabled]="!form.form.valid">Upload</button>
                 <button class="btn" (click)="Reset(form)">Reset</button>

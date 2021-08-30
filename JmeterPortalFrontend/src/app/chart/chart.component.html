@@ -1,0 +1,52 @@
+<div class="chart">
+    <div class="btn-wrapper">
+        <ng-container *ngIf="title == 'Actual Response Time Over Time'">
+            <button class="btn range" [disabled]="currentPage==0" (click)="PreviousPage()">Load Previous Time Range</button>
+            <button class="btn range" [disabled]="currentPage>=totalPages-1" (click)="NextPage()">Load Next Time Range</button>
+        </ng-container>
+        <button class="btn" (click)="ResetZoom()">Reset Zoom</button>
+        <div class="dropdown">
+            <div class="filter-label">
+                <button class="btn" (click)="dropdown =!dropdown">
+                    <span class="material-icons"> filter_alt</span>
+                    Scripts
+                </button>
+            </div>
+            <div class="checkBoxes" *ngIf="dropdown">
+                <div style="display: inline; position: sticky;">
+                    <input style="width: 80%; margin: 5px;" type="text" name="search" [(ngModel)]="labelSearch"
+                        (keyup)="SearchLabel()">
+                    <button *ngIf="dropdown && selectedItem.length>0" class="inline-btn" (click)="FilterLabel()">
+                        <span class="material-icons">done</span>
+                    </button>
+                </div>
+                <div class="list">
+                    <ng-container *ngFor="let i of labelsView">
+                        <label>
+                            <input [id]="i" type="checkbox" (click)="SelectMultiple($event)"> {{i}}
+                        </label>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <button *ngIf="filtered" class="btn" (click)="ClearLabelFilter()">
+            <span class="material-icons">clear</span>
+        </button>
+    </div>
+  
+    <div class="chart">
+        <ng-content></ng-content>
+    </div>
+
+    <div class="btn-wrapper-bottom">
+        <label>Filter by response time</label>
+        <select name="opt" id="opt" [(ngModel)]="selectedValue">
+            <option #opt1 [value]="opt1.value">Greater than</option>
+            <option #opt2 [value]="opt2.value">Less than</option>
+        </select>
+        <input type="number" *ngIf="selectedValue" name="response" [(ngModel)]="yAxisFilter">
+        <button class="btn" *ngIf="yAxisFilter" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
+        <button class="btn" *ngIf="yFilter" (click)="ClearYFilter()">Clear filters</button>
+    </div>
+</div>

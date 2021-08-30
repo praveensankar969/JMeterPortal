@@ -39,12 +39,7 @@ export class AddTestrunComponent implements OnInit {
     }  
   }
   Reset(form : NgForm){
-    this.Clear();
     form.resetForm();
-  }
-
-  Clear(){
-    this.fileAdded = false;
     this.fileInput.nativeElement.value = "";
   }
 

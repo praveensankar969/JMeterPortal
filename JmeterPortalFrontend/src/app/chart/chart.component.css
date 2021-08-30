@@ -1,10 +1,11 @@
 .chart{
     display: block;
-    width: 100%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin-left: 3%;
 }
 
 .range{
@@ -28,14 +29,18 @@
 
 .checkBoxes {
     position: absolute;
-    height: 500px;
     width: 350px;
-    display: block;
-    overflow-y: auto;
+    display: block; 
     border: 1px #8DF5E4 solid;
     color : black;
     background: rgb(172, 170, 170);
 }
+
+.list{
+    overflow-y: auto;
+    height: 500px;
+}
+
 
 
 .checkBoxes label {
@@ -51,4 +56,26 @@
 
 .dropdown{
     position: relative;
+}
+
+.inline-btn{
+    margin: 3px;
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    color: #000000;
+    background-color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+label{
+    padding: 20px;
+    text-align: center;
+}
+
+select, input{
+    height: 30px;
+    margin :15px;
 }
