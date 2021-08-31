@@ -2,20 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ChartService } from '../chart.service';
-import { CsvreaderService } from '../csvreader.service';
 import { FileService } from '../file.service';
 import { TestRunModel } from '../testrun-model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CsvModel } from '../csv-model';
 import { ChartDatasets } from '../chart-datasets';
-
+import { FilereaderService } from '../filereader.service';
 
 @Component({
-  selector: 'app-csv-reader',
-  templateUrl: './csv-reader.component.html',
-  styleUrls: ['./csv-reader.component.css']
+  selector: 'app-file-reader',
+  templateUrl: './file-reader.component.html',
+  styleUrls: ['./file-reader.component.css']
 })
-export class CsvReaderComponent implements OnInit {
+export class FileReaderComponent implements OnInit {
+
   id: string = "";
   testRun!: TestRunModel;
   dataLoaded = false;
@@ -34,7 +34,7 @@ export class CsvReaderComponent implements OnInit {
   totalPages = 0;
   currentPage = 0;
 
-  constructor(private service: FileService, private reader: CsvreaderService,
+  constructor(private service: FileService, private reader: FilereaderService,
     public chartService: ChartService, private route: ActivatedRoute, private spinner: NgxSpinnerService) {
     this.route.params.subscribe(res => { this.id = res['id']; this.Fetch() })
   }
@@ -46,7 +46,7 @@ export class CsvReaderComponent implements OnInit {
     this.spinner.show();
     this.subscription = this.service.GetWithId(this.id).subscribe(res => {
       this.testRun = res;
-      this.reader.GetCsvData(res);
+      this.reader.GetData(res);
       this.dataLoaded = true;
       this.spinner.hide();
     }, err => {
@@ -258,6 +258,5 @@ export class CsvReaderComponent implements OnInit {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
 
 }

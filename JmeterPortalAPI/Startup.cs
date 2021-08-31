@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +27,9 @@ namespace JmeterPortalAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "JmeterPortalAPI", Version = "v1" });
+            });
+            services.Configure<KestrelServerOptions>(opt =>{
+                opt.Limits.MaxRequestBodySize = 1073741824;
             });
         }
 

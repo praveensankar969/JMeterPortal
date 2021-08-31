@@ -1,7 +1,7 @@
 .section{
     position: relative;
     min-height: 100vh;
-    background-image: linear-gradient(rgb(0, 0, 0), rgb(156, 156, 156));
+    background-image: linear-gradient(rgb(75, 189, 255), rgb(255, 255, 255));
 }
 .navbar{
     display: flex;

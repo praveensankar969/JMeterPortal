@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CsvReaderComponent } from './csv-reader.component';
+import { FileReaderComponent } from './file-reader.component';
 
-describe('CsvReaderComponent', () => {
-  let component: CsvReaderComponent;
-  let fixture: ComponentFixture<CsvReaderComponent>;
+describe('FileReaderComponent', () => {
+  let component: FileReaderComponent;
+  let fixture: ComponentFixture<FileReaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CsvReaderComponent ]
+      declarations: [ FileReaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CsvReaderComponent);
+    fixture = TestBed.createComponent(FileReaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

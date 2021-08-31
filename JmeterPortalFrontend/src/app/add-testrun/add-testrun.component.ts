@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subscription, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { FileService } from '../file.service';
@@ -24,7 +25,7 @@ export class AddTestrunComponent implements OnInit {
   uploadSub! : Subscription;
   @ViewChild('fileInput' , {static :false}) fileInput! :  ElementRef;
 
-  constructor(private uploadService: FileService) { }
+  constructor(private uploadService: FileService, private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
   }
@@ -48,7 +49,7 @@ export class AddTestrunComponent implements OnInit {
     this.fileUploadDate = new Date();
     let base64String = "";
     let reader = new FileReader();
-    
+    this.spinner.show();
     reader.onload = ()=>{
       base64String = reader.result!.toString();
       this.uploadSub = this.uploadService.UploadFile( {
@@ -60,11 +61,12 @@ export class AddTestrunComponent implements OnInit {
         fileStreamDataBase64 : base64String
       }).pipe(catchError(err=> { 
         this.successStatus = !this.successStatus; return throwError(err)
-      })).subscribe(res=> {this.Reset(form);});
+      })).subscribe(res=> {this.Reset(form);this.spinner.hide();}, err=> {this.spinner.hide();});
     }
     reader.readAsDataURL(this.file);
+    this.spinner.hide();
     this.showMsg = true;  
-    setTimeout(()=> {this.showMsg = false},1500);  
+    setTimeout(()=> {this.showMsg = false},3500);  
     
   }
 

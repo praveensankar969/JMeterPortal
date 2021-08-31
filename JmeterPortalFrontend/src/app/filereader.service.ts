@@ -6,13 +6,27 @@ import { TestRunModel } from './testrun-model';
 @Injectable({
   providedIn: 'root'
 })
-export class CsvreaderService {
+export class FilereaderService {
 
   map : Map<string, CsvModel[]> = new Map<string, CsvModel[]>();
   constructor(private chartService : ChartService) {
   }
 
-  GetCsvData(testRun : TestRunModel) {
+  GetData(testRun : TestRunModel) {
+    //this.DataXML(testRun);
+    this.DataCSV(testRun);
+  }
+
+  // DataXML(testRun : TestRunModel){
+  //   let xmlString = atob(testRun.fileStreamData);
+  //   const parser = new DOMParser();
+  //   let xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  //   let testResults = xmlDoc.getElementsByTagName("testResults")[0];
+  //   let samples = testResults.getElementsByTagName("sample");
+  //   console.log(samples)
+  // }
+
+  DataCSV(testRun : TestRunModel){
     let allRecords = atob(testRun.fileStreamData).split(/\r\n|\n/);  
     for (let index = 1; index < allRecords.length-1; index++) {
       let records = allRecords[index].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
@@ -34,7 +48,6 @@ export class CsvreaderService {
     }
     console.log(this.map);
     this.chartService.UpdateData(this.map);
-    
   }
 
 }

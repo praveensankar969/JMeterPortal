@@ -33,12 +33,12 @@
 }
 
 .instruction{
-    color : rgb(255, 255, 255);
+    color : rgb(218, 214, 214);
     font-weight: bolder;
     flex : 2;
 }
 .behind{
-    color: rgb(109, 109, 109);
+    color: rgb(255, 248, 248);
     z-index: -99;
     background-color: transparent;
     font-size: 76px;
@@ -48,7 +48,7 @@
     color: rgb(0, 0, 0);
     padding: 50px;
     padding-right: 0;
-    background-color: cadetblue;
+    background-color: rgb(255, 254, 254);
     box-shadow:0 6px 10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     border-radius: 20px;
     flex : 3;

@@ -10,22 +10,23 @@ import { AllTestRunModel } from './all-testruns-model';
   providedIn: 'root'
 })
 export class FileService {
-
+  
+  API_URL="https://localhost:5001/portal/";
   constructor(private http: HttpClient) { }
 
   UploadFile(data : TestRun){
     console.log(data)
-    return this.http.post<number>("https://localhost:5001/Portal/add-testrun", data).
+    return this.http.post<number>(this.API_URL+"add-testrun", data).
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 
   GetWithId(id: string){
-    return this.http.get<TestRunModel>("https://localhost:5001/portal/"+id).
+    return this.http.get<TestRunModel>(this.API_URL+id).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
   GetAllResults(){
-    return this.http.get<AllTestRunModel[]>("https://localhost:5001/portal/all-results").
+    return this.http.get<AllTestRunModel[]>(this.API_URL+"all-results").
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 }

@@ -2,7 +2,7 @@
     <p style="color: white">Downloading report and generating charts...</p>
 </ngx-spinner>
 <div class="chart-wrapper">
-    <div class="break">
+    <div class="break" *ngIf="dataLoaded">
         Actual Response Time Over Time Chart
     </div>
     <div class="chart">
@@ -18,7 +18,7 @@
         </app-chart>
     </div>
     
-    <div class="break">
+    <div class="break" *ngIf="dataLoaded">
         Actual Response Time Over Thread
     </div>
     <div class="chart">
@@ -34,7 +34,7 @@
         </app-chart>
     </div>
     
-    <div class="break">
+    <div class="break" *ngIf="dataLoaded">
         Response Time Percentile Chart
     </div>
     <div class="chart">
@@ -51,7 +51,7 @@
         </app-chart>
     </div>
     
-    <div class="break">
+    <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Time Chart
     </div>
     <div class="chart">
@@ -67,7 +67,7 @@
         </app-chart>    
     </div>
     
-    <div class="break">
+    <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Thread
     </div>
     <div class="chart">
