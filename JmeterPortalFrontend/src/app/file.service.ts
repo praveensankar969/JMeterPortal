@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TestRun } from './test-run';
-import { catchError, first} from 'rxjs/operators';
+import { catchError, first, tap} from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TestRunModel } from './testrun-model';
 import { AllTestRunModel } from './all-testruns-model';
+import { CsvModel } from './csv-model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,8 @@ export class FileService {
   }
 
   GetWithId(id: string){
-    return this.http.get<TestRunModel>(this.API_URL+id).
-        pipe(catchError(err=> {return throwError(err)}), first());    
+    return this.http.get<CsvModel[]>(this.API_URL+id).
+        pipe(catchError(err=> {return throwError(err)}), first(), tap(res=> console.log(res)));    
   }
 
   GetAllResults(){
