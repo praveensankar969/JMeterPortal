@@ -13,6 +13,8 @@
   <Compile Include="..\Model\TestRun.cs" Link="TestRun.cs" />
   <Compile Include="..\Model\AllTestRunsDTO.cs" Link="AllTestRunsDTO.cs" />
   <Compile Include="..\Model\CsvModel.cs" Link="CsvModel.cs" />
+  <Compile Include="..\Model\ChartDataSet.cs" Link="ChartDataSet.cs" />
+  <Compile Include="..\Model\ActualThreadVResponse.cs" Link="ActualThreadVResponse.cs" />
   </ItemGroup>
 
 </Project>
