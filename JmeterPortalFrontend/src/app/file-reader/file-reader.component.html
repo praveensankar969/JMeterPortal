@@ -2,7 +2,7 @@
     <p style="color: white">Downloading report and generating charts...</p>
 </ngx-spinner>
 <div class="chart-wrapper">
-    <div class="break" *ngIf="dataLoaded">
+    <!-- <div class="break" *ngIf="dataLoaded">
         Actual Response Time Over Time Chart
     </div>
     <div class="chart">
@@ -16,13 +16,13 @@
          [yLabel]="'Actual Response Time (ms)'">
          <canvas id="actual-response-over-time"></canvas>
         </app-chart>
-    </div>
+    </div> -->
     
-    <div class="break" *ngIf="dataLoaded">
+    <!-- <div class="break" *ngIf="!dataLoaded">
         Actual Response Time Over Thread
-    </div>
-    <div class="chart">
-        <app-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"
+    </div> -->
+    <!-- <div class="chart">
+        <app-chart *ngIf="!dataLoaded">
          [function]="ActualThreadvResponseData"
          [id]="'actual-response-over-thread'"
          [pageFunction]="PagingFunctionTemplate"
@@ -32,9 +32,9 @@
          [yLabel]="'Actual Response Time (ms)'">
          <canvas id="actual-response-over-thread"></canvas>
         </app-chart>
-    </div>
+    </div> -->
     
-    <div class="break" *ngIf="dataLoaded">
+    <!-- <div class="break" *ngIf="dataLoaded">
         Response Time Percentile Chart
     </div>
     <div class="chart">
@@ -49,7 +49,7 @@
          [yLabel]="'Percentile value in ms'">
          <canvas id="responsetime-percentile"></canvas>
         </app-chart>
-    </div>
+    </div> -->
     
     <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Time Chart
@@ -67,7 +67,7 @@
         </app-chart>    
     </div>
     
-    <div class="break" *ngIf="dataLoaded">
+    <!-- <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Thread
     </div>
     <div class="chart">
@@ -81,5 +81,6 @@
          [yLabel]="'Average Response Time (ms)'">
          <canvas id="average-response-over-thread"></canvas>
         </app-chart>
-    </div>
+    </div>  -->
+    <!-- <app-chart><canvas id="actual-response-over-time"></canvas></app-chart> -->
 </div>

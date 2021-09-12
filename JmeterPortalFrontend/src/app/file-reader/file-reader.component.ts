@@ -40,15 +40,18 @@ export class FileReaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.Fetch();
+
   }
 
   Fetch() {
     this.spinner.show();
-    this.subscription = this.service.GetWithId(this.id).subscribe(res => {
+    this.subscription = this.service.GetWithIdOld(this.id).subscribe(res => {
       this.testRun = res;
-      this.reader.GetData(res);
+      this.reader.DataCSV(res);
       this.dataLoaded = true;
       this.spinner.hide();
+      this.chartService.obs.subscribe(res=> this.AverageResvTimeData(res));
     }, err => {
       this.dataLoaded = true;
       this.spinner.hide();
@@ -67,7 +70,8 @@ export class FileReaderComponent implements OnInit {
         label: key,
         data: [],
         borderColor: color,
-        pointBorderColor: color
+        pointBorderColor: color,
+        showLine : true
       }
       for (let i = 0; i < newV.length; i++) {
         let thread = newV[i].allThreads;
@@ -93,7 +97,8 @@ export class FileReaderComponent implements OnInit {
         label: key,
         data: [],
         borderColor: color,
-        pointBorderColor: color
+        pointBorderColor: color,
+        showLine : true
       }
       let newvalue = value.map(x => x.elapsed);
       newvalue.sort((x, y) => x - y);
@@ -142,14 +147,15 @@ export class FileReaderComponent implements OnInit {
         label: key,
         data: datapoint,
         borderColor: color,
-        pointBorderColor: color
+        pointBorderColor: color,
+        showLine : true
       }
       this.datasets.push(dataset);
     }
     this.labelsView = this.labels;
     this.xAxisLabel = this.xAxisLabel.sort((x, y) => x - y).map(x => { return this.ParseDate(x) });
     this.xAxisLabel = [...new Set(this.xAxisLabel)];
-    console.log(this.datasets);
+    console.log(this.xAxisLabel);
   }
 
   AverageResvThread(data: Map<string, CsvModel[]>) {
@@ -176,7 +182,8 @@ export class FileReaderComponent implements OnInit {
         label: key,
         data: avgPoints,
         borderColor: color,
-        pointBorderColor: color
+        pointBorderColor: color,
+        showLine : true
       }
       this.datasets.push(dataset);
 
@@ -208,7 +215,7 @@ export class FileReaderComponent implements OnInit {
         label: key,
         data: d,
         borderColor: color,
-        pointBorderColor: color
+        pointBorderColor: color,showLine : true
       }
       this.datasets.push(dataset);
       this.xAxisLabel.push(...sortData.map(x => { return x.timeStamp }));

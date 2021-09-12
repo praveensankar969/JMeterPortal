@@ -17,7 +17,7 @@ export class HomeViewComponent implements OnInit {
   }
 
   ViewChart() {
-    var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    var xValues = ['12, 11:57:07' , '12, 11:58:07', '12, 11:59:07', '12:01:07', '12:02:07', '12:03:07', '12:04:07']
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
     this.chart = new Chart("chart", {
@@ -25,21 +25,31 @@ export class HomeViewComponent implements OnInit {
       data: {
         labels: xValues,
         datasets: [{
-          data: [860, 1140, 1060, 1060, 1070, 1110, 1330, 2210, 7830, 2478],
+          data: [{ x: '12, 11:57:07', y: 124 },
+          { x: '12, 11:58:07', y: 133 },
+          { x: '12, 11:59:07', y: 114 },
+          { x: '13, 12:01:07', y: 91 },
+          { x: '13, 12:02:07', y: 103 },
+          { x: '13, 12:03:07', y: 102 },
+          { x: '13, 12:04:07', y: 80 }],
           borderColor: "red",
           fill: false,
-          label : 'Trend1'
-        }, {
-          data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
-          borderColor: "green",
-          fill: false,
-          label : 'Trend1'
-        }, {
-          data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
-          borderColor: "blue",
-          fill: false,
-          label : 'Trend1'
+          label: 'Trend1',
+          showLine: true
         }]
+        // }, {
+        //   data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
+        //   borderColor: "green",
+        //   fill: false,
+        //   label : 'Trend1',
+        //   showLine : false
+        // }, {
+        //   data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
+        //   borderColor: "blue",
+        //   fill: false,
+        //   label : 'Trend1',
+        //   showLine : false
+        // }]
       },
       options: {
         responsive: true,
@@ -76,7 +86,7 @@ export class HomeViewComponent implements OnInit {
             position: 'left',
           },
           y1: {
-            display : false
+            display: false
           }
         }
       }
