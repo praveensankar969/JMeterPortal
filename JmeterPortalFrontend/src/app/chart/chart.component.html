@@ -46,7 +46,7 @@
             <option #opt2 [value]="opt2.value">Less than</option>
         </select>
         <input type="number" *ngIf="selectedValue" name="response" [(ngModel)]="yAxisFilter">
-        <!-- <button class="btn" *ngIf="yAxisFilter" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button> -->
+        <button class="btn" *ngIf="yAxisFilter" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
         <button class="btn" *ngIf="yFilter" (click)="ClearYFilter()">Clear filters</button>
     </div>
 </div>

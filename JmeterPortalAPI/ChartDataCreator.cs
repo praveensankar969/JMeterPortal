@@ -25,10 +25,9 @@ namespace JmeterPortalAPI{
                 dataset.borderColor = color;
                 dataset.pointBorderColor = color;
                 dataset.showLine = false;
-                dataset.data = new int[sortedAllThread.Count][];
-                
+                dataset.data = new List<int[]>();
                 for(int i=0;i<sortedAllThread.Count;i++){
-                    dataset.data[i] = new int[] {sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed};
+                    dataset.data.Add(new int[] {sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed});
                     xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
                 }
                 datasets.Add(dataset);
@@ -49,8 +48,8 @@ namespace JmeterPortalAPI{
             string[] labels = new string[dictionary.Count];
             List<string> xAxisLabel = new List<string>();
             List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
-            int index=0;
-            string color="";
+            //int index=0;
+            //string color="";
             var random = new Random();
             
             // foreach (var item in dictionary)
@@ -238,15 +237,15 @@ namespace JmeterPortalAPI{
                 dataset.borderColor = color;
                 dataset.pointBorderColor = color;
                 dataset.showLine = true;
-                dataset.data = new int[totalThreads][];
-
+                dataset.data = new List<int[]>();
                 for(int i=1;i<=totalThreads;i++){
                     xAxisLabel.Add(i);
                     var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
                     var elapsedTimeList = threadsList.Select(x => {return x.elapsed;}).ToList();
                     if(elapsedTimeList.Count >0){
                         var avg = elapsedTimeList.Aggregate((x ,y)=> x+y)/elapsedTimeList.Count;
-                        dataset.data[i-1]= new int[] {i,avg};
+                        var inte = new int[] {i,avg};
+                        dataset.data.Add(inte);
                     }
                 }
                 

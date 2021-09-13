@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ChartService } from '../chart.service';
-import { FileService } from '../file.service';
-import { TestRunModel } from '../testrun-model';
+import { ChartService } from '../Services/chart.service';
+import { TestRunModel } from '../Models/testrun-model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CsvModel } from '../csv-model';
-import { ChartDatasets } from '../chart-datasets';
-import { FilereaderService } from '../filereader.service';
+import { CsvModel } from '../Models/csv-model';
+import { ChartDatasets } from '../Models/chart-datasets';
+import { ChartDataSetModel } from '../Models/chart-dataset-model';
+import { HttpService } from '../Services/http.service';
 
 @Component({
   selector: 'app-file-reader',
@@ -16,6 +16,7 @@ import { FilereaderService } from '../filereader.service';
 })
 export class FileReaderComponent implements OnInit {
 
+  data! : ChartDataSetModel;
   id: string = "";
   testRun!: TestRunModel;
   dataLoaded = false;
@@ -34,29 +35,29 @@ export class FileReaderComponent implements OnInit {
   totalPages = 0;
   currentPage = 0;
 
-  constructor(private service: FileService, private reader: FilereaderService,
-    public chartService: ChartService, private route: ActivatedRoute, private spinner: NgxSpinnerService) {
-    this.route.params.subscribe(res => { this.id = res['id']; this.Fetch() })
+  constructor(private service: HttpService,
+    public chartService: ChartService, 
+    private route: ActivatedRoute, 
+    private spinner: NgxSpinnerService) 
+  {
+    this.route.params.subscribe(res => { this.id = res['id'];})
   }
 
   ngOnInit(): void {
-    this.Fetch();
-
+    this.subscription = this.chartService.AverageResponseVsThread(this.id)
+      .subscribe(res=>{
+        this.data = res;
+        this.dataLoaded = true;
+      });
+  }
+  
+  AverageResvThread() {
+    this.xAxisLabel = this.data.xAxisLabel;
+    this.datasets = this.data.datasets;
+    this.labels = this.labels;
   }
 
-  Fetch() {
-    this.spinner.show();
-    this.subscription = this.service.GetWithIdOld(this.id).subscribe(res => {
-      this.testRun = res;
-      this.reader.DataCSV(res);
-      this.dataLoaded = true;
-      this.spinner.hide();
-      this.chartService.obs.subscribe(res=> this.AverageResvTimeData(res));
-    }, err => {
-      this.dataLoaded = true;
-      this.spinner.hide();
-    });
-  }
+  
 
   ActualThreadvResponseData(data: Map<string, CsvModel[]>) {
     this.xAxisLabel = [];
@@ -158,40 +159,7 @@ export class FileReaderComponent implements OnInit {
     console.log(this.xAxisLabel);
   }
 
-  AverageResvThread(data: Map<string, CsvModel[]>) {
-    this.xAxisLabel = [];
-    this.datasets = [];
-    for (let [key, value] of data) {
-      this.labels.push(key);
-      let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-      let newV = value.sort((x, y) => { return x.allThreads - y.allThreads });
-      this.xAxisLabel.push(...newV.map(x => x.allThreads));
-      let avgPoints: any[] = [];
-      this.totalThreads = newV[newV.length - 1].allThreads;
-
-      for (let index = 1; index <= this.totalThreads; index++) {
-        let allThreads = newV.filter(x => x.allThreads == index);
-        let allElapsed = allThreads.map(x => x.elapsed);
-        if (allElapsed.length > 1) {
-          let avg = (allElapsed.reduce((a, b) => a + b, 0)) / allElapsed.length;
-          avgPoints.push([index, avg]);
-        }
-      }
-
-      let dataset: ChartDatasets = {
-        label: key,
-        data: avgPoints,
-        borderColor: color,
-        pointBorderColor: color,
-        showLine : true
-      }
-      this.datasets.push(dataset);
-
-    }
-    this.labelsView = this.labels;
-    this.xAxisLabel = [...new Set(this.xAxisLabel)];
-    console.log(this.datasets);
-  }
+ 
 
   ActualResvTime(data: Map<string, CsvModel[]>) {
     this.xAxisLabel = [];

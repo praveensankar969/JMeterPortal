@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { ChartDatasets } from '../chart-datasets';
-import { CsvModel } from '../csv-model';
+import { ChartDatasets } from '../Models/chart-datasets';
+import { CsvModel } from '../Models/csv-model';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import { ChartService } from '../Services/chart.service';
+import { ChartDataSetModel } from '../Models/chart-dataset-model';
 
 @Component({
   selector: 'app-chart',
@@ -11,15 +13,15 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 })
 export class ChartComponent implements OnInit {
 
+  @Input() data! : ChartDataSetModel;
   @Input() id : string = "";
   @Input() title: string ="";
   @Input() xAxisType : any = "";
   @Input() xLabel : string = "";
   @Input() yLabel : string = "";
   @Input() pointRadius : number = 3;
-  @Input() csvData: Map<string, CsvModel[]> = new Map<string, CsvModel[]>();
-  @Input() function! : (data : Map<string, CsvModel[]>) => void;
-  @Input() pageFunction! : (data : Map<string, CsvModel[]>) => void;
+  @Input() function! : () => void;
+  
   datasets: ChartDatasets[] = [];
   chart: any;
   xAxisLabel: any[] = [];
@@ -41,16 +43,20 @@ export class ChartComponent implements OnInit {
   range: any[] = [];
   totalPages = 0;
 
-  constructor() {
+  constructor(public chartService: ChartService) {
    }
 
   ngOnInit(): void {
-    this.pageFunction(this.csvData);
-    this.function(this.csvData);
+    this.Fetch();
     this.CreateChart();
   }
-
   
+  Fetch(){
+    this.xAxisLabel = this.data.xAxisLabel;
+    this.datasets = this.data.datasets;
+    this.labels = this.data.labels;
+    this.labelsView = this.labels;
+  }
 
   FilterLabel() {
     this.dropdown = !this.dropdown;
@@ -99,13 +105,14 @@ export class ChartComponent implements OnInit {
   }
 
   CreateChart() {
+    console.log("Creating chart...");
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
     this.chart = new Chart(this.id, {
       type: 'line',
       data: {
         labels: this.xAxisLabel,
-        datasets: this.datasets
+        datasets:this.datasets
       },
       options: {
         animation: false,
@@ -170,48 +177,50 @@ export class ChartComponent implements OnInit {
   }
 
   PreviousPage() {
-    this.currentPage--;
-    this.chart.destroy();
-    this.function(this.csvData);
-    this.CreateChart();
+  //   this.currentPage--;
+  //   this.chart.destroy();
+  //   this.function(this.csvData);
+  //   this.CreateChart();
   }
   NextPage() {
-    this.currentPage++;
-    this.chart.destroy();
-    this.function(this.csvData);
-    this.CreateChart();
+  //   this.currentPage++;
+  //   this.chart.destroy();
+  //   this.function(this.csvData);
+  //   this.CreateChart();
   }
 
   ApplyYFilter(time: number) {
-    let filterData: Map<string, CsvModel[]> = new Map(this.csvData);
-    for (let [key, value] of filterData) {
-      let newvalue = value.filter(x => x.elapsed < time);
-      if (newvalue.length == 0) {
-        filterData.delete(key);
-      }
-      else {
-        filterData.set(key, newvalue);
-      }
-    }
     this.yFilter = true;
-    this.chart.destroy();
-    this.function(filterData);
+    this.chart.data.dataset = this.datasets.slice(0);
+    if(this.selectedValue=="Greater than"){
+      this.chart.data.datasets.forEach(function (ds: any) {
+        let filteredData = ds.data.filter((x : number[])=> x[1] >= time);
+        ds.data = filteredData;
+      });
+    }
+    else{
+      this.chart.data.datasets.forEach(function (ds: any) {
+        let filteredData = ds.data.filter((x : number[])=> x[1] <= time);
+        ds.data = filteredData;
+      });
+    }
+    this.chart.update();
   }
 
   ClearYFilter() {
     this.yFilter = false;
-    this.chart.destroy();
-    this.function(this.csvData);
+    this.chart.data.dataset = this.datasets.slice(0);
+    this.chart.update();
   }
 
-  ParseDate(inputDate: number) {
-    let date = new Date(inputDate);
-    let day = date.getDate();
-    let timeH = date.getHours();
-    let timeM = date.getMinutes();
-    let timeS = date.getSeconds();
-    return `${day}, ${timeH}:${timeM}:${timeS}`;
-  }
+  // ParseDate(inputDate: number) {
+  //   let date = new Date(inputDate);
+  //   let day = date.getDate();
+  //   let timeH = date.getHours();
+  //   let timeM = date.getMinutes();
+  //   let timeS = date.getSeconds();
+  //   return `${day}, ${timeH}:${timeM}:${timeS}`;
+  // }
 
 
 }

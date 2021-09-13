@@ -1,7 +1,7 @@
 import { ChartDatasets } from "./chart-datasets";
 
-export interface ActualThreadvResponseData {
+export interface ChartDataSetModel {
     labels : string[];
-    xAxisLabel: number[];
+    xAxisLabel: any[];
     datasets : ChartDatasets[];
 }

@@ -51,7 +51,7 @@
         </app-chart>
     </div> -->
     
-    <div class="break" *ngIf="dataLoaded">
+    <!-- <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Time Chart
     </div>
     <div class="chart">
@@ -65,15 +65,13 @@
          [yLabel]="'Average Response Time (ms)'">
          <canvas id="average-response-over-time"></canvas>
         </app-chart>    
-    </div>
+    </div> -->
     
-    <!-- <div class="break" *ngIf="dataLoaded">
+    <div class="break" *ngIf="dataLoaded">
         Average Response Time Over Thread
     </div>
     <div class="chart">
-        <app-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"
-         [function]="AverageResvThread"
-         [pageFunction]="PagingFunctionTemplate"
+        <app-chart *ngIf="dataLoaded" [data]="data"
          [id]="'average-response-over-thread'"
          [title]="'Average Response Time Over Thread Count'"
          [xLabel]="'Thread Count'"
@@ -81,6 +79,7 @@
          [yLabel]="'Average Response Time (ms)'">
          <canvas id="average-response-over-thread"></canvas>
         </app-chart>
-    </div>  -->
-    <!-- <app-chart><canvas id="actual-response-over-time"></canvas></app-chart> -->
+    </div> 
+
+    
 </div>

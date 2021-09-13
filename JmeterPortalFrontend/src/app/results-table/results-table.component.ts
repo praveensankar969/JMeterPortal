@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-import { AllTestRunModel } from '../all-testruns-model';
-import { FileService } from '../file.service';
+import { AllTestRunModel } from '../Models/all-testruns-model';
+import { HttpService } from '../Services/http.service';
 
 @Component({
   selector: 'app-results-table',
@@ -27,7 +27,7 @@ export class ResultsTableComponent implements OnInit {
   selectedValue = "";
   filtered = false;
 
-  constructor(private fileService: FileService, public router: Router, private spinner: NgxSpinnerService) { }
+  constructor(private fileService: HttpService, public router: Router, private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.spinner.show();

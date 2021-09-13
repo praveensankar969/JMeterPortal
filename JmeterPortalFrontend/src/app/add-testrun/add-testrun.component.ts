@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subscription, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { FileService } from '../file.service';
+import { HttpService } from '../Services/http.service';
 
 @Component({
   selector: 'app-add-testrun',
@@ -25,7 +25,7 @@ export class AddTestrunComponent implements OnInit {
   uploadSub! : Subscription;
   @ViewChild('fileInput' , {static :false}) fileInput! :  ElementRef;
 
-  constructor(private uploadService: FileService, private spinner: NgxSpinnerService) { }
+  constructor(private uploadService: HttpService, private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
   }
