@@ -44,6 +44,77 @@ namespace JmeterPortalAPI{
 
         }
 
+        public ResponseTimeVTime ComputeActualResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary){
+            System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+            string[] labels = new string[dictionary.Count];
+            List<string> xAxisLabel = new List<string>();
+            List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
+            int index=0;
+            string color="";
+            var random = new Random();
+            
+            // foreach (var item in dictionary)
+            // {
+            //     labels[index] = item.Key;
+            //     color = String.Format("#{0:X6}", random.Next(0x1000000));
+            //     List<CsvModel> sortedTimeStamp = item.Value;
+            //     sortedTimeStamp.Sort((x ,y)=> x.timeStamp.CompareTo(y.timeStamp));
+            //     var data = sortedTimeStamp.Select(x=> {return new long[] {x.timeStamp, x.elapsed};}).ToArray();
+            //     var start = data[0][0];
+            //     var end = data[data.Length-1][0];
+            //     var totalExecutionTime = (end-start)/60000;
+                
+            //     ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+            //     dataset.label = item.Key;
+            //     dataset.borderColor = color;
+            //     dataset.pointBorderColor = color;
+            //     dataset.showLine = true;
+            //     dataset.data = new ResponseTimeData[totalExecutionTime];
+            //     int datasetDataIndex=0;
+            //     for(int i=0;i<totalExecutionTime;i++){
+            //         var startTime = i*60000 + start;
+            //         var endTime = (i+1)*60000 + start;
+            //         var dataBetweenTime = sortedTimeStamp.Select(x => {
+            //                 if(x.timeStamp >= startTime && x.timeStamp <=endTime)
+            //                 {
+            //                     xAxisLabel.Add(x.timeStamp);
+            //                     return x.elapsed;
+            //                 }
+            //                 else{
+            //                     return 0;
+            //                 }
+            //             }).ToList();
+            //         dataBetweenTime = dataBetweenTime.Where(x => x>0).ToList();
+            //         if(dataBetweenTime.Count>0){
+            //             var avg = (dataBetweenTime.Aggregate((x,y)=> (x+y)))/dataBetweenTime.Count;
+            //             var parsedDate = ParseDate(((i*60000)+start),dtDateTime);
+            //             ResponseTimeData cordinates  = new ResponseTimeData();
+            //             cordinates.x = parsedDate;
+            //             cordinates.y = avg;
+            //             dataset.data[datasetDataIndex++] = cordinates; 
+            //         }
+            //     }
+            //     dataset.data = dataset.data.Where(x => x!=null).ToArray();
+            //     datasets.Add(dataset);
+            //     index++;
+            // }
+            // var tesRunStart = xAxisLabel.ElementAt(0);
+            // var tesRunEnd = xAxisLabel.ElementAt(xAxisLabel.Count -1);
+            // var totalTime = (tesRunEnd-tesRunStart)/60000; 
+            // List<string> parsedXAxisLabel = new List<string>();
+            // for(int i=0;i<totalTime;i++){
+            //     var parsedDate = ParseDate(((i*60000)+tesRunStart),dtDateTime);
+            //     parsedXAxisLabel.Add(parsedDate);
+            // }
+
+            return new ResponseTimeVTime {
+                labels = labels,
+                xAxisLabel = xAxisLabel.ToArray(),
+                datasets = datasets.ToArray()
+            };
+
+        }
+
         public PercentileChart ComputePercentile(Dictionary<string, List<CsvModel>> dictionary){
             string[] labels = new string[dictionary.Count];
             List<int> xAxisLabel = new List<int>();
@@ -83,7 +154,7 @@ namespace JmeterPortalAPI{
         public ResponseTimeVTime ComputeAverageResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary){
             System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
-            List<long> xAxisLabel = new List<long>();
+            List<string> xAxisLabel = new List<string>();
             List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
             int index=0;
             string color="";
@@ -113,7 +184,6 @@ namespace JmeterPortalAPI{
                     var dataBetweenTime = sortedTimeStamp.Select(x => {
                             if(x.timeStamp >= startTime && x.timeStamp <=endTime)
                             {
-                                xAxisLabel.Add(x.timeStamp);
                                 return x.elapsed;
                             }
                             else{
@@ -128,24 +198,67 @@ namespace JmeterPortalAPI{
                         cordinates.x = parsedDate;
                         cordinates.y = avg;
                         dataset.data[datasetDataIndex++] = cordinates; 
+                        xAxisLabel.Add(parsedDate);
                     }
                 }
                 dataset.data = dataset.data.Where(x => x!=null).ToArray();
                 datasets.Add(dataset);
                 index++;
             }
-            var tesRunStart = xAxisLabel.ElementAt(0);
-            var tesRunEnd = xAxisLabel.ElementAt(xAxisLabel.Count -1);
-            var totalTime = (tesRunEnd-tesRunStart)/60000; 
-            List<string> parsedXAxisLabel = new List<string>();
-            for(int i=0;i<totalTime;i++){
-                var parsedDate = ParseDate(((i*60000)+tesRunStart),dtDateTime);
-                parsedXAxisLabel.Add(parsedDate);
-            }
+           
+            xAxisLabel = xAxisLabel.Distinct().ToList();
 
             return new ResponseTimeVTime {
                 labels = labels,
-                xAxisLabel = parsedXAxisLabel.ToArray(),
+                xAxisLabel = xAxisLabel.ToArray(),
+                datasets = datasets.ToArray()
+            };
+
+        }
+
+        public ActualThreadVResponse ComputeAverageResponseTimeVsThread(Dictionary<string, List<CsvModel>> dictionary){
+            System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+            string[] labels = new string[dictionary.Count];
+            List<int> xAxisLabel = new List<int>();
+            List<ChartDataSet> datasets = new List<ChartDataSet>();
+            int index=0;
+            string color="";
+            var random = new Random();
+            
+            foreach (var item in dictionary)
+            {
+                labels[index] = item.Key;
+                color = String.Format("#{0:X6}", random.Next(0x1000000));
+                List<CsvModel> sortedAllThread = item.Value;
+                sortedAllThread.Sort((x ,y)=> x.allThreads - y.allThreads);
+                var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count -1).allThreads;
+                
+                ChartDataSet dataset = new ChartDataSet();
+                dataset.label = item.Key;
+                dataset.borderColor = color;
+                dataset.pointBorderColor = color;
+                dataset.showLine = true;
+                dataset.data = new int[totalThreads][];
+
+                for(int i=1;i<=totalThreads;i++){
+                    xAxisLabel.Add(i);
+                    var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
+                    var elapsedTimeList = threadsList.Select(x => {return x.elapsed;}).ToList();
+                    if(elapsedTimeList.Count >0){
+                        var avg = elapsedTimeList.Aggregate((x ,y)=> x+y)/elapsedTimeList.Count;
+                        dataset.data[i-1]= new int[] {i,avg};
+                    }
+                }
+                
+                datasets.Add(dataset);
+                index++;
+            }
+            
+            xAxisLabel = xAxisLabel.Distinct().ToList();
+
+            return new ActualThreadVResponse {
+                labels = labels,
+                xAxisLabel = xAxisLabel.ToArray(),
                 datasets = datasets.ToArray()
             };
 
