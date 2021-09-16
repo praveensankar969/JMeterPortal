@@ -4,7 +4,6 @@ import { ChartDatasets } from '../Models/chart-datasets';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { ChartService } from '../Services/chart.service';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
-import 'chartjs-adapter-moment';
 
 @Component({
   selector: 'app-chart',

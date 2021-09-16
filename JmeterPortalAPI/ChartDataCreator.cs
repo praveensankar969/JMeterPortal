@@ -8,6 +8,7 @@ namespace JmeterPortalAPI
 {
     public class ChartDataCreator
     {
+        private static TimeZoneInfo IST = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         public ActualThreadVResponse ComputeActualResponseVThread(Dictionary<string, List<CsvModel>> dictionary)
         {
             string[] labels = new string[dictionary.Count];
@@ -151,9 +152,9 @@ namespace JmeterPortalAPI
 
         public ResponseTimeVTime ComputeAverageResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary)
         {
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Unspecified);
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 5, 0, 0);
             string[] labels = new string[dictionary.Count];
-            List<string> xAxisLabel = new List<string>();
+            List<long> xAxisLabel = new List<long>();
             List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
             int index = 0;
             string color = "";
@@ -201,20 +202,24 @@ namespace JmeterPortalAPI
                         cordinates.x = parsedDate;
                         cordinates.y = avg;
                         dataset.data[datasetDataIndex++] = cordinates;
-                        xAxisLabel.Add(parsedDate);
+                        var longN = (i*60000)+start;
+                        xAxisLabel.Add(longN);
                     }
                 }
                 dataset.data = dataset.data.Where(x => x != null).ToArray();
                 datasets.Add(dataset);
                 index++;
             }
-
-            xAxisLabel = xAxisLabel.Distinct().ToList();
-
+            
+            xAxisLabel.Sort((x ,y)=>  x.CompareTo(y));
+            var parsedXAxisLabel = xAxisLabel.Select(x => {
+                return ParseDate(x, dtDateTime);
+            }).ToList();
+            parsedXAxisLabel = parsedXAxisLabel.Distinct().ToList();
             return new ResponseTimeVTime
             {
                 labels = labels,
-                xAxisLabel = xAxisLabel.ToArray(),
+                xAxisLabel = parsedXAxisLabel.ToArray(),
                 datasets = datasets.ToArray()
             };
 
@@ -261,10 +266,9 @@ namespace JmeterPortalAPI
 
         public string ParseDate(long time, DateTime dtDateTime)
         {
-            //DateTime dt = new DateTime(1970,1,1).Add(TimeSpan.FromMilliseconds(time));
-            //dtDateTime = dtDateTime.AddMilliseconds(time).ToLocalTime();
-            dtDateTime = dtDateTime.Add(TimeSpan.FromMilliseconds(time)).ToUniversalTime();
-            return dtDateTime.ToString("dd-MM-yyyy, hh:mm:ss tt", CultureInfo.InvariantCulture);
+            DateTime dt = new DateTime(1970,1,1,0,0,0).Add(TimeSpan.FromMilliseconds(time));
+            dt = TimeZoneInfo.ConvertTimeFromUtc(dt, IST);
+            return dt.ToString("dd, HH:mm", CultureInfo.InvariantCulture);
         }
     }
 }
