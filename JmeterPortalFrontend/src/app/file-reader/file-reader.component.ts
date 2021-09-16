@@ -16,10 +16,23 @@ import { HttpService } from '../Services/http.service';
 })
 export class FileReaderComponent implements OnInit {
 
-  data! : ChartDataSetModel;
+  averageResVThreadData! : ChartDataSetModel;
+  avgThreaddataLoaded = false;
+  
+  actualResVThreadData! : ChartDataSetModel;
+  actualThreaddataLoaded = false;
+  
+  averageResVTimeData! : ChartDataSetModel;
+  avgResdataLoaded = false;
+  
+  actualResVTimeData! : ChartDataSetModel;
+  actResdataLoaded = false;
+  
+  percentileData! : ChartDataSetModel;
+  percentiledataLoaded = false;
+  
   id: string = "";
   testRun!: TestRunModel;
-  dataLoaded = false;
   subscription!: Subscription;
   xAxisLabel: any[] = [];
   labelsView: string[] = [];
@@ -35,128 +48,45 @@ export class FileReaderComponent implements OnInit {
   totalPages = 0;
   currentPage = 0;
 
-  constructor(private service: HttpService,
-    public chartService: ChartService, 
-    private route: ActivatedRoute, 
+  constructor(private service: HttpService, 
+    private route: ActivatedRoute,
     private spinner: NgxSpinnerService) 
-  {
-    this.route.params.subscribe(res => { this.id = res['id'];})
-  }
+  {this.route.params.subscribe(res => { this.id = res['id'];})  }
 
   ngOnInit(): void {
-    this.subscription = this.chartService.AverageResponseVsThread(this.id)
-      .subscribe(res=>{
-        this.data = res;
-        this.dataLoaded = true;
-      });
+    this.AverageResvTimeData();
   }
   
   AverageResvThread() {
-    this.xAxisLabel = this.data.xAxisLabel;
-    this.datasets = this.data.datasets;
-    this.labels = this.labels;
-  }
-
-  
-
-  ActualThreadvResponseData(data: Map<string, CsvModel[]>) {
-    this.xAxisLabel = [];
-    this.datasets = [];
-
-    for (let [key, value] of data) {
-      this.labels.push(key);
-      let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-      let newV = value.sort((x, y) => { return x.allThreads - y.allThreads });
-      let dataset: ChartDatasets = {
-        label: key,
-        data: [],
-        borderColor: color,
-        pointBorderColor: color,
-        showLine : true
-      }
-      for (let i = 0; i < newV.length; i++) {
-        let thread = newV[i].allThreads;
-        let elapsed = newV[i].elapsed;
-        dataset.data.push([thread, elapsed]);
-      }
-      this.datasets.push(dataset);
-      this.xAxisLabel.push(...value.map(x => { return x.allThreads }));
-
-    }
-    this.labelsView = this.labels;
-    this.xAxisLabel = this.xAxisLabel.sort((x, y) => x - y).map(x => { return x });
-    this.xAxisLabel = [...new Set(this.xAxisLabel)];
-    console.log(this.datasets);
-
-  }
-
-  PercentileData(data: Map<string, CsvModel[]>) {
-    for (let [key, value] of data) {
-      this.labels.push(key);
-      let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-      let dataset: ChartDatasets = {
-        label: key,
-        data: [],
-        borderColor: color,
-        pointBorderColor: color,
-        showLine : true
-      }
-      let newvalue = value.map(x => x.elapsed);
-      newvalue.sort((x, y) => x - y);
-      this.maxValue.push(newvalue[newvalue.length - 1]);
-      for (let index = 0; index < newvalue.length; index++) {
-        let p = Number(((index / newvalue.length) * 100).toFixed(1));
-        let q = newvalue[index];
-        dataset.data.push([p, q])
-      }
-      this.datasets.push(dataset);
-
-    }
-    this.labelsView = this.labels;
-    this.maxValue.sort((a, b) => a - b)
-    console.log(this.datasets);
-  }
-
-  AverageResvTimeData(data: Map<string, CsvModel[]>) {
-    this.xAxisLabel = [];
-    this.datasets = [];
-    for (let [key, value] of data) {
-      this.labels.push(key);
-      let color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-      let newV = value.sort((x, y) => { return x.timeStamp - y.timeStamp });
-      let datapoint: any[] = []
-      let d = newV.map(x => {
-        return [x.timeStamp, x.elapsed]
+    this.subscription = this.service.GetAverageResponseVsThread(this.id)
+      .subscribe(res=>{
+        this.averageResVThreadData = res;
+        this.avgThreaddataLoaded = true;
       });
-      let start = d[0][0];
-      let end = d[d.length - 1][0];
-      let totalExecTime = (end - start) / 60000;
-      for (let index = 0; index < totalExecTime; index++) {
-        let startTime = ((index * 60000) + start);
-        let endTime = (((index + 1) * 60000) + start)
-        let allAtTime = newV.filter(x => {
-          return x.timeStamp >= startTime && x.timeStamp <= endTime
-        })
-        let elapsed = allAtTime.map(x => x.elapsed);
-        if (elapsed.length > 1) {
-          let avg = (elapsed.reduce((a, b) => a + b, 0)) / elapsed.length;
-          datapoint.push([this.ParseDate(((index * 60000) + start)), avg]);
-          this.xAxisLabel.push(((index * 60000) + start));
-        }
-      }
-      let dataset: ChartDatasets = {
-        label: key,
-        data: datapoint,
-        borderColor: color,
-        pointBorderColor: color,
-        showLine : true
-      }
-      this.datasets.push(dataset);
-    }
-    this.labelsView = this.labels;
-    this.xAxisLabel = this.xAxisLabel.sort((x, y) => x - y).map(x => { return this.ParseDate(x) });
-    this.xAxisLabel = [...new Set(this.xAxisLabel)];
-    console.log(this.xAxisLabel);
+  }
+
+  ActualThreadvResponseData() {
+    this.subscription = this.service.GetActualThreadVsResponse(this.id)
+      .subscribe(res=>{
+        this.actualResVThreadData = res;
+        this.actualThreaddataLoaded = true;
+      });
+  }
+
+  PercentileData() {
+    // this.subscription = this.service.GetPercentile(this.id)
+    //   .subscribe(res=>{
+    //     this.percentileData = res;
+    //     this.percentiledataLoaded = true;
+    //   });
+  }
+
+  AverageResvTimeData() {
+    this.subscription = this.service.GetAverageResponseVsTime(this.id)
+      .subscribe(res=>{
+        this.averageResVTimeData = res;
+        this.avgResdataLoaded = true;
+      });
   }
 
  

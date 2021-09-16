@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { ChartDatasets } from '../Models/chart-datasets';
-import { CsvModel } from '../Models/csv-model';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { ChartService } from '../Services/chart.service';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
+import 'chartjs-adapter-moment';
 
 @Component({
   selector: 'app-chart',
@@ -20,28 +20,20 @@ export class ChartComponent implements OnInit {
   @Input() xLabel : string = "";
   @Input() yLabel : string = "";
   @Input() pointRadius : number = 3;
-  @Input() function! : () => void;
   
   datasets: ChartDatasets[] = [];
+  labels: string[] = [];
   chart: any;
   xAxisLabel: any[] = [];
+  
   yAxisFilter: number = 0;
   selectedItem: string[] = [];
+  labelsView: string[] = [];
   dropdown: boolean = false;
   filtered = false;
   labelSearch = "";
   yFilter = false;
-  labelsView: string[] = [];
   selectedValue = "";
-  labels: string[] = [];
-  maxValue: number[] = [];
-  totalThreads = 0;
-  currentPage = 0;
-  allTimeStamp: number[] = [];
-  execStartTime = 0;
-  execEndTime = 0;
-  range: any[] = [];
-  totalPages = 0;
 
   constructor(public chartService: ChartService) {
    }
@@ -112,7 +104,7 @@ export class ChartComponent implements OnInit {
       type: 'line',
       data: {
         labels: this.xAxisLabel,
-        datasets:this.datasets
+        datasets: this.datasets
       },
       options: {
         animation: false,
@@ -149,7 +141,7 @@ export class ChartComponent implements OnInit {
           x: {
             type: this.xAxisType,
             title: {
-              text: 'Thread Count',
+              text: this.xLabel,
               display: true
             }
           },
@@ -157,7 +149,7 @@ export class ChartComponent implements OnInit {
             type: 'linear',
             position: 'left',
             title: {
-              text: 'Actual Response Time (ms)',
+              text: this.yLabel,
               display: true
             },
             ticks: {
@@ -191,26 +183,27 @@ export class ChartComponent implements OnInit {
 
   ApplyYFilter(time: number) {
     this.yFilter = true;
-    this.chart.data.dataset = this.datasets.slice(0);
+    this.UpdateChart(this.chart, time);
+  }
+
+  UpdateChart(chart: Chart, time: number){
     if(this.selectedValue=="Greater than"){
-      this.chart.data.datasets.forEach(function (ds: any) {
-        let filteredData = ds.data.filter((x : number[])=> x[1] >= time);
-        ds.data = filteredData;
+      chart.data.datasets.forEach(function (ds:  any) {
+        ds.data = ds.data.filter((x : number[])=> x[1] >= time);
       });
     }
     else{
-      this.chart.data.datasets.forEach(function (ds: any) {
-        let filteredData = ds.data.filter((x : number[])=> x[1] <= time);
-        ds.data = filteredData;
+      chart.data.datasets.forEach(function (ds: any) {
+        ds.data = ds.data.filter((x : number[])=> x[1] <= time);
       });
     }
-    this.chart.update();
+    chart.update();
+    console.log(this.data)
   }
 
   ClearYFilter() {
-    this.yFilter = false;
-    this.chart.data.dataset = this.datasets.slice(0);
-    this.chart.update();
+    this.chart.destroy();
+    this.ngOnInit();
   }
 
   // ParseDate(inputDate: number) {

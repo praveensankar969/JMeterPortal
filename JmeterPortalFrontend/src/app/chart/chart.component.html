@@ -1,8 +1,8 @@
 <div class="chart">
     <div class="btn-wrapper">
         <ng-container *ngIf="title == 'Actual Response Time Over Time'">
-            <button class="btn range" [disabled]="currentPage==0" (click)="PreviousPage()">Load Previous Time Range</button>
-            <button class="btn range" [disabled]="currentPage>=totalPages-1" (click)="NextPage()">Load Next Time Range</button>
+            <!-- <button class="btn range" [disabled]="currentPage==0" (click)="PreviousPage()">Load Previous Time Range</button>
+            <button class="btn range" [disabled]="currentPage>=totalPages-1" (click)="NextPage()">Load Next Time Range</button> -->
         </ng-container>
         <button class="btn" (click)="ResetZoom()">Reset Zoom</button>
         <div class="dropdown">

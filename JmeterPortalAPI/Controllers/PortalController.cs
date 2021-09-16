@@ -29,154 +29,25 @@ namespace JmeterPortalAPI.Controllers
             int res = await procedure.Insert(testRun);
             return Ok(res);
         }
+        
         [HttpGet("actual-thread-vs-response-chart/{id}")]
         public async Task<ActionResult<ActualThreadVResponse>> ActualThreadVsResponse(string id){
-            SQLProcedure procedure = new SQLProcedure(this.config);
-            TestRun res = await procedure.GetDataOfId(id);
-            List<CsvModel> data = new List<CsvModel>();
-            Dictionary<string, List<CsvModel>> dictionary = new Dictionary<string, List<CsvModel>>();
-            if(res !=null){
-                string decodedString = System.Text.ASCIIEncoding.ASCII.GetString(res.FileStreamData);
-                string[] allRecords = decodedString.Split("\n");
-                for(int i=1;i<allRecords.Length-1;i++){
-                    string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-                    CsvModel cm = new CsvModel();
-                    cm.timeStamp = Convert.ToInt64(record[0]);
-                    cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
-                    cm.allThreads = Convert.ToInt32(record[12]);
-                    data.Add(cm);
-
-                    if(dictionary.ContainsKey(cm.label)){
-                        List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
-                        copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
-                    }
-                    else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
-                    }
-                }
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
+            if(dictionary!=null){
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeActualThreadVsResponse(dictionary);
-                
-
+                return chartData.ComputeActualResponseVThread(dictionary);
             }
             else{
                 return NotFound();
             }
         }
-
-        [HttpGet("percentile-chart/{id}")]
-        public async Task<ActionResult<PercentileChart>> Percentile(string id){
-            SQLProcedure procedure = new SQLProcedure(this.config);
-            TestRun res = await procedure.GetDataOfId(id);
-            List<CsvModel> data = new List<CsvModel>();
-            Dictionary<string, List<CsvModel>> dictionary = new Dictionary<string, List<CsvModel>>();
-            if(res !=null){
-                string decodedString = System.Text.ASCIIEncoding.ASCII.GetString(res.FileStreamData);
-                string[] allRecords = decodedString.Split("\n");
-                for(int i=1;i<allRecords.Length-1;i++){
-                    string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-                    CsvModel cm = new CsvModel();
-                    cm.timeStamp = Convert.ToInt64(record[0]);
-                    cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
-                    cm.allThreads = Convert.ToInt32(record[12]);
-                    data.Add(cm);
-
-                    if(dictionary.ContainsKey(cm.label)){
-                        List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
-                        copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
-                    }
-                    else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
-                    }
-                }
-                ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputePercentile(dictionary);
-                
-
-            }
-            else{
-                return NotFound();
-            }
-        }
-
-        [HttpGet("average-response-over-time-chart/{id}")]
-        public async Task<ActionResult<ResponseTimeVTime>> AverageResponseVsTime(string id){
-            SQLProcedure procedure = new SQLProcedure(this.config);
-            TestRun res = await procedure.GetDataOfId(id);
-            List<CsvModel> data = new List<CsvModel>();
-            Dictionary<string, List<CsvModel>> dictionary = new Dictionary<string, List<CsvModel>>();
-            if(res !=null){
-                string decodedString = System.Text.ASCIIEncoding.ASCII.GetString(res.FileStreamData);
-                string[] allRecords = decodedString.Split("\n");
-                for(int i=1;i<allRecords.Length-1;i++){
-                    string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-                    CsvModel cm = new CsvModel();
-                    cm.timeStamp = Convert.ToInt64(record[0]);
-                    cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
-                    cm.allThreads = Convert.ToInt32(record[12]);
-                    data.Add(cm);
-
-                    if(dictionary.ContainsKey(cm.label)){
-                        List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
-                        copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
-                    }
-                    else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
-                    }
-                }
-                ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeAverageResponseTimeVsTime(dictionary);
-            }
-            else{
-                return NotFound();
-            }
-        }
-
+        
         [HttpGet("average-response-over-thread-chart/{id}")]
         public async Task<ActionResult<ActualThreadVResponse>> AverageResponseVsThread(string id){
-            SQLProcedure procedure = new SQLProcedure(this.config);
-            TestRun res = await procedure.GetDataOfId(id);
-            List<CsvModel> data = new List<CsvModel>();
-            Dictionary<string, List<CsvModel>> dictionary = new Dictionary<string, List<CsvModel>>();
-            if(res !=null){
-                string decodedString = System.Text.ASCIIEncoding.ASCII.GetString(res.FileStreamData);
-                string[] allRecords = decodedString.Split("\n");
-                for(int i=1;i<allRecords.Length-1;i++){
-                    string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-                    CsvModel cm = new CsvModel();
-                    cm.timeStamp = Convert.ToInt64(record[0]);
-                    cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
-                    cm.allThreads = Convert.ToInt32(record[12]);
-                    data.Add(cm);
-
-                    if(dictionary.ContainsKey(cm.label)){
-                        List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
-                        copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
-                    }
-                    else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
-                    }
-                }
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
+            if(dictionary!=null){
                 ChartDataCreator chartData = new ChartDataCreator();
                 return chartData.ComputeAverageResponseTimeVsThread(dictionary);
             }
@@ -185,44 +56,45 @@ namespace JmeterPortalAPI.Controllers
             }
         }
 
-        [HttpGet("get-map/{id}")]
-        public async Task<ActionResult<Dictionary<string, List<CsvModel>>>> GetMap(string id){
-            SQLProcedure procedure = new SQLProcedure(this.config);
-            TestRun res = await procedure.GetDataOfId(id);
-            List<CsvModel> data = new List<CsvModel>();
-            Dictionary<string, List<CsvModel>> dictionary = new Dictionary<string, List<CsvModel>>();
-            if(res !=null){
-                string decodedString = System.Text.ASCIIEncoding.ASCII.GetString(res.FileStreamData);
-                string[] allRecords = decodedString.Split("\n");
-                for(int i=1;i<allRecords.Length-1;i++){
-                    string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-                    CsvModel cm = new CsvModel();
-                    cm.timeStamp = Convert.ToInt64(record[0]);
-                    cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
-                    cm.allThreads = Convert.ToInt32(record[12]);
-                    data.Add(cm);
-
-                    if(dictionary.ContainsKey(cm.label)){
-                        List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
-                        copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
-                    }
-                    else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
-                    }
-                }
-                return dictionary;
-                
-
+        [HttpGet("percentile-chart/{id}")]
+        public async Task<ActionResult<PercentileChart>> Percentile(string id){
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
+            if(dictionary!=null){
+                ChartDataCreator chartData = new ChartDataCreator();
+                return chartData.ComputePercentile(dictionary);
             }
             else{
                 return NotFound();
             }
         }
+
+        [HttpGet("average-response-over-time-chart/{id}")]
+        public async Task<ActionResult<ResponseTimeVTime>> AverageResponseVsTime(string id){
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
+            if(dictionary!=null){
+                ChartDataCreator chartData = new ChartDataCreator();
+                return chartData.ComputeAverageResponseTimeVsTime(dictionary);
+            }
+            else{
+                return NotFound();
+            }
+        }
+
+        [HttpGet("actual-response-over-time-chart/{id}")]
+        public async Task<ActionResult<ResponseTimeVTime>> ActualResponseVsTime(string id){
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
+            if(dictionary!=null){
+                ChartDataCreator chartData = new ChartDataCreator();
+                return chartData.ComputeActualResponseTimeVsTime(dictionary);
+            }
+            else{
+                return NotFound();
+            }
+        } 
+        
 
         [HttpGet("all-results")]
         public async Task<ActionResult<List<AllTestRunsDTO>>> GetResults(){

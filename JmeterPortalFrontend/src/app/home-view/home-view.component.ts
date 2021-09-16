@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import 'chartjs-adapter-moment';
 
 @Component({
   selector: 'app-home-view',
@@ -23,15 +24,14 @@ export class HomeViewComponent implements OnInit {
     this.chart = new Chart("chart", {
       type: 'line',
       data: {
-        labels: xValues,
         datasets: [{
-          data: [{ x: '12, 11:57:07', y: 124 },
-          { x: '12, 11:58:07', y: 133 },
-          { x: '12, 11:59:07', y: 114 },
-          { x: '13, 12:01:07', y: 91 },
-          { x: '13, 12:02:07', y: 103 },
-          { x: '13, 12:03:07', y: 102 },
-          { x: '13, 12:04:07', y: 80 }],
+          data: [{ x: '2021-08-12, 11:57:07 PM', y: 124 },
+          { x: '2021-08-12, 11:58:07 PM', y: 133 },
+          { x: '2021-08-12, 11:59:07 PM', y: 114 },
+          { x: '2021-08-13, 12:01:07 AM', y: 91 },
+          { x: '2021-08-13, 12:02:07 AM', y: 103 },
+          { x: '2021-08-13, 12:03:07 AM', y: 102 },
+          { x: '2021-08-13, 12:04:07 AM', y: 80 }],
           borderColor: "red",
           fill: false,
           label: 'Trend1',
@@ -80,6 +80,9 @@ export class HomeViewComponent implements OnInit {
           }
         },
         scales: {
+          x : {
+            type : 'time'
+          },
           y: {
             type: 'linear',
             display: true,

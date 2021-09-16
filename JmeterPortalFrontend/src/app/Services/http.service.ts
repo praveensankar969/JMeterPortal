@@ -26,8 +26,8 @@ export class HttpService {
   }
   
   GetPercentile(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"percentile-chart/"+id).
-        pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
+    // return this.http.get<ChartDataSetModel>(this.API_URL+"percentile-chart/"+id).
+    //     pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
   }
 
   GetAverageResponseVsTime(id: string){
