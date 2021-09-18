@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AddTestrunComponent } from './add-testrun/add-testrun.component';
 import { FormsModule} from '@angular/forms';
-import { HomeViewComponent } from './home-view/home-view.component';
 import { ResultsTableComponent } from './results-table/results-table.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +15,6 @@ import { FileReaderComponent } from './file-reader/file-reader.component';
   declarations: [
     AppComponent,
     AddTestrunComponent,
-    HomeViewComponent,
     ResultsTableComponent,
     ChartComponent,
     FileReaderComponent,

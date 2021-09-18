@@ -104,7 +104,7 @@ namespace JmeterPortalAPI
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
-            List<string> xAxisLabel = new List<string>();
+            List<long> xAxisLabel = new List<long>();
             List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
             int index = 0;
             string color = "";
@@ -121,11 +121,11 @@ namespace JmeterPortalAPI
                 dataset.label = item.Key;
                 dataset.borderColor = color;
                 dataset.pointBorderColor = color;
-                dataset.showLine = true;
+                dataset.showLine = false;
                 dataset.data = sortedTimeStamp.Select(val =>
                 {
                     var parsedDt = ParseDate(val.timeStamp, dtDateTime);
-                    xAxisLabel.Add(parsedDt);
+                    xAxisLabel.Add(val.timeStamp);
                     return new ResponseTimeData()
                     {
                         x = parsedDt,
@@ -137,12 +137,16 @@ namespace JmeterPortalAPI
                 index++;
             }
 
-            xAxisLabel = xAxisLabel.Distinct().ToList();
+            xAxisLabel.Sort((x ,y)=>  x.CompareTo(y));
+            var parsedXAxisLabel = xAxisLabel.Select(x => {
+                return ParseDate(x, dtDateTime);
+            }).ToList();
+            parsedXAxisLabel = parsedXAxisLabel.Distinct().ToList();
 
             return new ResponseTimeVTime
             {
                 labels = labels,
-                xAxisLabel = xAxisLabel.ToArray(),
+                xAxisLabel = parsedXAxisLabel.ToArray(),
                 datasets = datasets.ToArray()
             };
 

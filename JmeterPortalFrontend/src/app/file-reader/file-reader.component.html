@@ -2,13 +2,11 @@
     <p style="color: white">Downloading report and generating charts...</p>
 </ngx-spinner>
 <div class="chart-wrapper">
-    <!-- <div class="break" *ngIf="dataLoaded">
+    <div class="break" *ngIf="actResdataLoaded">
         Actual Response Time Over Time Chart
     </div>
     <div class="chart">
-        <app-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"
-         [function]="ActualResvTime"
-         [pageFunction]="Paging"
+        <app-chart *ngIf="actResdataLoaded" [data]="actualResVTimeData"
          [id]="'actual-response-over-time'"
          [title]="'Actual Response Time Over Time'"
          [xLabel]="'Elapsed Time (granularity: 1 min)'"
@@ -16,16 +14,14 @@
          [yLabel]="'Actual Response Time (ms)'">
          <canvas id="actual-response-over-time"></canvas>
         </app-chart>
-    </div> -->
+    </div>
     
-    <!-- <div class="break" *ngIf="!dataLoaded">
+    <!-- <div class="break" *ngIf="actualThreaddataLoaded">
         Actual Response Time Over Thread
-    </div> -->
-    <!-- <div class="chart">
-        <app-chart *ngIf="!dataLoaded">
-         [function]="ActualThreadvResponseData"
+    </div>
+    <div class="chart">
+        <app-chart *ngIf="actualThreaddataLoaded" [data]="actualResVThreadData">
          [id]="'actual-response-over-thread'"
-         [pageFunction]="PagingFunctionTemplate"
          [title]="'Actual Response Time Over Thread Count'"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
@@ -34,13 +30,11 @@
         </app-chart>
     </div> -->
     
-    <!-- <div class="break" *ngIf="dataLoaded">
+    <div class="break" *ngIf="percentiledataLoaded">
         Response Time Percentile Chart
     </div>
     <div class="chart">
-        <app-chart *ngIf="dataLoaded" [csvData]="(chartService.obs | async)!"
-         [function]="PercentileData"
-         [pageFunction]="PagingFunctionTemplate"
+        <app-chart *ngIf="percentiledataLoaded" [data]="percentileData"
          [id]="'responsetime-percentile'"
          [title]="'Response Time Percentile'"
          [xLabel]="'Percentile'"
@@ -49,7 +43,7 @@
          [yLabel]="'Percentile value in ms'">
          <canvas id="responsetime-percentile"></canvas>
         </app-chart>
-    </div> -->
+    </div>
     
     <div class="break" *ngIf="avgResdataLoaded">
         Average Response Time Over Time Chart
@@ -65,11 +59,11 @@
         </app-chart>    
     </div>
     
-    <!-- <div class="break" *ngIf="dataLoaded">
+    <div class="break" *ngIf="avgThreaddataLoaded">
         Average Response Time Over Thread
     </div>
     <div class="chart">
-        <app-chart *ngIf="dataLoaded" [data]="data"
+        <app-chart *ngIf="avgThreaddataLoaded" [data]="averageResVThreadData"
          [id]="'average-response-over-thread'"
          [title]="'Average Response Time Over Thread Count'"
          [xLabel]="'Thread Count'"
@@ -77,7 +71,6 @@
          [yLabel]="'Average Response Time (ms)'">
          <canvas id="average-response-over-thread"></canvas>
         </app-chart>
-    </div>  -->
-
-    
+    </div> 
+  
 </div>

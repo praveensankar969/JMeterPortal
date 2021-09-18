@@ -18,7 +18,7 @@ export class ChartComponent implements OnInit {
   @Input() xAxisType : any = "";
   @Input() xLabel : string = "";
   @Input() yLabel : string = "";
-  @Input() pointRadius : number = 3;
+  @Input() pointRadius : number = 2;
   
   datasets: ChartDatasets[] = [];
   labels: string[] = [];
@@ -150,9 +150,6 @@ export class ChartComponent implements OnInit {
             title: {
               text: this.yLabel,
               display: true
-            },
-            ticks: {
-              stepSize: 400
             }
           },
           y: {
@@ -165,19 +162,6 @@ export class ChartComponent implements OnInit {
 
   ResetZoom() {
     this.chart.resetZoom();
-  }
-
-  PreviousPage() {
-  //   this.currentPage--;
-  //   this.chart.destroy();
-  //   this.function(this.csvData);
-  //   this.CreateChart();
-  }
-  NextPage() {
-  //   this.currentPage++;
-  //   this.chart.destroy();
-  //   this.function(this.csvData);
-  //   this.CreateChart();
   }
 
   ApplyYFilter(time: number) {
@@ -204,15 +188,5 @@ export class ChartComponent implements OnInit {
     this.chart.destroy();
     this.ngOnInit();
   }
-
-  // ParseDate(inputDate: number) {
-  //   let date = new Date(inputDate);
-  //   let day = date.getDate();
-  //   let timeH = date.getHours();
-  //   let timeM = date.getMinutes();
-  //   let timeS = date.getSeconds();
-  //   return `${day}, ${timeH}:${timeM}:${timeS}`;
-  // }
-
 
 }

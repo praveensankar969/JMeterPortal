@@ -22,23 +22,28 @@ export class HttpService {
 
   GetActualThreadVsResponse(id: string){
     return this.http.get<any>(this.API_URL+"actual-thread-vs-response-chart/"+id).
-        pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
+        pipe(catchError(err=> {return throwError(err)}),first());    
+  }
+  GetAverageResponseVsThread(id: string){
+    return this.http.get<ChartDataSetModel>(this.API_URL+"average-response-over-thread-chart/"+id).
+        pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
   GetPercentile(id: string){
-    // return this.http.get<ChartDataSetModel>(this.API_URL+"percentile-chart/"+id).
-    //     pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
+    return this.http.get<ChartDataSetModel>(this.API_URL+"percentile-chart/"+id).
+        pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
   GetAverageResponseVsTime(id: string){
     return this.http.get<ChartDataSetModel>(this.API_URL+"average-response-over-time-chart/"+id).
-        pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
+        pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
-  GetAverageResponseVsThread(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"average-response-over-thread-chart/"+id).
-        pipe(catchError(err=> {return throwError(err)}), tap(res=> console.log(res)));    
+  GetActualResponseVsTime(id: string){
+    return this.http.get<ChartDataSetModel>(this.API_URL+"actual-response-over-time-chart/"+id).
+        pipe(catchError(err=> {return throwError(err)}), first());    
   }
+
 
   GetAllResults(){
     return this.http.get<AllTestRunModel[]>(this.API_URL+"all-results").
