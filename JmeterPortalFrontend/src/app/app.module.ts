@@ -10,6 +10,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartComponent } from './chart/chart.component';
 import { FileReaderComponent } from './file-reader/file-reader.component';
+import { TestrunComponent } from './testrun/testrun.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FileReaderComponent } from './file-reader/file-reader.component';
     ResultsTableComponent,
     ChartComponent,
     FileReaderComponent,
+    TestrunComponent,
   ],
   imports: [
     BrowserModule,

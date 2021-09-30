@@ -9,7 +9,6 @@
                 class="shape-fill"></path>
         </svg>
     </div>
-
     <div class="table-wrapper">
         <div class="nav-btns">
             <button class="btn" (click)="filterFields = !filterFields">Filter Fields</button>
@@ -35,25 +34,13 @@
                 </ng-container>
             </ng-container>
         </div>
-        <table class="results">
-            <thead>
-                <th>Test Run Name</th>
-                <th>Test Run ID </th>
-                <th>Environment</th>
-                <th>Results File Name</th>
-                <th>File Upload Date</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of viewRuns" >
-                    <td>{{item.testName}}</td>
-                    <td>{{item.testRunID}}</td>
-                    <td>{{item.environment}}</td>
-                    <td>{{item.fileName}}</td>
-                    <td>{{item.fileUploadDate}}</td>
-                    <td><button class="btn" (click)="Download(item.id)">Download</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="testrun-container" *ngIf="viewRuns">
+            <ng-container *ngFor="let item of viewRuns">
+                <div class="wrap">
+                    <app-testrun [testRunData] = "item"></app-testrun>
+                </div>
+            </ng-container>
+        </div>
         <div class="btn-wrapper" style="display: inline;" *ngIf="viewRuns">
             <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
             <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>

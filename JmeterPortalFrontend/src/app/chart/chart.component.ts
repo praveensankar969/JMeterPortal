@@ -43,7 +43,7 @@ export class ChartComponent implements OnInit {
   
   Fetch(){
     this.xAxisLabel = this.data.xAxisLabel;
-    this.datasets = this.data.datasets;
+    this.datasets = {...this.data.datasets};
     this.labels = this.data.labels;
     this.labelsView = this.labels;
   }

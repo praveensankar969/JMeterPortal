@@ -1,6 +1,6 @@
 .section{
     position: relative;
-    background-image: linear-gradient(rgb(13, 152, 216), rgb(153, 245, 248));
+    background-image: linear-gradient(to right bottom, #7ed56f, #FF7730);
 }
 .navbar{
     display: flex;

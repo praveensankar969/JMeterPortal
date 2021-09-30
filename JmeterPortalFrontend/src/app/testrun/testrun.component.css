@@ -1,0 +1,145 @@
+.name {
+    padding: 5px;
+    margin: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.name label {
+    font-size: 26px;
+}
+
+.env, .date, .file{
+    padding: 10px;
+}
+
+.env label, .date label {
+    font-size: 16px;
+}
+
+button {
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    padding: 15px;
+    height: 50px;
+    width: 75%;
+    margin: 7px;
+    color: #ffffff;
+    border-radius: 10px;
+    font-family: "proxima-nova-soft", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    background: #ff2024 ;
+}
+
+span {
+  font-size: 1.6em;
+}
+
+.container,
+.flip-box,
+.front,
+.back {
+  width: 380px;
+  height: 220px;
+  border-radius: 20px;
+}
+
+.container,
+.flip_box {
+  position: relative;
+}
+
+.front,
+.back {
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.container {
+  -webkit-perspective: 1200px;
+  perspective: 1200px;
+}
+
+.flip_box {
+  transition: all 0.3s ease-out;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.front {
+  background-color: #024395;
+}
+
+.f_title {
+  padding-top: 30px;
+}
+
+.f_subline {
+  padding-top: 205px;
+  color: #B1D4E8;
+}
+
+.f_headline {
+  line-height: 23px;
+}
+
+.back {
+  background-color: #ec9e44;
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+
+.flipped {
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  -ms-transform: rotateY(-180deg);
+  transform: rotateY(-180deg);
+}
+
+.r_wrap {
+  position: absolute;
+  right: 40px;
+  bottom: 38px;
+}
+.s_round {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #D21849;
+  transition: all 0.2s linear;
+}
+
+.s_round_click {
+  transform: scale(1.7);
+}
+
+.s_round_back {
+  background-color: #C30C3D;
+}
+
+.s_arrow {
+  width: 52px;
+  height: 52px;
+  background-image: url('../../assets/backarrow.png');
+  background-color: transparent;
+  transition: all 0.35s linear;
+}
+
+.s_arrow_rotate {
+  transform: rotate(-180deg);
+}
+
+.btn-hld{
+    margin:25px
+}

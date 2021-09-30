@@ -87,3 +87,14 @@ th {
 .filter-input{
     font-size: 18px;
 }
+
+.testrun-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrap{
+    margin: 10px;
+}
