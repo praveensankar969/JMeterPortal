@@ -1,0 +1,31 @@
+<div class='container'>
+    <div class='flip_box'>
+        <div class='front'>
+            <div class="name">
+                <label for="">{{testRunData.testName}}</label>
+            </div>
+            <div class="env">
+                <label for=""><strong>Environment: </strong>{{testRunData.environment}}</label>
+            </div>
+            <div class="date">
+                <label for=""><strong>Upload Date: </strong>{{testRunData.fileUploadDate}}</label>
+            </div>
+            <div class="file">
+                <label for=""><strong>File Name: </strong>{{testRunData.fileName}}</label>
+            </div>
+        </div>
+        <div class='back'>
+            <div class="btn-hld">
+                <button class="view" (click)="router.navigate(['view-result', testRunData.id])">View Charts</button>
+            </div>
+            <div class="btn-hld">
+                <button class="download">Download Report</button>
+            </div>
+        </div>
+    </div>
+    <div class='r_wrap'>
+        <div class='s_round' (click)="Flip($event)">
+            <div class='s_arrow'></div>
+        </div>
+    </div>
+</div>

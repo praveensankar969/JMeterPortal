@@ -31,7 +31,7 @@
                 </div>
                 <div class="row">
                     <label>Upload CSV file</label>
-                    <input type="file" id="upload" required (change)="OnUploadFile($event)" #fileInput>
+                    <input type="file" id="upload" accept=".csv" required (change)="OnUploadFile($event)" #fileInput>
                 </div>
                 <button class="btn" (click)="Upload(form)" [disabled]="!form.form.valid">Upload</button>
                 <button class="btn" (click)="Reset(form)">Reset</button>

@@ -5,5 +5,5 @@ export interface TestRunModel {
     environment : string;
     fileName : string;
     fileUploadDate : Date;
-    fileStreamData : string;
+    fileStreamData : any;
 }

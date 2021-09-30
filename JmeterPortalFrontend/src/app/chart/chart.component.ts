@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { ChartDatasets } from '../Models/chart-datasets';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { ChartService } from '../Services/chart.service';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
 
 @Component({
@@ -34,7 +33,7 @@ export class ChartComponent implements OnInit {
   yFilter = false;
   selectedValue = "";
 
-  constructor(public chartService: ChartService) {
+  constructor() {
    }
 
   ngOnInit(): void {
@@ -44,7 +43,7 @@ export class ChartComponent implements OnInit {
   
   Fetch(){
     this.xAxisLabel = this.data.xAxisLabel;
-    this.datasets = this.data.datasets;
+    this.datasets = {...this.data.datasets};
     this.labels = this.data.labels;
     this.labelsView = this.labels;
   }
