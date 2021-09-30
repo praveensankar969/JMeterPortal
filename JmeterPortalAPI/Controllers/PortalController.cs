@@ -102,7 +102,7 @@ namespace JmeterPortalAPI.Controllers
             return await procedure.GetResults();
         }
 
-        [HttpGet("old/{id}")]
+        [HttpGet("testrun/{id}")]
         public async Task<ActionResult<TestRun>> GetWithID(string id){
             SQLProcedure procedure = new SQLProcedure(this.config);
             TestRun res = await procedure.GetDataOfId(id);

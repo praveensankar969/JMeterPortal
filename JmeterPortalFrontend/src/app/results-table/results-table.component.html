@@ -44,12 +44,13 @@
                 <th>File Upload Date</th>
             </thead>
             <tbody>
-                <tr *ngFor="let item of viewRuns" (click)="router.navigate(['view-result', item.id])">
+                <tr *ngFor="let item of viewRuns" >
                     <td>{{item.testName}}</td>
                     <td>{{item.testRunID}}</td>
                     <td>{{item.environment}}</td>
                     <td>{{item.fileName}}</td>
                     <td>{{item.fileUploadDate}}</td>
+                    <td><button class="btn" (click)="Download(item.id)">Download</button></td>
                 </tr>
             </tbody>
         </table>

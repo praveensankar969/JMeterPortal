@@ -5,6 +5,7 @@ import { catchError, first, tap} from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
+import { TestRunModel } from '../Models/testrun-model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,9 +45,13 @@ export class HttpService {
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
-
   GetAllResults(){
     return this.http.get<AllTestRunModel[]>(this.API_URL+"all-results").
+        pipe(catchError(err=> {return throwError(err)}), first());
+  }
+
+  GetFile(id : string){
+    return this.http.get<TestRunModel>(this.API_URL+"testrun/"+id).
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 }

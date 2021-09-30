@@ -52,6 +52,7 @@ export class AddTestrunComponent implements OnInit {
     this.spinner.show();
     reader.onload = ()=>{
       base64String = reader.result!.toString();
+      console.log(base64String)
       this.uploadSub = this.uploadService.UploadFile( {
         testName : this.testName,
         testRunID : this.testRunID,
@@ -62,6 +63,7 @@ export class AddTestrunComponent implements OnInit {
       }).pipe(catchError(err=> { 
         this.successStatus = !this.successStatus; return throwError(err)
       })).subscribe(res=> {this.Reset(form);this.spinner.hide();}, err=> {this.spinner.hide();});
+      
     }
     reader.readAsDataURL(this.file);
     this.spinner.hide();
