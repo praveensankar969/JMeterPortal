@@ -20,15 +20,15 @@
         Actual Response Time Over Thread
     </div>
     <div class="chart">
-        <app-chart *ngIf="actualThreaddataLoaded" [data]="actualResVThreadData">
+        <app-chart *ngIf="actualThreaddataLoaded" [data]="actualResVThreadData"
          [id]="'actual-response-over-thread'"
-         [title]="'Actual Response Time Over Thread Count'"
+         [title]="'Actual Response over Thread'"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
          [yLabel]="'Actual Response Time (ms)'">
          <canvas id="actual-response-over-thread"></canvas>
         </app-chart>
-    </div> -->
+    </div>
     
     <div class="break" *ngIf="percentiledataLoaded">
         Response Time Percentile Chart
@@ -71,6 +71,6 @@
          [yLabel]="'Average Response Time (ms)'">
          <canvas id="average-response-over-thread"></canvas>
         </app-chart>
-    </div> 
+    </div>  -->
   
 </div>

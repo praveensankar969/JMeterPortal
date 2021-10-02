@@ -21,7 +21,7 @@ export class ChartComponent implements OnInit {
   
   datasets: ChartDatasets[] = [];
   labels: string[] = [];
-  chart: any;
+  chart!: Chart;
   xAxisLabel: any[] = [];
   
   yAxisFilter: number = 0;
@@ -43,9 +43,10 @@ export class ChartComponent implements OnInit {
   
   Fetch(){
     this.xAxisLabel = this.data.xAxisLabel;
-    this.datasets = {...this.data.datasets};
+    this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
     this.labels = this.data.labels;
     this.labelsView = this.labels;
+    console.log(this.datasets)
   }
 
   FilterLabel() {
@@ -74,6 +75,7 @@ export class ChartComponent implements OnInit {
   }
 
   ClearLabelFilter() {
+    this.labelSearch = "";
     this.filtered = false;
     this.selectedItem = [];
     this.chart.data.datasets.forEach(function (ds: any) {
@@ -95,7 +97,7 @@ export class ChartComponent implements OnInit {
   }
 
   CreateChart() {
-    console.log("Creating chart...");
+    console.log("Creating chart..." + this.title);
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
     this.chart = new Chart(this.id, {
@@ -165,27 +167,23 @@ export class ChartComponent implements OnInit {
 
   ApplyYFilter(time: number) {
     this.yFilter = true;
-    this.UpdateChart(this.chart, time);
-  }
-
-  UpdateChart(chart: Chart, time: number){
-    if(this.selectedValue=="Greater than"){
-      chart.data.datasets.forEach(function (ds:  any) {
-        ds.data = ds.data.filter((x : number[])=> x[1] >= time);
-      });
-    }
-    else{
-      chart.data.datasets.forEach(function (ds: any) {
-        ds.data = ds.data.filter((x : number[])=> x[1] <= time);
-      });
-    }
-    chart.update();
-    console.log(this.data)
+    
+    this.chart.update();
   }
 
   ClearYFilter() {
+    this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
     this.chart.destroy();
-    this.ngOnInit();
+    this.CreateChart();
+  }
+
+  XFilter(){
+    this.chart.data.datasets.forEach(function (ds:  any) {
+      ds.data = ds.data.filter((d: any)=> d.x > "13, 01:16");
+    });
+    this.xAxisLabel = this.xAxisLabel.filter(x=> x > "13, 01:16");
+    console.log(this.chart.data.datasets)
+    this.chart.update();
   }
 
 }

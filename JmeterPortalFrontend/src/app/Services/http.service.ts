@@ -41,7 +41,7 @@ export class HttpService {
   }
   
   GetActualResponseVsTime(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"actual-response-over-time-chart/"+id).
+    return this.http.get<ChartDataSetModel>(this.API_URL+"actual-response-over-time-chart/"+id+"?responseTime=1500&op=greater&timeFrom=13, 01:00&timeTo=13, 02:10").
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 

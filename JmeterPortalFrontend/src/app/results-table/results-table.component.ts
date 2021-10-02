@@ -46,12 +46,11 @@ export class ResultsTableComponent implements OnInit {
     let prop = this.selectedField;
     let res: AllTestRunModel[];
     if (prop != "fileUploadDate") {
-      res = this.testRuns.filter((x: any) => x[prop].toLowerCase().indexOf(this.selectedValue)>-1);
+      res = this.testRuns.filter((x: any) => x[prop].toLowerCase().includes(this.selectedValue.toLowerCase()));
     }
     else {
       res = this.testRuns.filter(x => new Date(x.fileUploadDate) >= new Date(this.selectedValue));
     }
-    console.log(res)
     if (res.length > 0) {
       this.filtered = true;
       this.testRunsView = res;

@@ -17,103 +17,144 @@ namespace JmeterPortalAPI.Controllers
     public class PortalController : ControllerBase
     {
         private readonly IConfiguration config;
-        
+
         public PortalController(IConfiguration config)
         {
             this.config = config;
         }
 
         [HttpPost("add-testrun")]
-        public async Task<ActionResult<string>> AddTestRun(TestRunDTO testRun){
+        public async Task<ActionResult<string>> AddTestRun(TestRunDTO testRun)
+        {
             SQLProcedure procedure = new SQLProcedure(this.config);
             int res = await procedure.Insert(testRun);
             return Ok(res);
         }
-        
+
         [HttpGet("actual-thread-vs-response-chart/{id}")]
-        public async Task<ActionResult<ActualThreadVResponse>> ActualThreadVsResponse(string id){
+        public async Task<ActionResult<ActualThreadVResponse>> ActualThreadVsResponse(string id)
+        {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
-            if(dictionary!=null){
+            if (dictionary != null)
+            {
                 ChartDataCreator chartData = new ChartDataCreator();
                 return chartData.ComputeActualResponseVThread(dictionary);
             }
-            else{
+            else
+            {
                 return NotFound();
             }
         }
-        
+
         [HttpGet("average-response-over-thread-chart/{id}")]
-        public async Task<ActionResult<ActualThreadVResponse>> AverageResponseVsThread(string id){
+        public async Task<ActionResult<ActualThreadVResponse>> AverageResponseVsThread(string id)
+        {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
-            if(dictionary!=null){
+            if (dictionary != null)
+            {
                 ChartDataCreator chartData = new ChartDataCreator();
                 return chartData.ComputeAverageResponseTimeVsThread(dictionary);
             }
-            else{
+            else
+            {
                 return NotFound();
             }
         }
 
         [HttpGet("percentile-chart/{id}")]
-        public async Task<ActionResult<PercentileChart>> Percentile(string id){
+        public async Task<ActionResult<PercentileChart>> Percentile(string id)
+        {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
-            if(dictionary!=null){
+            if (dictionary != null)
+            {
                 ChartDataCreator chartData = new ChartDataCreator();
                 return chartData.ComputePercentile(dictionary);
             }
-            else{
+            else
+            {
                 return NotFound();
             }
         }
 
         [HttpGet("average-response-over-time-chart/{id}")]
-        public async Task<ActionResult<ResponseTimeVTime>> AverageResponseVsTime(string id){
+        public async Task<ActionResult<ResponseTimeVTime>> AverageResponseVsTime(string id, string timeFrom, string timeTo, int responseTime = 0, string op = "greater")
+        {
+            Regex regex = new Regex("^\\d{2}, \\d{2}:\\d{2}$", RegexOptions.IgnoreCase);
+            if (!string.IsNullOrEmpty(timeTo) && !string.IsNullOrEmpty(timeFrom))
+            {
+                if (!regex.IsMatch(timeFrom) || !regex.IsMatch(timeTo))
+                    return BadRequest();
+                if(timeFrom.CompareTo(timeTo)>0){
+                    return BadRequest();
+                }
+            }
+
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
-            if(dictionary!=null){
+            if (dictionary != null)
+            {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeAverageResponseTimeVsTime(dictionary);
+                return chartData.ComputeAverageResponseTimeVsTime(dictionary, timeFrom, timeTo, responseTime, op);
             }
-            else{
+            else
+            {
                 return NotFound();
             }
         }
 
         [HttpGet("actual-response-over-time-chart/{id}")]
-        public async Task<ActionResult<ResponseTimeVTime>> ActualResponseVsTime(string id){
+        public async Task<ActionResult<ResponseTimeVTime>> ActualResponseVsTime(string id, string timeFrom, string timeTo, int responseTime = 0, string op = "greater")
+        {
+            Regex regex = new Regex("^\\d{2}, \\d{2}:\\d{2}$", RegexOptions.IgnoreCase);
+            if (!string.IsNullOrEmpty(timeTo) && !string.IsNullOrEmpty(timeFrom))
+            {
+                if (!regex.IsMatch(timeFrom) || !regex.IsMatch(timeTo))
+                    return BadRequest();
+                if(timeFrom.CompareTo(timeTo)>0){
+                    return BadRequest();
+                }
+            }
+
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
-            if(dictionary!=null){
+            if (dictionary != null)
+            {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeActualResponseTimeVsTime(dictionary);
+                return chartData.ComputeActualResponseTimeVsTime(dictionary, timeFrom, timeTo, responseTime, op);
             }
-            else{
+            else
+            {
                 return NotFound();
             }
-        } 
-        
+        }
+
 
         [HttpGet("all-results")]
-        public async Task<ActionResult<List<AllTestRunsDTO>>> GetResults(){
+        public async Task<ActionResult<List<AllTestRunsDTO>>> GetResults()
+        {
             SQLProcedure procedure = new SQLProcedure(this.config);
             return await procedure.GetResults();
         }
 
         [HttpGet("testrun/{id}")]
-        public async Task<ActionResult<TestRun>> GetWithID(string id){
+        public async Task<ActionResult<TestRun>> GetWithID(string id)
+        {
             SQLProcedure procedure = new SQLProcedure(this.config);
             TestRun res = await procedure.GetDataOfId(id);
-            if(res !=null){
+            if (res != null)
+            {
                 return res;
             }
-            else{
+            else
+            {
                 return NotFound();
             }
         }
-        
+
+
 
 
     }

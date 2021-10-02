@@ -4,15 +4,14 @@
         <div class="dropdown">
             <div class="filter-label">
                 <button class="btn" (click)="dropdown =!dropdown">
-                    <span class="material-icons"> filter_alt</span>
-                    Scripts
+                    <span class="material-icons">filter_alt</span>
                 </button>
             </div>
             <div class="checkBoxes" *ngIf="dropdown">
-                <div style="display: inline; position: sticky;">
-                    <input style="width: 80%; margin: 5px;" type="text" name="search" [(ngModel)]="labelSearch"
+                <div style="display: flex; position: sticky;">
+                    <input class="checkbox-search" type="text" name="search" [(ngModel)]="labelSearch"
                         (keyup)="SearchLabel()">
-                    <button *ngIf="dropdown && selectedItem.length>0" class="inline-btn" (click)="FilterLabel()">
+                    <button *ngIf="dropdown && selectedItem.length>0" class="inline-btn" (click)="FilterLabel()" class="search-confirm">
                         <span class="material-icons">done</span>
                     </button>
                 </div>
@@ -44,5 +43,6 @@
         <input type="number" *ngIf="selectedValue" name="response" [(ngModel)]="yAxisFilter">
         <button class="btn" *ngIf="yAxisFilter" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
         <button class="btn" *ngIf="yFilter" (click)="ClearYFilter()">Clear filters</button>
+        <button class="btn" (click)="XFilter()">Elapsed Time Filter</button>
     </div>
 </div>

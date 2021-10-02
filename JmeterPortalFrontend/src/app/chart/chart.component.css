@@ -29,11 +29,12 @@
 
 .checkBoxes {
     position: absolute;
-    width: 350px;
+    width: 400px;
     display: block; 
     border: 1px #8DF5E4 solid;
     color : black;
-    background: rgb(172, 170, 170);
+    background: rgb(68, 147, 226);
+    border-radius: 10px;
 }
 
 .list{
@@ -41,21 +42,42 @@
     height: 500px;
 }
 
+.checkbox-search{
+    width: 70%; 
+    margin: 15px;
+    border-radius: 5px;
+    padding:0px;
+}
 
+.search-confirm{
+    width: 20%;
+    border:none;
+    margin: 15px;
+}
 
 .checkBoxes label {
     padding: 5px;
     display: block;
     text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.checkBoxes label input{
+    margin :10px
 }
 
 .checkBoxes label:hover {
-    background-color: #4F615E;
+    background-color: #56a1f7;
     color : white;
 }
 
 .dropdown{
     position: relative;
+}
+
+.material-icons{
+    margin-top :5px
 }
 
 .inline-btn{
@@ -78,4 +100,22 @@ label{
 select, input{
     height: 30px;
     margin :15px;
+}
+
+select {
+    width: 250px;
+    height: 33px;
+    background-color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-wrapper-bottom label{
+    font-size: 20px;
+    font-family: "proxima-nova-soft", sans-serif;
+    font-weight: 600;
+    color:black
 }

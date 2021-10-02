@@ -100,7 +100,7 @@ namespace JmeterPortalAPI
 
         }
 
-        public ResponseTimeVTime ComputeActualResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary)
+        public ResponseTimeVTime ComputeActualResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary, string timeFrom, string timeTo, int responseTime, string op)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
@@ -109,39 +109,97 @@ namespace JmeterPortalAPI
             int index = 0;
             string color = "";
             var random = new Random();
-
-            foreach (var item in dictionary)
+            var timeFilter = false;
+            if (timeTo != null)
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedTimeStamp = item.Value;
-                sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
-
-                ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = false;
-                dataset.data = sortedTimeStamp.Select(val =>
+                timeFilter = true;
+            }
+            if (op == "greater")
+            {
+                foreach (var item in dictionary)
                 {
-                    var parsedDt = ParseDate(val.timeStamp, dtDateTime);
-                    xAxisLabel.Add(val.timeStamp);
-                    return new ResponseTimeData()
-                    {
-                        x = parsedDt,
-                        y = val.elapsed
-                    };
-                }).ToArray();
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedTimeStamp = item.Value;
+                    sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
 
-                datasets.Add(dataset);
-                index++;
+                    ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = false;
+                    dataset.data = sortedTimeStamp.Select(val =>
+                    {
+                        var parsedDt = ParseDate(val.timeStamp, dtDateTime);
+                        xAxisLabel.Add(val.timeStamp);
+                        if (val.elapsed >= responseTime)
+                        {
+                            return new ResponseTimeData()
+                            {
+                                x = parsedDt,
+                                y = val.elapsed
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }).ToArray();
+                    dataset.data = dataset.data.Where(x => x != null).ToArray();
+                    if (timeFilter)
+                        dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+            else if (op == "lesser")
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedTimeStamp = item.Value;
+                    sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
+
+                    ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = false;
+                    dataset.data = sortedTimeStamp.Select(val =>
+                    {
+                        var parsedDt = ParseDate(val.timeStamp, dtDateTime);
+                        xAxisLabel.Add(val.timeStamp);
+                        if (val.elapsed <= responseTime)
+                        {
+                            return new ResponseTimeData()
+                            {
+                                x = parsedDt,
+                                y = val.elapsed
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }).ToArray();
+                    dataset.data = dataset.data.Where(x => x != null).ToArray();
+                    if (timeFilter)
+                        dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
+                    datasets.Add(dataset);
+                    index++;
+                }
             }
 
-            xAxisLabel.Sort((x ,y)=>  x.CompareTo(y));
-            var parsedXAxisLabel = xAxisLabel.Select(x => {
+
+            xAxisLabel.Sort((x, y) => x.CompareTo(y));
+            var parsedXAxisLabel = xAxisLabel.Select(x =>
+            {
                 return ParseDate(x, dtDateTime);
             }).ToList();
             parsedXAxisLabel = parsedXAxisLabel.Distinct().ToList();
+            if (timeFilter)
+                parsedXAxisLabel = parsedXAxisLabel.Where(d => d.CompareTo(timeFrom) >= 0 && d.CompareTo(timeTo) <= 0).ToList();
 
             return new ResponseTimeVTime
             {
@@ -154,7 +212,7 @@ namespace JmeterPortalAPI
 
 
 
-        public ResponseTimeVTime ComputeAverageResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary)
+        public ResponseTimeVTime ComputeAverageResponseTimeVsTime(Dictionary<string, List<CsvModel>> dictionary, string timeFrom, string timeTo, int responseTime, string op)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 5, 0, 0);
             string[] labels = new string[dictionary.Count];
@@ -163,63 +221,138 @@ namespace JmeterPortalAPI
             int index = 0;
             string color = "";
             var random = new Random();
-
-            foreach (var item in dictionary)
+            var timeFilter = false;
+            if (timeTo != null)
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedTimeStamp = item.Value;
-                sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
-                var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
-                var start = data[0][0];
-                var end = data[data.Length - 1][0];
-                var totalExecutionTime = (end - start) / 60000;
-
-                ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = true;
-                dataset.data = new ResponseTimeData[totalExecutionTime];
-                int datasetDataIndex = 0;
-                for (int i = 0; i < totalExecutionTime; i++)
-                {
-                    var startTime = i * 60000 + start;
-                    var endTime = (i + 1) * 60000 + start;
-                    var dataBetweenTime = sortedTimeStamp.Select(x =>
-                    {
-                        if (x.timeStamp >= startTime && x.timeStamp <= endTime)
-                        {
-                            return x.elapsed;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }).ToList();
-                    dataBetweenTime = dataBetweenTime.Where(x => x > 0).ToList();
-                    if (dataBetweenTime.Count > 0)
-                    {
-                        var avg = (dataBetweenTime.Aggregate((x, y) => (x + y))) / dataBetweenTime.Count;
-                        var parsedDate = ParseDate(((i * 60000) + start), dtDateTime);
-                        ResponseTimeData cordinates = new ResponseTimeData();
-                        cordinates.x = parsedDate;
-                        cordinates.y = avg;
-                        dataset.data[datasetDataIndex++] = cordinates;
-                        var longN = (i*60000)+start;
-                        xAxisLabel.Add(longN);
-                    }
-                }
-                dataset.data = dataset.data.Where(x => x != null).ToArray();
-                datasets.Add(dataset);
-                index++;
+                timeFilter = true;
             }
-            
-            xAxisLabel.Sort((x ,y)=>  x.CompareTo(y));
-            var parsedXAxisLabel = xAxisLabel.Select(x => {
+            if (op == "greater")
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedTimeStamp = item.Value;
+                    sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
+                    var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
+                    var start = data[0][0];
+                    var end = data[data.Length - 1][0];
+                    var totalExecutionTime = (end - start) / 60000;
+
+                    ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new ResponseTimeData[totalExecutionTime];
+                    int datasetDataIndex = 0;
+                    for (int i = 0; i < totalExecutionTime; i++)
+                    {
+                        var startTime = i * 60000 + start;
+                        var endTime = (i + 1) * 60000 + start;
+                        var dataBetweenTime = sortedTimeStamp.Select(x =>
+                        {
+                            if (x.timeStamp >= startTime && x.timeStamp <= endTime)
+                            {
+                                return x.elapsed;
+                            }
+                            else
+                            {
+                                return 0;
+                            }
+                        }).ToList();
+                        dataBetweenTime = dataBetweenTime.Where(x => x > 0).ToList();
+                        if (dataBetweenTime.Count > 0)
+                        {
+                            var avg = (dataBetweenTime.Aggregate((x, y) => (x + y))) / dataBetweenTime.Count;
+                            if (avg >= responseTime)
+                            {
+                                var parsedDate = ParseDate(((i * 60000) + start), dtDateTime);
+                                ResponseTimeData cordinates = new ResponseTimeData();
+                                cordinates.x = parsedDate;
+                                cordinates.y = avg;
+                                dataset.data[datasetDataIndex++] = cordinates;
+                                var longN = (i * 60000) + start;
+                                xAxisLabel.Add(longN);
+                            }
+                        }
+                    }
+                    dataset.data = dataset.data.Where(x => x != null).ToArray();
+                    if (timeFilter)
+                        dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+            else
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedTimeStamp = item.Value;
+                    sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
+                    var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
+                    var start = data[0][0];
+                    var end = data[data.Length - 1][0];
+                    var totalExecutionTime = (end - start) / 60000;
+
+                    ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new ResponseTimeData[totalExecutionTime];
+                    int datasetDataIndex = 0;
+                    for (int i = 0; i < totalExecutionTime; i++)
+                    {
+                        var startTime = i * 60000 + start;
+                        var endTime = (i + 1) * 60000 + start;
+                        var dataBetweenTime = sortedTimeStamp.Select(x =>
+                        {
+                            if (x.timeStamp >= startTime && x.timeStamp <= endTime)
+                            {
+                                return x.elapsed;
+                            }
+                            else
+                            {
+                                return 0;
+                            }
+                        }).ToList();
+                        dataBetweenTime = dataBetweenTime.Where(x => x > 0).ToList();
+                        if (dataBetweenTime.Count > 0)
+                        {
+                            var avg = (dataBetweenTime.Aggregate((x, y) => (x + y))) / dataBetweenTime.Count;
+                            if (avg <= responseTime)
+                            {
+                                var parsedDate = ParseDate(((i * 60000) + start), dtDateTime);
+                                ResponseTimeData cordinates = new ResponseTimeData();
+                                cordinates.x = parsedDate;
+                                cordinates.y = avg;
+                                dataset.data[datasetDataIndex++] = cordinates;
+                                var longN = (i * 60000) + start;
+                                xAxisLabel.Add(longN);
+                            }
+                        }
+                    }
+                    dataset.data = dataset.data.Where(x => x != null).ToArray();
+                    if (timeFilter)
+                        dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+
+
+
+            xAxisLabel.Sort((x, y) => x.CompareTo(y));
+            var parsedXAxisLabel = xAxisLabel.Select(x =>
+            {
                 return ParseDate(x, dtDateTime);
             }).ToList();
             parsedXAxisLabel = parsedXAxisLabel.Distinct().ToList();
+            if (timeFilter)
+                parsedXAxisLabel = parsedXAxisLabel.Where(d => d.CompareTo(timeFrom) >= 0 && d.CompareTo(timeTo) <= 0).ToList();
             return new ResponseTimeVTime
             {
                 labels = labels,
@@ -270,7 +403,7 @@ namespace JmeterPortalAPI
 
         public string ParseDate(long time, DateTime dtDateTime)
         {
-            DateTime dt = new DateTime(1970,1,1,0,0,0).Add(TimeSpan.FromMilliseconds(time));
+            DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0).Add(TimeSpan.FromMilliseconds(time));
             dt = TimeZoneInfo.ConvertTimeFromUtc(dt, IST);
             return dt.ToString("dd, HH:mm", CultureInfo.InvariantCulture);
         }

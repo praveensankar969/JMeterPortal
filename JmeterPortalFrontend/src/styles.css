@@ -7,7 +7,6 @@ body{
     color: white;
 }
 html, body { height: 100%; }
-body { margin: 0; font-family:"Helvetica Neue", sans-serif; }
 
 canvas{
     background-color: white;
@@ -42,5 +41,4 @@ canvas{
 
 select{
     font-size: 18px;
-    font-family: 'Courier New', Courier, monospace;
 }
