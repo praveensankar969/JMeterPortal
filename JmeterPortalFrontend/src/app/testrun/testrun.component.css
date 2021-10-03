@@ -120,6 +120,11 @@ span {
   transition: all 0.2s linear;
 }
 
+.s_round:hover{
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
 .s_round_click {
   transform: scale(1.7);
 }

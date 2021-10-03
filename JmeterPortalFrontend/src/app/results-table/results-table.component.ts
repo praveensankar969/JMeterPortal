@@ -4,7 +4,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { HttpService } from '../Services/http.service';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-results-table',
@@ -46,12 +45,11 @@ export class ResultsTableComponent implements OnInit {
     let prop = this.selectedField;
     let res: AllTestRunModel[];
     if (prop != "fileUploadDate") {
-      res = this.testRuns.filter((x: any) => x[prop].toLowerCase().indexOf(this.selectedValue)>-1);
+      res = this.testRuns.filter((x: any) => x[prop].toLowerCase().includes(this.selectedValue.toLowerCase()));
     }
     else {
       res = this.testRuns.filter(x => new Date(x.fileUploadDate) >= new Date(this.selectedValue));
     }
-    console.log(res)
     if (res.length > 0) {
       this.filtered = true;
       this.testRunsView = res;
@@ -101,13 +99,6 @@ export class ResultsTableComponent implements OnInit {
 
   OnClick(id: string) {
     console.log(id);
-  }
-
-  Download(id: string){
-    var subscription = this.fileService.GetFile(id).subscribe(res=> 
-      {
-        saveAs(new Blob([atob(res.fileStreamData)],{type : 'text/csv'} ), res.fileName+".csv")
-      });
   }
 
   ngOnDestroy(): void {

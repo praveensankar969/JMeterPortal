@@ -3,8 +3,8 @@
 </ngx-spinner>
 <section class="application">
     <div class="message" *ngIf="showMsg">
-        <p class="success" *ngIf="successStatus">Data added <strong>Successfully</strong>!!</p>
-        <p class="failure" *ngIf="!successStatus">Data add <strong>Failed</strong>!!</p>
+        <p class="success" *ngIf="successStatus">Data upload <strong>Success</strong>!!</p>
+        <p class="failure" *ngIf="!successStatus">Data upload <strong>Failed</strong>!!</p>
     </div>
     <div class="custom-shape-divider-bottom">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -33,8 +33,8 @@
                     <label>Upload CSV file</label>
                     <input type="file" id="upload" accept=".csv" required (change)="OnUploadFile($event)" #fileInput>
                 </div>
-                <button class="btn" (click)="Upload(form)" [disabled]="!form.form.valid">Upload</button>
-                <button class="btn" (click)="Reset(form)">Reset</button>
+                <button (click)="Upload(form)" [disabled]="!form.form.valid">Upload</button>
+                <button (click)="Reset(form)">Reset</button>
             </form>
         </div>
     </div>

@@ -6,6 +6,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ChartDatasets } from '../Models/chart-datasets';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
 import { HttpService } from '../Services/http.service';
+import { CsvModel } from '../Models/csv-model';
+import { APIURL } from '../Models/api_url';
 
 @Component({
   selector: 'app-file-reader',
@@ -28,6 +30,8 @@ export class FileReaderComponent implements OnInit {
   
   percentileData! : ChartDataSetModel;
   percentiledataLoaded = false;
+
+  chartType : typeof APIURL = APIURL;
   
   id: string = "";
   testRun!: TestRunModel;
@@ -74,7 +78,6 @@ export class FileReaderComponent implements OnInit {
       .subscribe(res=>{
         this.actualResVThreadData = res;
         this.actualThreaddataLoaded = true;
-        console.log(this.actualResVThreadData);
       });
   }
 

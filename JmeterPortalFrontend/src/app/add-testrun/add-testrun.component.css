@@ -1,5 +1,5 @@
 .application{
-    height: 84vh;
+    height: 82vh;
     position: relative;
 }
 
@@ -48,7 +48,7 @@
     color: rgb(0, 0, 0);
     padding: 50px;
     padding-right: 0;
-    background-color: rgb(255, 254, 254);
+    background-color: rgba(255, 254, 254, 0.589);
     box-shadow:0 6px 10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     border-radius: 20px;
     flex : 3;
@@ -56,6 +56,7 @@
 }
 
 .form label{
+    margin-top: 5px;
     display: inline-block;
     text-align: right;
     font-weight: bold;
@@ -69,12 +70,10 @@
 
 .row input{
     font-family: Verdana, Tahoma, sans-serif;
-    font-size: 22px;
+    font-size: 20px;
     width: 60%;
     margin-left: 20px;
 }
-
-
 
 .success{
     font-size: 18px;
@@ -95,3 +94,30 @@
     color: rgb(128, 0, 0);
     border-radius: 10px;
 }
+
+button {
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    padding: 15px;
+    height: 50px;
+    width: 300px;
+    margin: 7px;
+    color: #ffffff;
+    border-radius: 10px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    background: #FF7730 ;
+}
+button:hover{
+    transform: scale(1.02);
+}
+
+button:disabled{
+    color: #ffffff6e;
+    transform: none;
+}
+

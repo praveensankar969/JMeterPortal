@@ -38,39 +38,7 @@
     background-color: #ffffff;
     text-align: center;
     border-collapse: collapse;
-    width: 80%;  
-}
-
-td, th {
-    padding: 15px 20px;
-    color : black;
-}
-
-td {
-    font-size: 18px;
-}
-
-tr:hover {
-    transform: scale(1.01);
-    background-color: #ffffff;
-}
-
-tr:nth-child(even) {
-    background: #dfdfdf;
-}
-
-tr:nth-child(even):hover {
-    transform: scale(1.01);
-    background-color: #cecece;
-}
-
-thead {
-    background: #0af1e5;
-}
-
-th {
-    font-size: 20px;
-    font-weight: bold;
+    width: 80%;
 }
 
 .nav-btns {
@@ -79,22 +47,39 @@ th {
     margin-left: 200px;
 }
 
-.filter-label{
-    padding:10px;
+.filter-label {
+    margin-left: 50px;
+    padding-right: 25px;
+    padding: 10px;
     font-size: 18px;
 }
 
-.filter-input{
+.filter-input {
     font-size: 18px;
+    width: 250px;
+    height: 33px;
+    border: none;
+    border-radius: 10px;
 }
 
-.testrun-container{
+.testrun-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
-.wrap{
-    margin: 10px;
+.wrap {
+    margin: 15px;
+}
+
+select {
+    width: 250px;
+    height: 33px;
+    background-color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+    border: none;
+    border-radius: 10px;
 }
