@@ -32,14 +32,14 @@ namespace JmeterPortalAPI.Controllers
         }
 
         [HttpGet("actual-thread-vs-response-chart/{id}")]
-        public async Task<ActionResult<ActualThreadVResponse>> ActualThreadVsResponse(string id)
+        public async Task<ActionResult<ActualThreadVResponse>> ActualThreadVsResponse(string id, int responseTime = 0, string op = "greater")
         {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeActualResponseVThread(dictionary);
+                return chartData.ComputeActualResponseVThread(dictionary, responseTime, op);
             }
             else
             {
@@ -48,14 +48,14 @@ namespace JmeterPortalAPI.Controllers
         }
 
         [HttpGet("average-response-over-thread-chart/{id}")]
-        public async Task<ActionResult<ActualThreadVResponse>> AverageResponseVsThread(string id)
+        public async Task<ActionResult<ActualThreadVResponse>> AverageResponseVsThread(string id, int responseTime = 0, string op = "greater")
         {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeAverageResponseTimeVsThread(dictionary);
+                return chartData.ComputeAverageResponseTimeVsThread(dictionary, responseTime, op);
             }
             else
             {
@@ -64,14 +64,14 @@ namespace JmeterPortalAPI.Controllers
         }
 
         [HttpGet("percentile-chart/{id}")]
-        public async Task<ActionResult<PercentileChart>> Percentile(string id)
+        public async Task<ActionResult<PercentileChart>> Percentile(string id, int responseTime = 0, string op = "greater")
         {
             DictionaryCreator service = new DictionaryCreator(this.config);
             Dictionary<string, List<CsvModel>> dictionary = await service.GetMap(id);
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputePercentile(dictionary);
+                return chartData.ComputePercentile(dictionary, responseTime, op);
             }
             else
             {

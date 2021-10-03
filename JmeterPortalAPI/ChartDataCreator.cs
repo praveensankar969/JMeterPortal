@@ -9,7 +9,7 @@ namespace JmeterPortalAPI
     public class ChartDataCreator
     {
         private static TimeZoneInfo IST = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        public ActualThreadVResponse ComputeActualResponseVThread(Dictionary<string, List<CsvModel>> dictionary)
+        public ActualThreadVResponse ComputeActualResponseVThread(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op)
         {
             string[] labels = new string[dictionary.Count];
             List<int> xAxisLabel = new List<int>();
@@ -17,28 +17,61 @@ namespace JmeterPortalAPI
             int index = 0;
             string color = "";
             var random = new Random();
-
-            foreach (var item in dictionary)
+            if (op == "greater")
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedAllThread = item.Value;
-                sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
-                ChartDataSet dataset = new ChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = false;
-                dataset.data = new List<int[]>();
-                for (int i = 0; i < sortedAllThread.Count; i++)
+                foreach (var item in dictionary)
                 {
-                    dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
-                    xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedAllThread = item.Value;
+                    sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
+                    ChartDataSet dataset = new ChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = false;
+                    dataset.data = new List<int[]>();
+                    for (int i = 0; i < sortedAllThread.Count; i++)
+                    {
+                        if (sortedAllThread.ElementAt(i).elapsed >= responseTime)
+                        {
+                            dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
+                            xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
+                        }
+                    }
+                    datasets.Add(dataset);
+                    index++;
                 }
-                datasets.Add(dataset);
-                index++;
             }
+            else if (op == "lesser")
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedAllThread = item.Value;
+                    sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
+                    ChartDataSet dataset = new ChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = false;
+                    dataset.data = new List<int[]>();
+                    for (int i = 0; i < sortedAllThread.Count; i++)
+                    {
+                        if (sortedAllThread.ElementAt(i).elapsed <= responseTime)
+                        {
+                            dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
+                            xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
+                        }
+                    }
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+
             xAxisLabel = xAxisLabel.Distinct().ToList();
+            xAxisLabel.Sort((x, y) => x-y);
 
             return new ActualThreadVResponse
             {
@@ -48,7 +81,7 @@ namespace JmeterPortalAPI
             };
 
         }
-        public ActualThreadVResponse ComputeAverageResponseTimeVsThread(Dictionary<string, List<CsvModel>> dictionary)
+        public ActualThreadVResponse ComputeAverageResponseTimeVsThread(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
@@ -57,39 +90,83 @@ namespace JmeterPortalAPI
             int index = 0;
             string color = "";
             var random = new Random();
-
-            foreach (var item in dictionary)
+            if (op == "greater")
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedAllThread = item.Value;
-                sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
-                var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
-
-                ChartDataSet dataset = new ChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = true;
-                dataset.data = new List<int[]>();
-                for (int i = 1; i <= totalThreads; i++)
+                foreach (var item in dictionary)
                 {
-                    xAxisLabel.Add(i);
-                    var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
-                    var elapsedTimeList = threadsList.Select(x => { return x.elapsed; }).ToList();
-                    if (elapsedTimeList.Count > 0)
-                    {
-                        var avg = elapsedTimeList.Aggregate((x, y) => x + y) / elapsedTimeList.Count;
-                        var inte = new int[] { i, avg };
-                        dataset.data.Add(inte);
-                    }
-                }
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedAllThread = item.Value;
+                    sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
+                    var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
 
-                datasets.Add(dataset);
-                index++;
+                    ChartDataSet dataset = new ChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new List<int[]>();
+                    for (int i = 1; i <= totalThreads; i++)
+                    {
+                        xAxisLabel.Add(i);
+                        var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
+                        var elapsedTimeList = threadsList.Select(x => { return x.elapsed; }).ToList();
+                        if (elapsedTimeList.Count > 0)
+                        {
+                            var avg = elapsedTimeList.Aggregate((x, y) => x + y) / elapsedTimeList.Count;
+                            if (avg >= responseTime)
+                            {
+                                var inte = new int[] { i, avg };
+                                dataset.data.Add(inte);
+                            }
+
+                        }
+                    }
+
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+            else if (op == "lesser")
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedAllThread = item.Value;
+                    sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
+                    var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
+
+                    ChartDataSet dataset = new ChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new List<int[]>();
+                    for (int i = 1; i <= totalThreads; i++)
+                    {
+                        xAxisLabel.Add(i);
+                        var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
+                        var elapsedTimeList = threadsList.Select(x => { return x.elapsed; }).ToList();
+                        if (elapsedTimeList.Count > 0)
+                        {
+                            var avg = elapsedTimeList.Aggregate((x, y) => x + y) / elapsedTimeList.Count;
+                            if (avg <= responseTime)
+                            {
+                                var inte = new int[] { i, avg };
+                                dataset.data.Add(inte);
+                            }
+
+                        }
+                    }
+                    datasets.Add(dataset);
+                    index++;
+                }
             }
 
+
             xAxisLabel = xAxisLabel.Distinct().ToList();
+            xAxisLabel.Sort((x, y) => x-y);
 
             return new ActualThreadVResponse
             {
@@ -343,8 +420,6 @@ namespace JmeterPortalAPI
                 }
             }
 
-
-
             xAxisLabel.Sort((x, y) => x.CompareTo(y));
             var parsedXAxisLabel = xAxisLabel.Select(x =>
             {
@@ -362,7 +437,7 @@ namespace JmeterPortalAPI
 
         }
 
-        public PercentileChart ComputePercentile(Dictionary<string, List<CsvModel>> dictionary)
+        public PercentileChart ComputePercentile(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op)
         {
             string[] labels = new string[dictionary.Count];
             List<int> xAxisLabel = new List<int>();
@@ -370,27 +445,55 @@ namespace JmeterPortalAPI
             int index = 0;
             string color = "";
             var random = new Random();
-
-            foreach (var item in dictionary)
+            if (op == "greater")
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedPercentile = item.Value;
-                sortedPercentile.Sort((x, y) => x.elapsed - y.elapsed);
-                PercentileChartDataSet dataset = new PercentileChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = true;
-                dataset.data = new double[sortedPercentile.Count][];
-                for (int i = 0; i < sortedPercentile.Count; i++)
+                foreach (var item in dictionary)
                 {
-                    dataset.data[i] = new double[] { Math.Round((((double)i / sortedPercentile.Count) * 100), 1), sortedPercentile.ElementAt(i).elapsed };
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedPercentile = item.Value;
+                    sortedPercentile.Sort((x, y) => x.elapsed - y.elapsed);
+                    PercentileChartDataSet dataset = new PercentileChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new double[sortedPercentile.Count][];
+                    for (int i = 0; i < sortedPercentile.Count; i++)
+                    {
+                        if (sortedPercentile.ElementAt(i).elapsed >= responseTime)
+                            dataset.data[i] = new double[] { Math.Round((((double)i / sortedPercentile.Count) * 100), 1), sortedPercentile.ElementAt(i).elapsed };
 
+                    }
+                    datasets.Add(dataset);
+                    index++;
                 }
-                datasets.Add(dataset);
-                index++;
             }
+            else if (op == " lesser")
+            {
+                foreach (var item in dictionary)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    List<CsvModel> sortedPercentile = item.Value;
+                    sortedPercentile.Sort((x, y) => x.elapsed - y.elapsed);
+                    PercentileChartDataSet dataset = new PercentileChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = true;
+                    dataset.data = new double[sortedPercentile.Count][];
+                    for (int i = 0; i < sortedPercentile.Count; i++)
+                    {
+                        if (sortedPercentile.ElementAt(i).elapsed <= responseTime)
+                            dataset.data[i] = new double[] { Math.Round((((double)i / sortedPercentile.Count) * 100), 1), sortedPercentile.ElementAt(i).elapsed };
+
+                    }
+                    datasets.Add(dataset);
+                    index++;
+                }
+            }
+
 
             return new PercentileChart
             {
