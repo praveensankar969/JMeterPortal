@@ -1,3 +1,6 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="medium" type="line-scale-pulse-out">
+    <p style="color: white">Please wait...</p>
+</ngx-spinner>
 <div class="chart">
     <div class="btn-wrapper">
         <button class="btn" (click)="ResetZoom()">Reset Zoom</button>
@@ -11,7 +14,8 @@
                 <div style="display: flex; position: sticky;">
                     <input class="checkbox-search" type="text" name="search" [(ngModel)]="labelSearch"
                         (keyup)="SearchLabel()">
-                    <button *ngIf="dropdown && selectedItem.length>0" class="inline-btn" (click)="FilterLabel()" class="search-confirm">
+                    <button *ngIf="dropdown && selectedItem.length>0" class="inline-btn" (click)="FilterLabel()"
+                        class="search-confirm">
                         <span class="material-icons">done</span>
                     </button>
                 </div>
@@ -29,20 +33,45 @@
             <span class="material-icons">clear</span>
         </button>
     </div>
-  
+
     <div class="chart">
         <ng-content></ng-content>
     </div>
 
     <div class="btn-wrapper-bottom">
-        <label>Filter by response time</label>
-        <select name="opt" id="opt" [(ngModel)]="selectedValue">
-            <option #opt1 [value]="opt1.value">Greater than</option>
-            <option #opt2 [value]="opt2.value">Less than</option>
-        </select>
-        <input type="number" *ngIf="selectedValue" name="response" [(ngModel)]="yAxisFilter">
-        <button class="btn" *ngIf="yAxisFilter" (click)="ApplyYFilter(yAxisFilter)">Apply filter</button>
-        <button class="btn" *ngIf="yFilter" (click)="ClearYFilter()">Clear filters</button>
-        <button class="btn" (click)="XFilter()">Elapsed Time Filter</button>
+        <button class="btn filter-btn" (click)="ResponseTimeFilter()" [ngClass]="responseFilterSelected? 'active' : ''">Response Time Filter</button>
+        <button class="btn filter-btn" *ngIf="resposeTimeCharts" (click)="ElapsedTimeFilter()" [ngClass]="timeFilterSelected? 'active' : ''">Elapsed Time filter</button>
+        <button class="btn filter-btn" (click)="ClearAllFilter()" *ngIf="yFilter || xFilter">Clear all filters</button>
+        <div class="filter-wrapper">
+            <div class="response-filter" *ngIf="responseFilterSelected">
+                <select name="opt" id="opt" [(ngModel)]="selectedYAxisOperatorValue">
+                    <option #opt1 [value]="opt1.value">Greater than</option>
+                    <option #opt2 [value]="opt2.value">Less than</option>
+                </select>
+                <input type="number" name="response" [(ngModel)]="yAxisFilter">
+                <button class="btn" *ngIf="selectedYAxisOperatorValue" (click)="ApplyYFilter()">Apply filter</button>
+                <button class="btn" *ngIf="yFilter" (click)="ApplyYFilter(true)">Clear filter</button>
+            </div>
+            <div class="time-filter" *ngIf="timeFilterSelected">
+                <div class="input-wrapper">
+                    <label>From: </label>
+                    <input type="text" name="fromtimeDD" [(ngModel)]="FromTimeDD" placeholder="DD" maxlength=2>
+                    <label for="">, </label>
+                    <input type="text" name="fromtimeHH" [(ngModel)]="FromTimeHH" placeholder="HH" maxlength=2>
+                    <label for="">:</label>
+                    <input type="text" name="fromtimeMM" [(ngModel)]="FromTimeMM" placeholder="MM" maxlength=2>
+                </div>
+                <div class="input-wrapper">
+                    <label>To: </label>
+                    <input type="text" name="totimeDD" [(ngModel)]="ToTimeDD" placeholder="DD" maxlength=2>
+                    <label for="">, </label>
+                    <input type="text" name="totimeHH" [(ngModel)]="ToTimeHH" placeholder="HH" maxlength=2>
+                    <label for="">:</label>
+                    <input type="text" name="totimeMM" [(ngModel)]="ToTimeMM" placeholder="MM" maxlength=2>
+                </div>
+                <button class="btn" (click)="ApplyXFilter()">Apply Filter</button>
+                <button class="btn" *ngIf="xFilter" (click)="ApplyXFilter(true)">Clear filter</button>
+            </div>
+        </div>
     </div>
 </div>

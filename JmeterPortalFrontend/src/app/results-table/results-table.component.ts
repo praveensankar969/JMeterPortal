@@ -4,7 +4,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { HttpService } from '../Services/http.service';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-results-table',
@@ -100,13 +99,6 @@ export class ResultsTableComponent implements OnInit {
 
   OnClick(id: string) {
     console.log(id);
-  }
-
-  Download(id: string){
-    var subscription = this.fileService.GetFile(id).subscribe(res=> 
-      {
-        saveAs(new Blob([atob(res.fileStreamData)],{type : 'text/csv'} ), res.fileName+".csv")
-      });
   }
 
   ngOnDestroy(): void {

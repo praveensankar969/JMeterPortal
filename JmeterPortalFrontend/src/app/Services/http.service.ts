@@ -6,52 +6,52 @@ import { throwError } from 'rxjs';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
 import { TestRunModel } from '../Models/testrun-model';
+import { APIURL } from '../Models/api_url';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class HttpService {
-  
-  API_URL="https://localhost:5001/portal/";
   constructor(private http: HttpClient) { }
 
   UploadFile(data : TestRun){
     console.log(data)
-    return this.http.post<number>(this.API_URL+"add-testrun", data).
+    return this.http.post<number>(APIURL.URL+"add-testrun", data).
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 
   GetActualThreadVsResponse(id: string){
-    return this.http.get<any>(this.API_URL+"actual-thread-vs-response-chart/"+id).
+    return this.http.get<any>(APIURL.URL + APIURL.ActualResponseTimeOverThread + id).
         pipe(catchError(err=> {return throwError(err)}),first());    
   }
   GetAverageResponseVsThread(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"average-response-over-thread-chart/"+id).
+    return this.http.get<ChartDataSetModel>(APIURL.URL + APIURL.AverageResponseTimeOverThread + id).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
   GetPercentile(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"percentile-chart/"+id).
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.Percentile + id).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
   GetAverageResponseVsTime(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"average-response-over-time-chart/"+id).
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.AverageResponseOverTime + id).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
   GetActualResponseVsTime(id: string){
-    return this.http.get<ChartDataSetModel>(this.API_URL+"actual-response-over-time-chart/"+id+"?responseTime=1500&op=greater&timeFrom=13, 01:00&timeTo=13, 02:10").
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.ActualResponseTimeOverTime + id).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
   GetAllResults(){
-    return this.http.get<AllTestRunModel[]>(this.API_URL+"all-results").
+    return this.http.get<AllTestRunModel[]>(APIURL.URL+"all-results").
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 
   GetFile(id : string){
-    return this.http.get<TestRunModel>(this.API_URL+"testrun/"+id).
+    return this.http.get<TestRunModel>(APIURL.URL+"testrun/"+id).
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 }

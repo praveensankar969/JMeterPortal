@@ -3,6 +3,18 @@ import { Chart, registerables } from 'chart.js';
 import { ChartDatasets } from '../Models/chart-datasets';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { APIURL } from '../Models/api_url';
+import { catchError, first } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { HttpService } from '../Services/http.service';
+
+enum Operator {
+  greater = "Greater than",
+  lesser = "Less than"
+}
 
 @Component({
   selector: 'app-chart',
@@ -11,42 +23,59 @@ import { ChartDataSetModel } from '../Models/chart-dataset-model';
 })
 export class ChartComponent implements OnInit {
 
-  @Input() data! : ChartDataSetModel;
-  @Input() id : string = "";
-  @Input() title: string ="";
-  @Input() xAxisType : any = "";
-  @Input() xLabel : string = "";
-  @Input() yLabel : string = "";
-  @Input() pointRadius : number = 2;
-  
+  @Input() data!: ChartDataSetModel;
+  @Input() id: string = "";
+  @Input() title: string = "";
+  @Input() xAxisType: any = "";
+  @Input() xLabel: string = "";
+  @Input() yLabel: string = "";
+  @Input() pointRadius: number = 2;
+  @Input() type: string = "";
+
+  operatorType: typeof Operator = Operator;
   datasets: ChartDatasets[] = [];
   labels: string[] = [];
   chart!: Chart;
   xAxisLabel: any[] = [];
-  
+  FromTimeDD: string = "";
+  FromTimeHH: string = "";
+  FromTimeMM: string = "";
+  ToTimeDD: string = "";
+  ToTimeHH: string = "";
+  ToTimeMM: string = "";
   yAxisFilter: number = 0;
   selectedItem: string[] = [];
   labelsView: string[] = [];
   dropdown: boolean = false;
   filtered = false;
   labelSearch = "";
-  yFilter = false;
-  selectedValue = "";
+  selectedYAxisOperatorValue = Operator.greater;
 
-  constructor() {
-   }
+  yFilter = false;
+  xFilter = false;
+  responseFilterSelected = false;
+  timeFilterSelected = false;
+  dateTimeStart: string = "";
+  dateTimeEnd: string = "";
+  resposeTimeCharts = false;
+
+  constructor(private router: ActivatedRoute, private httpService: HttpClient, private spinner: NgxSpinnerService, private service: HttpService) {
+  }
 
   ngOnInit(): void {
     this.Fetch();
-    this.CreateChart();
+    if (this.title.includes("Response Time Over Time")) {
+      this.resposeTimeCharts = true;
+    }
   }
-  
-  Fetch(){
+
+  Fetch() {
     this.xAxisLabel = this.data.xAxisLabel;
     this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
     this.labels = this.data.labels;
     this.labelsView = this.labels;
-    console.log(this.datasets)
+    console.log(this.datasets);
+    this.CreateChart();
   }
 
   FilterLabel() {
@@ -165,25 +194,89 @@ export class ChartComponent implements OnInit {
     this.chart.resetZoom();
   }
 
-  ApplyYFilter(time: number) {
+  ApplyYFilter(clear: boolean = false) {
+    this.ClearLabelFilter();
     this.yFilter = true;
-    
-    this.chart.update();
+    if (clear) {
+      this.yFilter = false;
+      this.selectedYAxisOperatorValue = Operator.greater;
+      this.yAxisFilter = 0;
+    }
+    this.ConstructRequest();
   }
 
-  ClearYFilter() {
-    this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
-    this.chart.destroy();
-    this.CreateChart();
+  ApplyXFilter(clear: boolean = false) {
+    this.ClearLabelFilter();
+    this.xFilter = true;
+    if (clear) {
+      this.xFilter = false;
+      this.FromTimeDD = "";
+      this.FromTimeHH = "";
+      this.FromTimeMM = "";
+      this.ToTimeDD = "";
+      this.ToTimeHH = "";
+      this.ToTimeMM = "";
+    }
+    this.ConstructRequest();
   }
 
-  XFilter(){
-    this.chart.data.datasets.forEach(function (ds:  any) {
-      ds.data = ds.data.filter((d: any)=> d.x > "13, 01:16");
-    });
-    this.xAxisLabel = this.xAxisLabel.filter(x=> x > "13, 01:16");
-    console.log(this.chart.data.datasets)
-    this.chart.update();
+  ConstructRequest() {
+    var regex = new RegExp("^\\d{2}, \\d{2}:\\d{2}$");
+    var fromTime = this.FromTimeDD + ", " + this.FromTimeHH + ":" + this.FromTimeMM;
+    var toTime = this.ToTimeDD + ", " + this.ToTimeHH + ":" + this.ToTimeMM;
+    var fromTimeValid = regex.test(fromTime);
+    var toTimeValid = regex.test(toTime);
+
+    var id;
+    this.router.params.subscribe(res => id = res.id);
+    let params = new HttpParams();
+    let op = Object.keys(Operator).filter(x => !(parseInt(x) >= 0));
+    params = params.append("op", (this.selectedYAxisOperatorValue == Operator.greater) ? op[0] : op[1]);
+    params = params.append("responseTime", this.yAxisFilter);
+    if (toTimeValid || fromTimeValid) {
+      params = params.append("timeFrom", fromTimeValid ? fromTime : this.xAxisLabel[0]);
+      params = params.append("timeTo", toTimeValid ? toTime : this.xAxisLabel[this.xAxisLabel.length - 1]);
+    }
+    let url = APIURL.URL + this.type + id;
+    this.spinner.show();
+    this.httpService.get<ChartDataSetModel>(url, { params: params }).
+      pipe(catchError(err => { this.spinner.hide(); return throwError(err) }), first()).
+      subscribe(res => {
+        this.chart.destroy();
+        this.data = res;
+        this.spinner.hide();
+        this.Fetch()
+      }
+      );
   }
+
+  ResponseTimeFilter() {
+    this.responseFilterSelected = !this.responseFilterSelected;
+    this.timeFilterSelected = false;
+  }
+
+  ElapsedTimeFilter() {
+    this.timeFilterSelected = !this.timeFilterSelected;
+    this.responseFilterSelected = false;
+  }
+
+  ClearAllFilter() {
+    this.timeFilterSelected = false;
+    this.responseFilterSelected = false;
+    var id;
+    this.router.params.subscribe(res => id = res.id)
+    let url = APIURL.URL + this.type + id;
+    this.spinner.show();
+    this.httpService.get<ChartDataSetModel>(url).
+      pipe(catchError(err => { this.spinner.hide(); return throwError(err) }), first()).
+      subscribe(res => {
+        this.chart.destroy();
+        this.data = res;
+        this.spinner.hide();
+        this.Fetch()
+      }
+      );
+  }
+
 
 }

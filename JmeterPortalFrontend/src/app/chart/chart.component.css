@@ -1,57 +1,57 @@
-.chart{
+.chart {
     display: block;
     width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin:auto;
+    margin: auto;
 }
 
-.range{
+.range {
     width: 300px;
     padding: 7px;
 }
 
-.apply{
-    width : 100px;
+.apply {
+    width: 100px;
     background: rgb(47, 206, 255);
-    color:white
+    color: white
 }
 
-.btn-wrapper, .btn-wrapper-bottom{
+.btn-wrapper {
     display: flex;
 }
 
-.canvas{
-    width : 80%; 
+.canvas {
+    width: 80%;
 }
 
 .checkBoxes {
     position: absolute;
     width: 400px;
-    display: block; 
+    display: block;
     border: 1px #8DF5E4 solid;
-    color : black;
+    color: black;
     background: rgb(68, 147, 226);
     border-radius: 10px;
 }
 
-.list{
+.list {
     overflow-y: auto;
     height: 500px;
 }
 
-.checkbox-search{
-    width: 70%; 
+.checkbox-search {
+    width: 70%;
     margin: 15px;
     border-radius: 5px;
-    padding:0px;
+    padding: 0px;
 }
 
-.search-confirm{
+.search-confirm {
     width: 20%;
-    border:none;
+    border: none;
     margin: 15px;
 }
 
@@ -63,24 +63,24 @@
     align-items: center;
 }
 
-.checkBoxes label input{
-    margin :10px
+.checkBoxes label input {
+    margin: 10px
 }
 
 .checkBoxes label:hover {
     background-color: #56a1f7;
-    color : white;
+    color: white;
 }
 
-.dropdown{
+.dropdown {
     position: relative;
 }
 
-.material-icons{
-    margin-top :5px
+.material-icons {
+    margin-top: 5px
 }
 
-.inline-btn{
+.inline-btn {
     margin: 3px;
     border: 0;
     text-align: center;
@@ -92,14 +92,14 @@
     border-radius: 2px;
 }
 
-label{
+label {
     padding: 20px;
     text-align: center;
 }
 
-select, input{
+select, input {
     height: 30px;
-    margin :15px;
+    margin: 15px;
 }
 
 select {
@@ -113,9 +113,42 @@ select {
     border-radius: 10px;
 }
 
-.btn-wrapper-bottom label{
-    font-size: 20px;
-    font-family: "proxima-nova-soft", sans-serif;
-    font-weight: 600;
-    color:black
+.btn-wrapper-bottom input {
+    border-radius: 10px;
+    width: 250px;
+    height: 33px;
+    border: none;
+    font-size: 1.2em;
+}
+
+.btn-wrapper-bottom{
+    width : 100%;
+    margin-left : 150px;
+}
+
+.response-filter, .time-filter {
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn {
+    width: 200px;
+}
+
+.active {
+    background: black;
+    color: white;
+}
+
+.time-filter input{
+    width : 40px;
+    margin: 0px;
+    border-radius :2px;
+}
+.time-filter label{
+    padding: 5px;
+}
+
+.input-wrapper{
+    margin-left : 30px
 }
