@@ -102,7 +102,7 @@ export class ResultsTableComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    //this.sub.unsubscribe();
   }
 
 
