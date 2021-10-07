@@ -13,7 +13,6 @@ import { HttpService } from '../Services/http.service';
 export class TestrunComponent implements OnInit {
 
   @Input() testRunData!: AllTestRunModel;
-  subscription!: Subscription;
 
   constructor(public router: Router, private fileService: HttpService, private activatedRouter: ActivatedRoute) { }
 
@@ -28,13 +27,12 @@ export class TestrunComponent implements OnInit {
   }
 
   DownloadFile() {
-    this.subscription = this.fileService.GetFile(this.testRunData.id).subscribe(res => {
+    this.fileService.GetFile(this.testRunData.id).subscribe(res => {
       saveAs(new Blob([atob(res.fileStreamData)], { type: 'text/csv' }), res.fileName + ".csv")
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
 }
