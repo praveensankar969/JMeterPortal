@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { HttpService } from '../Services/http.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-testrun',
@@ -27,12 +27,9 @@ export class TestrunComponent implements OnInit {
   }
 
   DownloadFile() {
-    this.fileService.GetFile(this.testRunData.id).subscribe(res => {
+    this.fileService.GetFile(this.testRunData.id).pipe(first()).subscribe(res => {
       saveAs(new Blob([atob(res.fileStreamData)], { type: 'text/csv' }), res.fileName + ".csv")
     });
-  }
-
-  ngOnDestroy(): void {
   }
 
 }
