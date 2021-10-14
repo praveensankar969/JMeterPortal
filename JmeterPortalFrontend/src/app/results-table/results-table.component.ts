@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { HttpService } from '../Services/http.service';
 
@@ -16,7 +17,6 @@ export class ResultsTableComponent implements OnInit {
   testRunsView = this.testRuns;
   viewRuns = this.testRuns;
   dataLoaded: boolean = false;
-  sub!: Subscription;
   total: number = 0;
   startIndex = 0;
   perPage = 8;
@@ -31,7 +31,7 @@ export class ResultsTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-    this.sub = this.fileService.GetAllResults().subscribe(res => {
+    this.fileService.GetAllResults().subscribe(res => {
       this.testRuns = res;
       this.dataLoaded = true;
       this.total = res.length;
@@ -96,14 +96,5 @@ export class ResultsTableComponent implements OnInit {
       this.Paging(this.testRunsView);
     }
   }
-
-  OnClick(id: string) {
-    console.log(id);
-  }
-
-  ngOnDestroy(): void {
-    //this.sub.unsubscribe();
-  }
-
 
 }

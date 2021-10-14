@@ -49,6 +49,7 @@ export class FileReaderComponent implements OnInit {
   range: any[] = [];
   totalPages = 0;
   currentPage = 0;
+  dataloading = true;
 
   constructor(private service: HttpService, 
     private route: ActivatedRoute,
@@ -104,8 +105,10 @@ export class FileReaderComponent implements OnInit {
         this.actualResVTimeData = res;
         this.actResdataLoaded = true;
         this.spinner.hide();
+        this.dataloading = false;
       }, (err)=> {
         this.spinner.hide();
+        this.dataloading = false;
       });
   }
 
