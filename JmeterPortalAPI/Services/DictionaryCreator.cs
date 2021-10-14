@@ -6,7 +6,7 @@ using JmeterPortalAPI.PersistenceHandler;
 using Microsoft.Extensions.Configuration;
 using Model;
 
-namespace JmeterPortalAPI{
+namespace JmeterPortalAPI.Services{
     public class DictionaryCreator{
         private readonly IConfiguration config;
         

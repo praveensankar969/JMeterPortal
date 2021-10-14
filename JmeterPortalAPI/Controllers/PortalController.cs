@@ -1,12 +1,9 @@
 ﻿using JmeterPortalAPI.PersistenceHandler;
+using JmeterPortalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -39,7 +36,7 @@ namespace JmeterPortalAPI.Controllers
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeActualResponseVThread(dictionary, responseTime, op);
+                return chartData.ComputeThreadVResponseChart(dictionary, responseTime, op, ChartTypes.ActualThreadVsResponse);
             }
             else
             {
@@ -55,7 +52,7 @@ namespace JmeterPortalAPI.Controllers
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeAverageResponseTimeVsThread(dictionary, responseTime, op);
+                return chartData.ComputeThreadVResponseChart(dictionary, responseTime, op, ChartTypes.AverageThreadVResponse);
             }
             else
             {
@@ -97,7 +94,7 @@ namespace JmeterPortalAPI.Controllers
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeAverageResponseTimeVsTime(dictionary, timeFrom, timeTo, responseTime, op);
+                return chartData.ComputeResponseVTimeChart(dictionary, timeFrom, timeTo, responseTime, op, ChartTypes.AverageResponseVTime);
             }
             else
             {
@@ -123,7 +120,7 @@ namespace JmeterPortalAPI.Controllers
             if (dictionary != null)
             {
                 ChartDataCreator chartData = new ChartDataCreator();
-                return chartData.ComputeActualResponseTimeVsTime(dictionary, timeFrom, timeTo, responseTime, op);
+                return chartData.ComputeResponseVTimeChart(dictionary, timeFrom, timeTo, responseTime, op, ChartTypes.ActualResponseVsTime);
             }
             else
             {

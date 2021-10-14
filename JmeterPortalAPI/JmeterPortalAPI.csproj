@@ -8,20 +8,5 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
-  <ItemGroup>
-  <Compile Include="..\Model\TestRunDTO.cs" Link="TestRunDTO.cs" />
-  <Compile Include="..\Model\TestRun.cs" Link="TestRun.cs" />
-  <Compile Include="..\Model\AllTestRunsDTO.cs" Link="AllTestRunsDTO.cs" />
-  <Compile Include="..\Model\CsvModel.cs" Link="CsvModel.cs" />
-  <Compile Include="..\Model\ChartDataSet.cs" Link="ChartDataSet.cs" />
-  <Compile Include="..\Model\ActualThreadVResponse.cs" Link="ActualThreadVResponse.cs" />
-  <Compile Include="..\Model\PercentileChartDataSet.cs" Link="PercentileChartDataSet.cs" />
-  <Compile Include="..\Model\PercentileChart.cs" Link="PercentileChart.cs" />
-  <Compile Include="..\Model\ResponseTimeChartDataSet.cs" Link="ResponseTimeChartDataSet.cs" />
-  <Compile Include="..\Model\ResponseTimeVTime.cs" Link="ResponseTimeVTime.cs" />
-  <Compile Include="..\Model\ResponseTimeData.cs" Link="ResponseTimeData.cs" />
-
-  </ItemGroup>
-  
 
 </Project>
