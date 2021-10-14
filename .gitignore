@@ -51,3 +51,4 @@ Properties
 .vscode
 .vs 
 node_modules
+dist
