@@ -49,6 +49,7 @@ namespace JmeterPortalAPI
             }
 
             context.Database.Migrate();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             
