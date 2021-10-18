@@ -52,7 +52,6 @@ export class AddTestrunComponent implements OnInit {
     this.spinner.show();
     reader.onload = ()=>{
       base64String = reader.result!.toString();
-      console.log(base64String)
       this.uploadSub = this.uploadService.UploadFile( {
         testName : this.testName,
         testRunID : this.testRunID,
