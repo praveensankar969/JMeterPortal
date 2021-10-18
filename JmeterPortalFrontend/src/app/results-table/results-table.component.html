@@ -9,7 +9,7 @@
                 class="shape-fill"></path>
         </svg>
     </div>
-    <div class="table-wrapper">
+    <div class="table-wrapper" *ngIf="testRuns.length>0">
         <div class="nav-btns">
             <button class="btn" (click)="filterFields = !filterFields">Filter Fields</button>
             <ng-container *ngIf="filterFields">
@@ -45,5 +45,8 @@
             <button class="btn" [disabled]="startIndex <1" (click)="PreviousPage()">Previous Page</button>
             <button class="btn" [disabled]="endIndex >= total" (click)="NextPage()">Next Page</button>
         </div>  
+    </div>
+    <div *ngIf="testRuns.length==0" style="margin-left: 150px; color:rgb(243, 61, 61); font-size: 1.5em;">
+        No Data!!
     </div>
 </div>

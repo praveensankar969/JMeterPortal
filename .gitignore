@@ -52,3 +52,4 @@ Properties
 .vs 
 node_modules
 dist
+Migrations

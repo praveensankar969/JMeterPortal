@@ -1,5 +1,5 @@
 export enum APIURL {
-    URL =  "https://localhost:5001/portal/",
+    URL =  "http://localhost:5555/portal/",
     ActualResponseTimeOverThread = "actual-thread-vs-response-chart/",
     AverageResponseTimeOverThread = "average-response-over-thread-chart/",
     Percentile = "percentile-chart/",

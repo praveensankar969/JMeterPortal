@@ -1,17 +1,17 @@
-version: '3.9'
-
+version: "3.8"
 services:
-  jmeterportalapi:
-    image: dockerjmeterapi
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "IGVch123PX"
+    ports:
+      - "14331:1433"
+  employeeapi:
     build:
       context: .
-      dockerfile: JmeterPortalAPI/Dockerfile
-    ports:
-      - 5000:5000
+      dockerfile: ./JmeterPortalAPI/Dockerfile
     depends_on:
       - db
-  db:
-      build: 
-        context: .
-        dockerfile: JmeterPortalDatabase/Dockerfile
-
+    ports:
+      - "5555:80"
