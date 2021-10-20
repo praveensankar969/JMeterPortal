@@ -107,7 +107,7 @@ namespace JmeterPortalAPI.Services
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
-            List<long> xAxisLabel = new List<long>();
+            List<string> xAxisLabel = new List<string>();
             List<ResponseTimeChartDataSet> datasets = new List<ResponseTimeChartDataSet>();
             int index = 0;
             string color = "";
@@ -132,13 +132,13 @@ namespace JmeterPortalAPI.Services
                 dataset.borderColor = color;
                 dataset.pointBorderColor = color;
                 dataset.showLine = false;
-
+                dataset.snapGaps = false;
                 if (chartType == ChartTypes.ActualResponseVsTime)
                 {
                     dataset.data = sortedTimeStamp.Select(val =>
                     {
-                        var parsedDt = ParseDate(val.timeStamp, dtDateTime);
-                        xAxisLabel.Add(val.timeStamp);
+                        var parsedDt = ParseActualDate(val.timeStamp, dtDateTime);
+                        xAxisLabel.Add(parsedDt);
                         if (op == "greater")
                         {
                             if (val.elapsed >= responseTime)
@@ -208,8 +208,7 @@ namespace JmeterPortalAPI.Services
                                     cordinates.x = parsedDate;
                                     cordinates.y = avg;
                                     dataset.data[datasetDataIndex++] = cordinates;
-                                    var longN = (i * 60000) + start;
-                                    xAxisLabel.Add(longN);
+                                    xAxisLabel.Add(parsedDate);
                                 }
                             }
                             else if (op == "lesser")
@@ -221,8 +220,7 @@ namespace JmeterPortalAPI.Services
                                     cordinates.x = parsedDate;
                                     cordinates.y = avg;
                                     dataset.data[datasetDataIndex++] = cordinates;
-                                    var longN = (i * 60000) + start;
-                                    xAxisLabel.Add(longN);
+                                    xAxisLabel.Add(parsedDate);
                                 }
                             }
 
@@ -238,11 +236,8 @@ namespace JmeterPortalAPI.Services
 
 
             xAxisLabel.Sort((x, y) => x.CompareTo(y));
-            var parsedXAxisLabel = xAxisLabel.Select(x =>
-            {
-                return ParseDate(x, dtDateTime);
-            }).ToList();
-            parsedXAxisLabel = parsedXAxisLabel.Distinct().ToList();
+
+            var parsedXAxisLabel = xAxisLabel.Distinct().ToList();
             if (timeFilter)
                 parsedXAxisLabel = parsedXAxisLabel.Where(d => d.CompareTo(timeFrom) >= 0 && d.CompareTo(timeTo) <= 0).ToList();
 
@@ -307,6 +302,13 @@ namespace JmeterPortalAPI.Services
             DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0).Add(TimeSpan.FromMilliseconds(time));
             dt = TimeZoneInfo.ConvertTimeFromUtc(dt, IST);
             return dt.ToString("dd, HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        public string ParseActualDate(long time, DateTime dtDateTime)
+        {
+            DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0).Add(TimeSpan.FromMilliseconds(time));
+            dt = TimeZoneInfo.ConvertTimeFromUtc(dt, IST);
+            return dt.ToString("dd, HH:mm:ss", CultureInfo.InvariantCulture);
         }
     }
 }

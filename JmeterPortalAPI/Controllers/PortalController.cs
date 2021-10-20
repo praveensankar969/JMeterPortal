@@ -105,7 +105,7 @@ namespace JmeterPortalAPI.Controllers
         [HttpGet("actual-response-over-time-chart/{id}")]
         public async Task<ActionResult<ResponseTimeVTime>> ActualResponseVsTime(string id, string timeFrom, string timeTo, int responseTime = 0, string op = "greater")
         {
-            Regex regex = new Regex("^\\d{2}, \\d{2}:\\d{2}$", RegexOptions.IgnoreCase);
+            Regex regex = new Regex("^\\d{2}, \\d{2}:\\d{2}:\\d{2}$", RegexOptions.IgnoreCase);
             if (!string.IsNullOrEmpty(timeTo) && !string.IsNullOrEmpty(timeFrom))
             {
                 if (!regex.IsMatch(timeFrom) || !regex.IsMatch(timeTo))

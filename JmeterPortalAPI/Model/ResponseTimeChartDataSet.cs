@@ -5,5 +5,6 @@ namespace Model{
         public string borderColor { get; set; }
         public string pointBorderColor { get; set; }
         public bool showLine { get; set; }
+        public bool snapGaps { get; set; }
     }
 }
