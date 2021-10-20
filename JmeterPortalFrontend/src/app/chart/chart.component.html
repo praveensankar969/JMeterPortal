@@ -60,6 +60,10 @@
                     <input type="text" name="fromtimeHH" [(ngModel)]="FromTimeHH" placeholder="HH" maxlength=2>
                     <label for="">:</label>
                     <input type="text" name="fromtimeMM" [(ngModel)]="FromTimeMM" placeholder="MM" maxlength=2>
+                    <ng-container *ngIf="title == chartType.ActualResponseTimeOverTime">
+                        <label for="">:</label>
+                        <input type="text" name="fromtimeSS" [(ngModel)]="FromTimeSS" placeholder="SS" maxlength=2>
+                    </ng-container>
                 </div>
                 <div class="input-wrapper">
                     <label>To: </label>
@@ -68,6 +72,10 @@
                     <input type="text" name="totimeHH" [(ngModel)]="ToTimeHH" placeholder="HH" maxlength=2>
                     <label for="">:</label>
                     <input type="text" name="totimeMM" [(ngModel)]="ToTimeMM" placeholder="MM" maxlength=2>
+                    <ng-container *ngIf="title == chartType.ActualResponseTimeOverTime">
+                        <label for="">:</label>
+                        <input type="text" name="totimeSS" [(ngModel)]="ToTimeSS" placeholder="SS" maxlength=2>
+                    </ng-container>
                 </div>
                 <button class="btn" (click)="ApplyXFilter()">Apply Filter</button>
                 <button class="btn" *ngIf="xFilter" (click)="ApplyXFilter(true)">Clear filter</button>

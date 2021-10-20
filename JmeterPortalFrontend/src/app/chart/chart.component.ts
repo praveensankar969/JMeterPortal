@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
+import { Chart, Decimation, registerables } from 'chart.js';
 import { ChartDatasets } from '../Models/chart-datasets';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
@@ -10,61 +10,68 @@ import { catchError, first } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpService } from '../Services/http.service';
+import { ChartType } from '../Models/chart-type';
 
 enum Operator {
-  greater = "Greater than",
-  lesser = "Less than"
+  greater = 'Greater than',
+  lesser = 'Less than',
 }
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-
   @Input() data!: ChartDataSetModel;
-  @Input() id: string = "";
-  @Input() title: string = "";
-  @Input() xAxisType: any = "";
-  @Input() xLabel: string = "";
-  @Input() yLabel: string = "";
-  @Input() pointRadius: number = 2;
-  @Input() type: string = "";
+  @Input() id: string = '';
+  @Input() title: string = '';
+  @Input() xAxisType: any = '';
+  @Input() xLabel: string = '';
+  @Input() yLabel: string = '';
+  @Input() pointRadius: number = 1;
+  @Input() type: string = '';
 
   operatorType: typeof Operator = Operator;
   datasets: ChartDatasets[] = [];
   labels: string[] = [];
   chart!: Chart;
   xAxisLabel: any[] = [];
-  FromTimeDD: string = "";
-  FromTimeHH: string = "";
-  FromTimeMM: string = "";
-  ToTimeDD: string = "";
-  ToTimeHH: string = "";
-  ToTimeMM: string = "";
+  FromTimeDD: string = '';
+  FromTimeHH: string = '';
+  FromTimeMM: string = '';
+  FromTimeSS: string = '';
+  ToTimeDD: string = '';
+  ToTimeHH: string = '';
+  ToTimeMM: string = '';
+  ToTimeSS: string = '';
   yAxisFilter: number = 0;
   selectedItem: string[] = [];
   labelsView: string[] = [];
   dropdown: boolean = false;
   filtered = false;
-  labelSearch = "";
+  labelSearch = '';
   selectedYAxisOperatorValue = Operator.greater;
+  chartType: typeof ChartType = ChartType;
 
   yFilter = false;
   xFilter = false;
   responseFilterSelected = false;
   timeFilterSelected = false;
-  dateTimeStart: string = "";
-  dateTimeEnd: string = "";
+  dateTimeStart: string = '';
+  dateTimeEnd: string = '';
   resposeTimeCharts = false;
 
-  constructor(private router: ActivatedRoute, private httpService: HttpClient, private spinner: NgxSpinnerService, private service: HttpService) {
-  }
+  constructor(
+    private router: ActivatedRoute,
+    private httpService: HttpClient,
+    private spinner: NgxSpinnerService,
+    private service: HttpService
+  ) {}
 
   ngOnInit(): void {
     this.Fetch();
-    if (this.title.includes("Response Time Over Time")) {
+    if (this.title.includes('Response Time Over Time')) {
       this.resposeTimeCharts = true;
     }
   }
@@ -82,10 +89,9 @@ export class ChartComponent implements OnInit {
     this.dropdown = !this.dropdown;
     let selected = this.selectedItem;
     this.chart.data.datasets.forEach(function (ds: any) {
-      if (selected.find(x => x == ds.label) != undefined) {
+      if (selected.find((x) => x == ds.label) != undefined) {
         ds.hidden = false;
-      }
-      else {
+      } else {
         ds.hidden = true;
       }
     });
@@ -94,17 +100,16 @@ export class ChartComponent implements OnInit {
   }
 
   SelectMultiple(event: Event) {
-    let val = (event.target as HTMLInputElement);
+    let val = event.target as HTMLInputElement;
     if (val.checked) {
       this.selectedItem.push(val.id);
-    }
-    else {
-      this.selectedItem = this.selectedItem.filter(x => x != val.id);
+    } else {
+      this.selectedItem = this.selectedItem.filter((x) => x != val.id);
     }
   }
 
   ClearLabelFilter() {
-    this.labelSearch = "";
+    this.labelSearch = '';
     this.filtered = false;
     this.selectedItem = [];
     this.chart.data.datasets.forEach(function (ds: any) {
@@ -118,75 +123,73 @@ export class ChartComponent implements OnInit {
   SearchLabel() {
     if (this.labelSearch.length == 0) {
       this.labelsView = this.labels;
-    }
-    else {
-      let filtered = this.labelsView.filter(x => x.toLowerCase().indexOf(this.labelSearch) > -1);
+    } else {
+      let filtered = this.labelsView.filter(
+        (x) => x.toLowerCase().indexOf(this.labelSearch) > -1
+      );
       this.labelsView = filtered;
     }
   }
 
   CreateChart() {
-    console.log("Creating chart..." + this.title);
+    console.log('Creating chart...' + this.title);
     Chart.register(...registerables);
     Chart.register(zoomPlugin);
     this.chart = new Chart(this.id, {
       type: 'line',
       data: {
         labels: this.xAxisLabel,
-        datasets: this.datasets
+        datasets: this.datasets,
       },
       options: {
         animation: false,
         responsive: true,
-        elements: {
-          point: {
-            radius: this.pointRadius
+        datasets : {
+          line : {
+            pointRadius : this.pointRadius
           }
         },
         plugins: {
+          
           title: {
             display: true,
-            text: this.title
+            text: this.title,
           },
           zoom: {
             zoom: {
               wheel: {
                 enabled: true,
               },
-              pinch: {
-                enabled: true
-              },
-              mode: 'x'
+              mode: 'x',
             },
             pan: {
               enabled: true,
               mode: 'x',
-              threshold: 10
-            }
-          }
-
+              threshold: 10,
+            },
+          },
         },
         scales: {
           x: {
             type: this.xAxisType,
             title: {
               text: this.xLabel,
-              display: true
-            }
+              display: true,
+            },
           },
           y0: {
             type: 'linear',
             position: 'left',
             title: {
               text: this.yLabel,
-              display: true
-            }
+              display: true,
+            },
           },
           y: {
-            display: false
-          }
-        }
-      }
+            display: false,
+          },
+        },
+      },
     });
   }
 
@@ -210,44 +213,77 @@ export class ChartComponent implements OnInit {
     this.xFilter = true;
     if (clear) {
       this.xFilter = false;
-      this.FromTimeDD = "";
-      this.FromTimeHH = "";
-      this.FromTimeMM = "";
-      this.ToTimeDD = "";
-      this.ToTimeHH = "";
-      this.ToTimeMM = "";
+      this.FromTimeDD = '';
+      this.FromTimeHH = '';
+      this.FromTimeMM = '';
+      this.FromTimeSS = '';
+      this.ToTimeDD = '';
+      this.ToTimeHH = '';
+      this.ToTimeMM = '';
+      this.ToTimeSS = '';
     }
     this.ConstructRequest();
   }
 
   ConstructRequest() {
-    var regex = new RegExp("^\\d{2}, \\d{2}:\\d{2}$");
-    var fromTime = this.FromTimeDD + ", " + this.FromTimeHH + ":" + this.FromTimeMM;
-    var toTime = this.ToTimeDD + ", " + this.ToTimeHH + ":" + this.ToTimeMM;
-    var fromTimeValid = regex.test(fromTime);
-    var toTimeValid = regex.test(toTime);
+    var regex;
+    var fromTime;
+    var toTime;
+    var fromTimeValid;
+    var toTimeValid;
+
+    if (this.title == this.chartType.ActualResponseTimeOverTime) {
+      regex = new RegExp('^\\d{2}, \\d{2}:\\d{2}:\\d{2}$');
+      fromTime =
+        this.FromTimeDD + ', ' + this.FromTimeHH + ':' + this.FromTimeMM + ':' + this.FromTimeSS;
+      toTime = this.ToTimeDD + ', ' + this.ToTimeHH + ':' + this.ToTimeMM+ ':' + this.ToTimeSS;
+      fromTimeValid = regex.test(fromTime);
+      toTimeValid = regex.test(toTime);
+    } else if (this.title == this.chartType.AverageResponseTimeOverTime) {
+      regex = new RegExp('^\\d{2}, \\d{2}:\\d{2}$');
+      fromTime =
+        this.FromTimeDD + ', ' + this.FromTimeHH + ':' + this.FromTimeMM;
+      toTime = this.ToTimeDD + ', ' + this.ToTimeHH + ':' + this.ToTimeMM;
+      fromTimeValid = regex.test(fromTime);
+      toTimeValid = regex.test(toTime);
+    }
 
     var id;
-    this.router.params.subscribe(res => id = res.id);
+    this.router.params.subscribe((res) => (id = res.id));
     let params = new HttpParams();
-    let op = Object.keys(Operator).filter(x => !(parseInt(x) >= 0));
-    params = params.append("op", (this.selectedYAxisOperatorValue == Operator.greater) ? op[0] : op[1]);
-    params = params.append("responseTime", this.yAxisFilter);
+    let op = Object.keys(Operator).filter((x) => !(parseInt(x) >= 0));
+    params = params.append(
+      'op',
+      this.selectedYAxisOperatorValue == Operator.greater ? op[0] : op[1]
+    );
+    params = params.append('responseTime', this.yAxisFilter);
     if (toTimeValid || fromTimeValid) {
-      params = params.append("timeFrom", fromTimeValid ? fromTime : this.xAxisLabel[0]);
-      params = params.append("timeTo", toTimeValid ? toTime : this.xAxisLabel[this.xAxisLabel.length - 1]);
+      params = params.append(
+        'timeFrom',
+        fromTimeValid ? fromTime : this.xAxisLabel[0]
+      );
+      params = params.append(
+        'timeTo',
+        toTimeValid ? toTime : this.xAxisLabel[this.xAxisLabel.length - 1]
+      );
     }
     let url = APIURL.URL + this.type + id;
     this.spinner.show();
-    this.httpService.get<ChartDataSetModel>(url, { params: params }).
-      pipe(catchError(err => { this.spinner.hide(); return throwError(err) }), first()).
-      subscribe(res => {
+    this.httpService
+      .get<ChartDataSetModel>(url, { params: params })
+      .pipe(
+        catchError((err) => {
+          this.spinner.hide();
+          return throwError(err);
+        }),
+        first()
+      )
+      .subscribe((res) => {
         this.chart.destroy();
         this.data = res;
         this.spinner.hide();
-        this.Fetch()
-      }
-      );
+        this.Fetch();
+      });
   }
 
   ResponseTimeFilter() {
@@ -263,20 +299,27 @@ export class ChartComponent implements OnInit {
   ClearAllFilter() {
     this.timeFilterSelected = false;
     this.responseFilterSelected = false;
+    this.labelSearch = '';
+    this.filtered = false;
+    this.selectedItem = [];
     var id;
-    this.router.params.subscribe(res => id = res.id)
+    this.router.params.subscribe((res) => (id = res.id));
     let url = APIURL.URL + this.type + id;
     this.spinner.show();
-    this.httpService.get<ChartDataSetModel>(url).
-      pipe(catchError(err => { this.spinner.hide(); return throwError(err) }), first()).
-      subscribe(res => {
+    this.httpService
+      .get<ChartDataSetModel>(url)
+      .pipe(
+        catchError((err) => {
+          this.spinner.hide();
+          return throwError(err);
+        }),
+        first()
+      )
+      .subscribe((res) => {
         this.chart.destroy();
         this.data = res;
         this.spinner.hide();
-        this.Fetch()
-      }
-      );
+        this.Fetch();
+      });
   }
-
-
 }

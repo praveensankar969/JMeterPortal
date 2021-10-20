@@ -8,6 +8,7 @@ import { ChartDataSetModel } from '../Models/chart-dataset-model';
 import { HttpService } from '../Services/http.service';
 import { CsvModel } from '../Models/csv-model';
 import { APIURL } from '../Models/api_url';
+import { ChartType } from '../Models/chart-type';
 
 @Component({
   selector: 'app-file-reader',
@@ -32,6 +33,7 @@ export class FileReaderComponent implements OnInit {
   percentiledataLoaded = false;
 
   chartType : typeof APIURL = APIURL;
+  chartTitle: typeof ChartType = ChartType;
   
   id: string = "";
   testRun!: TestRunModel;

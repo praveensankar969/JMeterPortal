@@ -8,7 +8,7 @@
     <div class="chart">
         <app-chart *ngIf="actResdataLoaded" [data]="actualResVTimeData"
          [id]="'actual-response-over-time'"
-         [title]="'Actual Response Time Over Time'"
+         [title]="chartTitle.ActualResponseTimeOverTime"
          [type]= "chartType.ActualResponseTimeOverTime"
          [xLabel]="'Elapsed Time (granularity: 1 min)'"
          [xAxisType]="'category'"
@@ -23,7 +23,7 @@
     <div class="chart">
         <app-chart *ngIf="actualThreaddataLoaded" [data]="actualResVThreadData"
          [id]="'actual-response-over-thread'"
-         [title]="'Actual Response over Thread'"
+         [title]="chartTitle.ActualResponseoverThread"
          [type]= "chartType.ActualResponseTimeOverThread"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
@@ -38,7 +38,7 @@
     <div class="chart">
         <app-chart *ngIf="percentiledataLoaded" [data]="percentileData"
          [id]="'responsetime-percentile'"
-         [title]="'Response Time Percentile'"
+         [title]="chartTitle.ResponseTimePercentile"
          [type]= "chartType.Percentile"
          [xLabel]="'Percentile'"
          [xAxisType]="'linear'"
@@ -54,7 +54,7 @@
     <div class="chart">
         <app-chart *ngIf="avgResdataLoaded" [data]="averageResVTimeData"
          [id]="'average-response-over-time'"
-         [title]="'Average Response Time Over Time'"
+         [title]="chartTitle.AverageResponseTimeOverTime"
          [type]= "chartType.AverageResponseOverTime"
          [xLabel]="'Elapsed Time (granularity: 1 min)'"
          [xAxisType]="'category'"
@@ -69,7 +69,7 @@
     <div class="chart">
         <app-chart *ngIf="avgThreaddataLoaded" [data]="averageResVThreadData"
          [id]="'average-response-over-thread'"
-         [title]="'Average Response Time Over Thread Count'"
+         [title]="chartTitle.AverageResponseTimeOverThread"
          [type]= "chartType.AverageResponseTimeOverThread"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
