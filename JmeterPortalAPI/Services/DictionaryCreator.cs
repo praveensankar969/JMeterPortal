@@ -24,23 +24,23 @@ namespace JmeterPortalAPI.Services{
                 string[] allRecords = decodedString.Split("\n");
                 for(int i=1;i<allRecords.Length-1;i++){
                     string[] record = Regex.Split(allRecords[i], "[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+                    var label = record[2];
                     CsvModel cm = new CsvModel();
                     cm.timeStamp = Convert.ToInt64(record[0]);
                     cm.elapsed = Convert.ToInt32(record[1]);
-                    cm.label = record[2];
                     cm.allThreads = Convert.ToInt32(record[12]);
                     data.Add(cm);
 
-                    if(dictionary.ContainsKey(cm.label)){
+                    if(dictionary.ContainsKey(label)){
                         List<CsvModel> copyModel = new List<CsvModel>();
-                        dictionary.TryGetValue(cm.label, out copyModel);
+                        dictionary.TryGetValue(label, out copyModel);
                         copyModel.Add(cm);
                         copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
-                        dictionary.Remove(cm.label);
-                        dictionary.Add(cm.label, copyModel);
+                        dictionary.Remove(label);
+                        dictionary.Add(label, copyModel);
                     }
                     else{
-                        dictionary.Add(cm.label, new List<CsvModel>() {cm});
+                        dictionary.Add(label, new List<CsvModel>() {cm});
                     }
                 }
                 return dictionary;

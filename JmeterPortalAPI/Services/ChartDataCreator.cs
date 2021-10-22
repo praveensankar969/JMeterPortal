@@ -22,7 +22,7 @@ namespace JmeterPortalAPI.Services
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
                 List<CsvModel> sortedAllThread = item.Value;
-                sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
+                //sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
                 var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
                 ChartDataSet dataset = new ChartDataSet();
                 dataset.label = item.Key;
@@ -122,7 +122,7 @@ namespace JmeterPortalAPI.Services
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
                 List<CsvModel> sortedTimeStamp = item.Value;
-                sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
+                //sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
                 var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
                 var start = data[0][0];
                 var end = data[data.Length - 1][0];
