@@ -9,7 +9,13 @@ namespace JmeterPortalAPI.Services
     public class ChartDataCreator
     {
         private static TimeZoneInfo IST = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        public ActualThreadVResponse ComputeThreadVResponseChart(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op, ChartTypes chartType)
+        public ActualThreadVResponse ComputeThreadVResponseChart(
+            Dictionary<string, List<CsvModel>> dictionary,
+            int responseTime,
+            string op,
+            ChartTypes chartType,
+            long start,
+            long end)
         {
             string[] labels = new string[dictionary.Count];
             List<int> xAxisLabel = new List<int>();
@@ -19,76 +25,79 @@ namespace JmeterPortalAPI.Services
             var random = new Random();
             foreach (var item in dictionary)
             {
-                labels[index] = item.Key;
-                color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedAllThread = item.Value;
-                //sortedAllThread.Sort((x, y) => x.allThreads - y.allThreads);
-                var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
-                ChartDataSet dataset = new ChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
+                List<CsvModel> sortedAllThread = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
+                if (sortedAllThread.Count > 0)
+                {
+                    labels[index] = item.Key;
+                    color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    var totalThreads = sortedAllThread.ElementAt(sortedAllThread.Count - 1).allThreads;
+                    ChartDataSet dataset = new ChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
 
-                if (chartType == ChartTypes.ActualThreadVsResponse)
-                {
-                    dataset.showLine = false;
-                    dataset.data = new List<int[]>();
-                    for (int i = 0; i < sortedAllThread.Count; i++)
+                    if (chartType == ChartTypes.ActualThreadVsResponse)
                     {
-                        if (op == "greater")
+                        dataset.showLine = false;
+                        dataset.data = new List<int[]>();
+                        for (int i = 0; i < sortedAllThread.Count; i++)
                         {
-                            if (sortedAllThread.ElementAt(i).elapsed >= responseTime)
-                            {
-                                dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
-                                xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
-                            }
-                        }
-                        else if (op == "lesser")
-                        {
-                            if (sortedAllThread.ElementAt(i).elapsed <= responseTime)
-                            {
-                                dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
-                                xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
-                            }
-                        }
-                    }
-                }
-                else if (chartType == ChartTypes.AverageThreadVResponse)
-                {
-                    dataset.showLine = true;
-                    dataset.data = new List<int[]>();
-                    for (int i = 1; i <= totalThreads; i++)
-                    {
-                        xAxisLabel.Add(i);
-                        var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
-                        var elapsedTimeList = threadsList.Select(x => { return x.elapsed; }).ToList();
-                        if (elapsedTimeList.Count > 0)
-                        {
-                            var avg = elapsedTimeList.Aggregate((x, y) => x + y) / elapsedTimeList.Count;
                             if (op == "greater")
                             {
-                                if (avg >= responseTime)
+                                if (sortedAllThread.ElementAt(i).elapsed >= responseTime)
                                 {
-                                    var inte = new int[] { i, avg };
-                                    dataset.data.Add(inte);
+                                    dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
+                                    xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
                                 }
                             }
                             else if (op == "lesser")
                             {
-                                if (avg <= responseTime)
+                                if (sortedAllThread.ElementAt(i).elapsed <= responseTime)
                                 {
-                                    var inte = new int[] { i, avg };
-                                    dataset.data.Add(inte);
+                                    dataset.data.Add(new int[] { sortedAllThread.ElementAt(i).allThreads, sortedAllThread.ElementAt(i).elapsed });
+                                    xAxisLabel.Add(sortedAllThread.ElementAt(i).allThreads);
                                 }
                             }
-
-
                         }
                     }
+                    else if (chartType == ChartTypes.AverageThreadVResponse)
+                    {
+                        dataset.showLine = true;
+                        dataset.data = new List<int[]>();
+                        for (int i = 1; i <= totalThreads; i++)
+                        {
+                            xAxisLabel.Add(i);
+                            var threadsList = sortedAllThread.Where(x => x.allThreads == i).ToList();
+                            var elapsedTimeList = threadsList.Select(x => { return x.elapsed; }).ToList();
+                            if (elapsedTimeList.Count > 0)
+                            {
+                                var avg = elapsedTimeList.Aggregate((x, y) => x + y) / elapsedTimeList.Count;
+                                if (op == "greater")
+                                {
+                                    if (avg >= responseTime)
+                                    {
+                                        var inte = new int[] { i, avg };
+                                        dataset.data.Add(inte);
+                                    }
+                                }
+                                else if (op == "lesser")
+                                {
+                                    if (avg <= responseTime)
+                                    {
+                                        var inte = new int[] { i, avg };
+                                        dataset.data.Add(inte);
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    datasets.Add(dataset);
+                    index++;
                 }
 
-                datasets.Add(dataset);
-                index++;
             }
 
             xAxisLabel = xAxisLabel.Distinct().ToList();
@@ -103,7 +112,15 @@ namespace JmeterPortalAPI.Services
 
         }
 
-        public ResponseTimeVTime ComputeResponseVTimeChart(Dictionary<string, List<CsvModel>> dictionary, string timeFrom, string timeTo, int responseTime, string op, ChartTypes chartType)
+        public ResponseTimeVTime ComputeResponseVTimeChart(
+            Dictionary<string, List<CsvModel>> dictionary,
+            string timeFrom,
+            string timeTo,
+            int responseTime,
+            string op,
+            ChartTypes chartType,
+            long start,
+            long end)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             string[] labels = new string[dictionary.Count];
@@ -121,117 +138,120 @@ namespace JmeterPortalAPI.Services
             {
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedTimeStamp = item.Value;
-                //sortedTimeStamp.Sort((x, y) => x.timeStamp.CompareTo(y.timeStamp));
-                var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
-                var start = data[0][0];
-                var end = data[data.Length - 1][0];
-                var totalExecutionTime = (end - start) / 60000;
-                ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
-                dataset.label = item.Key;
-                dataset.borderColor = color;
-                dataset.pointBorderColor = color;
-                dataset.showLine = false;
-                dataset.snapGaps = false;
-                if (chartType == ChartTypes.ActualResponseVsTime)
+                List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
+                if (sortedTimeStamp.Count > 0)
                 {
-                    dataset.data = sortedTimeStamp.Select(val =>
+                    var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
+                    var startFilter = data[0][0];
+                    var endFilter = data[data.Length - 1][0];
+                    var totalExecutionTime = (endFilter - startFilter) / 60000;
+                    ResponseTimeChartDataSet dataset = new ResponseTimeChartDataSet();
+                    dataset.label = item.Key;
+                    dataset.borderColor = color;
+                    dataset.pointBorderColor = color;
+                    dataset.showLine = false;
+                    dataset.snapGaps = false;
+                    if (chartType == ChartTypes.ActualResponseVsTime)
                     {
-                        var parsedDt = ParseActualDate(val.timeStamp, dtDateTime);
-                        xAxisLabel.Add(parsedDt);
-                        if (op == "greater")
+                        dataset.data = sortedTimeStamp.Select(val =>
                         {
-                            if (val.elapsed >= responseTime)
-                            {
-                                return new ResponseTimeData()
-                                {
-                                    x = parsedDt,
-                                    y = val.elapsed
-                                };
-                            }
-                            else
-                            {
-                                return null;
-                            }
-                        }
-                        else if (op == "lesser")
-                        {
-                            if (val.elapsed <= responseTime)
-                            {
-                                return new ResponseTimeData()
-                                {
-                                    x = parsedDt,
-                                    y = val.elapsed
-                                };
-                            }
-                            else
-                            {
-                                return null;
-                            }
-                        }
-                        else
-                        {
-                            return null;
-                        }
-
-                    }).ToArray();
-                }
-                else if (chartType == ChartTypes.AverageResponseVTime)
-                {
-                    dataset.data = new ResponseTimeData[totalExecutionTime];
-                    int datasetDataIndex = 0;
-                    for (int i = 0; i < totalExecutionTime; i++)
-                    {
-                        var startTime = i * 60000 + start;
-                        var endTime = (i + 1) * 60000 + start;
-                        var dataBetweenTime = sortedTimeStamp.Select(x =>
-                        {
-                            if (x.timeStamp >= startTime && x.timeStamp <= endTime)
-                            {
-                                return x.elapsed;
-                            }
-                            else
-                            {
-                                return 0;
-                            }
-                        }).ToList();
-                        dataBetweenTime = dataBetweenTime.Where(x => x > 0).ToList();
-                        if (dataBetweenTime.Count > 0)
-                        {
-                            var avg = (dataBetweenTime.Aggregate((x, y) => (x + y))) / dataBetweenTime.Count;
+                            var parsedDt = ParseActualDate(val.timeStamp, dtDateTime);
+                            xAxisLabel.Add(parsedDt);
                             if (op == "greater")
                             {
-                                if (avg >= responseTime)
+                                if (val.elapsed >= responseTime)
                                 {
-                                    var parsedDate = ParseDate(((i * 60000) + start), dtDateTime);
-                                    ResponseTimeData cordinates = new ResponseTimeData();
-                                    cordinates.x = parsedDate;
-                                    cordinates.y = avg;
-                                    dataset.data[datasetDataIndex++] = cordinates;
-                                    xAxisLabel.Add(parsedDate);
+                                    return new ResponseTimeData()
+                                    {
+                                        x = parsedDt,
+                                        y = val.elapsed
+                                    };
+                                }
+                                else
+                                {
+                                    return null;
                                 }
                             }
                             else if (op == "lesser")
                             {
-                                if (avg <= responseTime)
+                                if (val.elapsed <= responseTime)
                                 {
-                                    var parsedDate = ParseDate(((i * 60000) + start), dtDateTime);
-                                    ResponseTimeData cordinates = new ResponseTimeData();
-                                    cordinates.x = parsedDate;
-                                    cordinates.y = avg;
-                                    dataset.data[datasetDataIndex++] = cordinates;
-                                    xAxisLabel.Add(parsedDate);
+                                    return new ResponseTimeData()
+                                    {
+                                        x = parsedDt,
+                                        y = val.elapsed
+                                    };
+                                }
+                                else
+                                {
+                                    return null;
                                 }
                             }
+                            else
+                            {
+                                return null;
+                            }
 
+                        }).ToArray();
+                    }
+                    else if (chartType == ChartTypes.AverageResponseVTime)
+                    {
+                        dataset.data = new ResponseTimeData[totalExecutionTime];
+                        int datasetDataIndex = 0;
+                        for (int i = 0; i < totalExecutionTime; i++)
+                        {
+                            var startTime = i * 60000 + startFilter;
+                            var endTime = (i + 1) * 60000 + startFilter;
+                            var dataBetweenTime = sortedTimeStamp.Select(x =>
+                            {
+                                if (x.timeStamp >= startTime && x.timeStamp <= endTime)
+                                {
+                                    return x.elapsed;
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
+                            }).ToList();
+                            dataBetweenTime = dataBetweenTime.Where(x => x > 0).ToList();
+                            if (dataBetweenTime.Count > 0)
+                            {
+                                var avg = (dataBetweenTime.Aggregate((x, y) => (x + y))) / dataBetweenTime.Count;
+                                if (op == "greater")
+                                {
+                                    if (avg >= responseTime)
+                                    {
+                                        var parsedDate = ParseDate(((i * 60000) + startFilter), dtDateTime);
+                                        ResponseTimeData cordinates = new ResponseTimeData();
+                                        cordinates.x = parsedDate;
+                                        cordinates.y = avg;
+                                        dataset.data[datasetDataIndex++] = cordinates;
+                                        xAxisLabel.Add(parsedDate);
+                                    }
+                                }
+                                else if (op == "lesser")
+                                {
+                                    if (avg <= responseTime)
+                                    {
+                                        var parsedDate = ParseDate(((i * 60000) + startFilter), dtDateTime);
+                                        ResponseTimeData cordinates = new ResponseTimeData();
+                                        cordinates.x = parsedDate;
+                                        cordinates.y = avg;
+                                        dataset.data[datasetDataIndex++] = cordinates;
+                                        xAxisLabel.Add(parsedDate);
+                                    }
+                                }
+
+                            }
                         }
                     }
+                    dataset.data = dataset.data.Where(x => x != null).ToArray();
+                    if (timeFilter)
+                        dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
+                    datasets.Add(dataset);
+                    index++;
                 }
-                dataset.data = dataset.data.Where(x => x != null).ToArray();
-                if (timeFilter)
-                    dataset.data = dataset.data.Where(d => d.x.CompareTo(timeFrom) >= 0 && d.x.CompareTo(timeTo) <= 0).ToArray();
-                datasets.Add(dataset);
-                index++;
+
             }
 
 
@@ -250,7 +270,7 @@ namespace JmeterPortalAPI.Services
 
         }
 
-        public PercentileChart ComputePercentile(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op)
+        public PercentileChart ComputePercentile(Dictionary<string, List<CsvModel>> dictionary, int responseTime, string op, long start, long end)
         {
             string[] labels = new string[dictionary.Count];
             List<int> xAxisLabel = new List<int>();
@@ -262,7 +282,7 @@ namespace JmeterPortalAPI.Services
             {
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedPercentile = item.Value;
+                List<CsvModel> sortedPercentile = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
                 sortedPercentile.Sort((x, y) => x.elapsed - y.elapsed);
                 PercentileChartDataSet dataset = new PercentileChartDataSet();
                 dataset.label = item.Key;

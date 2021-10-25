@@ -52,7 +52,9 @@ export class FileReaderComponent implements OnInit {
   currentPage = 0;
   dataloading = true;
   timeRangeMin: string = "";
+  timeMin: number = 0;
   timeRangeMax: string = "";
+  timeMax : number= 0;
   filtered = false;
 
   constructor(
@@ -67,6 +69,8 @@ export class FileReaderComponent implements OnInit {
 
   ngOnInit(): void {   
     this.service.GetTimeInterval(this.id).subscribe(res=> {
+      this.timeMin = res[0];
+      this.timeMax = res[1];
       let params = new HttpParams();
       params = params.append('start', res[0]);
       params = params.append('end', res[1]);
@@ -142,16 +146,39 @@ export class FileReaderComponent implements OnInit {
     this.spinner.show();
     let start = new Date(this.execStartTime).getTime();
     let end = new Date(this.execEndTime).getTime();
-    console.log(this.execEndTime)
+    let canApply = 0;
     let params = new HttpParams();
     if(!isNaN(start)){
-      params = params.append('start', start);
+      if(start >= this.timeMin && start <= this.timeMax){
+        params = params.append('start', start);
+      }
+      else{
+        canApply++;
+      }
+    }
+    else{
+      canApply++;
     }
     if(!isNaN(end)){
-      params = params.append('end', end);
+      if(end <= this.timeMax && end >= this.timeMin){
+        params = params.append('end', end);
+      }
+      else{
+        canApply++;
+      }
+     
     }
-    this.Fetch(params);
-    this.filtered = true;
+    else{
+      canApply++;
+    }
+    if(canApply<2){
+      this.Fetch(params);
+      this.filtered = true;
+    }
+    else{
+      this.execStartTime  = "";
+      this.execEndTime  = "";
+    }
     this.spinner.hide();
   }
 

@@ -1,4 +1,5 @@
-ALTER PROCEDURE [dbo].[GetWithId] @Id uniqueidentifier
+﻿-- ================================================
+CREATE PROCEDURE GetWithId @Id uniqueidentifier
 AS
 BEGIN
 	SET NOCOUNT ON;

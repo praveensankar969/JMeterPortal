@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JmeterPortalAPI.PersistenceHandler;
@@ -14,7 +16,7 @@ namespace JmeterPortalAPI.Services{
         {
             this.config = config;
         }
-        public async Task<Dictionary<string, List<CsvModel>>> GetMap(string id){
+        public async Task<ChartData> GetMap(string id){
             SQLProcedure procedure = new SQLProcedure(this.config);
             TestRun res = await procedure.GetDataOfId(id);
             List<CsvModel> data = new List<CsvModel>();
@@ -35,7 +37,6 @@ namespace JmeterPortalAPI.Services{
                         List<CsvModel> copyModel = new List<CsvModel>();
                         dictionary.TryGetValue(label, out copyModel);
                         copyModel.Add(cm);
-                        copyModel.Sort((x,y)=> x.timeStamp.CompareTo(y.timeStamp));
                         dictionary.Remove(label);
                         dictionary.Add(label, copyModel);
                     }
@@ -43,7 +44,14 @@ namespace JmeterPortalAPI.Services{
                         dictionary.Add(label, new List<CsvModel>() {cm});
                     }
                 }
-                return dictionary;
+                 
+                var startTime = dictionary.First().Value.First().timeStamp;
+                var endTime = dictionary.Last().Value.Last().timeStamp;
+                return new ChartData {
+                    data = dictionary,
+                    startTime = startTime,
+                    endTime = endTime
+                };
             }
             else{
                 return null;
