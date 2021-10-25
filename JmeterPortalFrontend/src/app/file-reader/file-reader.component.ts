@@ -6,115 +6,151 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ChartDatasets } from '../Models/chart-datasets';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
 import { HttpService } from '../Services/http.service';
-import { CsvModel } from '../Models/csv-model';
 import { APIURL } from '../Models/api_url';
 import { ChartType } from '../Models/chart-type';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-file-reader',
   templateUrl: './file-reader.component.html',
-  styleUrls: ['./file-reader.component.css']
+  styleUrls: ['./file-reader.component.css'],
 })
 export class FileReaderComponent implements OnInit {
-
-  averageResVThreadData! : ChartDataSetModel;
+  averageResVThreadData!: ChartDataSetModel;
   avgThreaddataLoaded = false;
-  
-  actualResVThreadData! : ChartDataSetModel;
+
+  actualResVThreadData!: ChartDataSetModel;
   actualThreaddataLoaded = false;
-  
-  averageResVTimeData! : ChartDataSetModel;
+
+  averageResVTimeData!: ChartDataSetModel;
   avgResdataLoaded = false;
-  
-  actualResVTimeData! : ChartDataSetModel;
+
+  actualResVTimeData!: ChartDataSetModel;
   actResdataLoaded = false;
-  
-  percentileData! : ChartDataSetModel;
+
+  percentileData!: ChartDataSetModel;
   percentiledataLoaded = false;
 
-  chartType : typeof APIURL = APIURL;
+  chartType: typeof APIURL = APIURL;
   chartTitle: typeof ChartType = ChartType;
-  
-  id: string = "";
+
+  id: string = '';
   testRun!: TestRunModel;
   subscription!: Subscription;
   xAxisLabel: any[] = [];
   labelsView: string[] = [];
-  selectedValue = "";
+  selectedValue = '';
   labels: string[] = [];
   datasets: ChartDatasets[] = [];
   maxValue: number[] = [];
   totalThreads = 0;
   allTimeStamp: number[] = [];
-  execStartTime = 0;
-  execEndTime = 0;
+  execStartTime : string = "";
+  execEndTime : string = "";
   range: any[] = [];
   totalPages = 0;
   currentPage = 0;
   dataloading = true;
-
-  constructor(private service: HttpService, 
-    private route: ActivatedRoute,
-    private spinner: NgxSpinnerService) 
-  {
-    this.route.params.subscribe(res => { this.id = res['id'];})  
-  }
-
-  ngOnInit(): void {
-    this.AverageResvThread();
-    this.ActualThreadvResponseData();
-    this.PercentileData();
-    this.AverageResvTimeData();
-    this.ActualResvTime();
-  }
+  timeRangeMin: string = "";
+  timeRangeMax: string = "";
   
-  AverageResvThread() {
-    this.service.GetAverageResponseVsThread(this.id)
-      .subscribe(res=>{
-        this.averageResVThreadData = res;
-        this.avgThreaddataLoaded = true;
-      });
+
+  constructor(
+    private service: HttpService,
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
+  ) {
+    this.route.params.subscribe((res) => {
+      this.id = res['id'];
+    });
   }
 
-  ActualThreadvResponseData() {
-    this.service.GetActualThreadVsResponse(this.id)
-      .subscribe(res=>{
-        this.actualResVThreadData = res;
-        this.actualThreaddataLoaded = true;
-      });
+  ngOnInit(): void {   
+    this.service.GetTimeInterval(this.id).subscribe(res=> {
+      let params = new HttpParams();
+      params = params.append('start', res[0]);
+      params = params.append('end', res[1]);
+      let date = new Date(res[0]);
+      this.timeRangeMin = date.getFullYear() + "-" + this.formatDate(date.getMonth()+1) + "-" + this.formatDate(date.getDate())
+             + "T" + this.formatDate(date.getHours()) +":" + this.formatDate(date.getMinutes());
+      date = new Date(res[1]);
+      this.timeRangeMax =  date.getFullYear() + "-" + this.formatDate(date.getMonth()+1) + "-" + this.formatDate(date.getDate())
+      + "T" + this.formatDate(date.getHours()) +":" + this.formatDate(date.getMinutes());
+      this.Fetch(params);
+    });
   }
 
-  PercentileData() {
-    this.service.GetPercentile(this.id)
-      .subscribe(res=>{
-        this.percentileData = res;
-        this.percentiledataLoaded = true;
-      });
+  private formatDate(nmbr: number): string {
+    var date = nmbr + "";
+    date = (date.length < 2) ? "0" + date : date;
+    return date;
   }
 
-  AverageResvTimeData() {
-    this.service.GetAverageResponseVsTime(this.id)
-      .subscribe(res=>{
-        this.averageResVTimeData = res;
-        this.avgResdataLoaded = true;
-      });
+  Fetch(params: HttpParams){
+    this.AverageResvThread(params);
+    this.ActualThreadvResponseData(params);
+    this.PercentileData(params);
+    this.AverageResvTimeData(params);
+    this.ActualResvTime(params);
   }
 
-  ActualResvTime() {
+  AverageResvThread(params: HttpParams) {
+    this.service.GetAverageResponseVsThread(this.id, params).subscribe((res) => {
+      this.averageResVThreadData = res;
+      this.avgThreaddataLoaded = true;
+    });
+  }
+
+  ActualThreadvResponseData(params: HttpParams) {
+    this.service.GetActualThreadVsResponse(this.id, params).subscribe((res) => {
+      this.actualResVThreadData = res;
+      this.actualThreaddataLoaded = true;
+    });
+  }
+
+  PercentileData(params: HttpParams) {
+    this.service.GetPercentile(this.id, params).subscribe((res) => {
+      this.percentileData = res;
+      this.percentiledataLoaded = true;
+    });
+  }
+
+  AverageResvTimeData(params: HttpParams) {
+    this.service.GetAverageResponseVsTime(this.id, params).subscribe((res) => {
+      this.averageResVTimeData = res;
+      this.avgResdataLoaded = true;
+    });
+  }
+
+  ActualResvTime(params: HttpParams) {
     this.spinner.show();
-    this.service.GetActualResponseVsTime(this.id)
-      .subscribe(res=>{
+    this.service.GetActualResponseVsTime(this.id, params).subscribe(
+      (res) => {
         this.actualResVTimeData = res;
         this.actResdataLoaded = true;
         this.spinner.hide();
         this.dataloading = false;
-      }, (err)=> {
+      },
+      (err) => {
         this.spinner.hide();
         this.dataloading = false;
-      });
+      }
+    );
   }
 
-  ngOnDestroy(): void {
+  TimeFilter(){
+    let start = new Date(this.execStartTime).getTime();
+    let end = new Date(this.execEndTime).getTime();
+    console.log(this.execEndTime)
+    let params = new HttpParams();
+    if(!isNaN(start)){
+      params = params.append('start', start);
+    }
+    if(!isNaN(end)){
+      params = params.append('end', end);
+    }
+    this.Fetch(params);
   }
 
+  ngOnDestroy(): void {}
 }

@@ -16,3 +16,12 @@
 .chart{
     padding-bottom: 100px;
 }
+
+.filter{
+    padding: 20px;
+    font-size: 1.2em;
+}
+
+.filter input{
+    margin-left: 10px;
+}

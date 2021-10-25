@@ -110,7 +110,7 @@ button {
     font-size: 20px;
     text-decoration: none;
     cursor: pointer;
-    background: #FF7730 ;
+    background: #308aff ;
 }
 button:hover{
     transform: scale(1.02);

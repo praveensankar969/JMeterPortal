@@ -81,7 +81,6 @@ export class ChartComponent implements OnInit {
     this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
     this.labels = this.data.labels;
     this.labelsView = this.labels;
-    console.log(this.datasets);
     this.CreateChart();
   }
 
@@ -144,13 +143,12 @@ export class ChartComponent implements OnInit {
       options: {
         animation: false,
         responsive: true,
-        datasets : {
-          line : {
-            pointRadius : this.pointRadius
-          }
+        datasets: {
+          line: {
+            pointRadius: this.pointRadius,
+          },
         },
         plugins: {
-          
           title: {
             display: true,
             text: this.title,
@@ -235,8 +233,21 @@ export class ChartComponent implements OnInit {
     if (this.title == this.chartType.ActualResponseTimeOverTime) {
       regex = new RegExp('^\\d{2}, \\d{2}:\\d{2}:\\d{2}$');
       fromTime =
-        this.FromTimeDD + ', ' + this.FromTimeHH + ':' + this.FromTimeMM + ':' + this.FromTimeSS;
-      toTime = this.ToTimeDD + ', ' + this.ToTimeHH + ':' + this.ToTimeMM+ ':' + this.ToTimeSS;
+        this.FromTimeDD +
+        ', ' +
+        this.FromTimeHH +
+        ':' +
+        this.FromTimeMM +
+        ':' +
+        this.FromTimeSS;
+      toTime =
+        this.ToTimeDD +
+        ', ' +
+        this.ToTimeHH +
+        ':' +
+        this.ToTimeMM +
+        ':' +
+        this.ToTimeSS;
       fromTimeValid = regex.test(fromTime);
       toTimeValid = regex.test(toTime);
     } else if (this.title == this.chartType.AverageResponseTimeOverTime) {

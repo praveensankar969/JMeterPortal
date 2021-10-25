@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TestRun } from '../Models/test-run';
 import { catchError, first, tap} from 'rxjs/operators';
@@ -21,27 +21,32 @@ export class HttpService {
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 
-  GetActualThreadVsResponse(id: string){
-    return this.http.get<any>(APIURL.URL + APIURL.ActualResponseTimeOverThread + id).
+  GetTimeInterval(id: string){
+    return this.http.get<any>(APIURL.URL + "testrun/" + id + "/time").
+    pipe(catchError(err=> {return throwError(err)}),first());  
+  }
+
+  GetActualThreadVsResponse(id: string, params: HttpParams){
+    return this.http.get<any>(APIURL.URL + APIURL.ActualResponseTimeOverThread + id, {params : params}).
         pipe(catchError(err=> {return throwError(err)}),first());    
   }
-  GetAverageResponseVsThread(id: string){
-    return this.http.get<ChartDataSetModel>(APIURL.URL + APIURL.AverageResponseTimeOverThread + id).
+  GetAverageResponseVsThread(id: string, params: HttpParams){
+    return this.http.get<ChartDataSetModel>(APIURL.URL + APIURL.AverageResponseTimeOverThread + id, {params : params}).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
-  GetPercentile(id: string){
-    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.Percentile + id).
+  GetPercentile(id: string, params: HttpParams){
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.Percentile + id, {params : params}).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 
-  GetAverageResponseVsTime(id: string){
-    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.AverageResponseOverTime + id).
+  GetAverageResponseVsTime(id: string, params: HttpParams){
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.AverageResponseOverTime + id, {params : params}).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
   
-  GetActualResponseVsTime(id: string){
-    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.ActualResponseTimeOverTime + id).
+  GetActualResponseVsTime(id: string, params: HttpParams){
+    return this.http.get<ChartDataSetModel>(APIURL.URL+ APIURL.ActualResponseTimeOverTime + id, {params : params}).
         pipe(catchError(err=> {return throwError(err)}), first());    
   }
 

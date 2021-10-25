@@ -1,6 +1,17 @@
 <ngx-spinner *ngIf="dataloading" bdColor="rgba(51, 51, 51, 0.8)" size="medium" type="line-scale-pulse-out">
     <p style="color: white">Please wait...</p>
 </ngx-spinner>
+<div class="filter">
+    <div class="info">
+        <label for="">The testrun starts from <strong>{{timeRangeMin}}</strong> and ends at <strong>{{timeRangeMax}}</strong></label>
+    </div>
+    <div class="filter-input">
+        <label for="">Enter range: </label>
+        <input type="datetime-local" [(ngModel)]="execStartTime" name="start-date" [min]="timeRangeMin" [max]="timeRangeMax">
+        <input type="datetime-local" [(ngModel)]="execEndTime" name="end-date"  [min]="timeRangeMin" [max]="timeRangeMax">
+        <button class="btn" (click)="TimeFilter()" [disabled]="execStartTime.length <1 && execEndTime.length <1">Filter Range</button>
+    </div>
+</div>
 <div class="chart-wrapper">
     <div class="break" *ngIf="actResdataLoaded">
         Actual Response Time Over Time Chart
@@ -10,7 +21,7 @@
          [id]="'actual-response-over-time'"
          [title]="chartTitle.ActualResponseTimeOverTime"
          [type]= "chartType.ActualResponseTimeOverTime"
-         [xLabel]="'Elapsed Time (granularity: 1 min)'"
+         [xLabel]="'Elapsed Time'"
          [xAxisType]="'category'"
          [yLabel]="'Actual Response Time (ms)'">
          <canvas id="actual-response-over-time"></canvas>
