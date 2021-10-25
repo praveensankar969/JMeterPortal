@@ -53,7 +53,7 @@ export class FileReaderComponent implements OnInit {
   dataloading = true;
   timeRangeMin: string = "";
   timeRangeMax: string = "";
-  
+  filtered = false;
 
   constructor(
     private service: HttpService,
@@ -86,7 +86,7 @@ export class FileReaderComponent implements OnInit {
     return date;
   }
 
-  Fetch(params: HttpParams){
+  Fetch(params?: HttpParams){
     this.AverageResvThread(params);
     this.ActualThreadvResponseData(params);
     this.PercentileData(params);
@@ -94,35 +94,35 @@ export class FileReaderComponent implements OnInit {
     this.ActualResvTime(params);
   }
 
-  AverageResvThread(params: HttpParams) {
+  AverageResvThread(params?: HttpParams) {
     this.service.GetAverageResponseVsThread(this.id, params).subscribe((res) => {
       this.averageResVThreadData = res;
       this.avgThreaddataLoaded = true;
     });
   }
 
-  ActualThreadvResponseData(params: HttpParams) {
+  ActualThreadvResponseData(params?: HttpParams) {
     this.service.GetActualThreadVsResponse(this.id, params).subscribe((res) => {
       this.actualResVThreadData = res;
       this.actualThreaddataLoaded = true;
     });
   }
 
-  PercentileData(params: HttpParams) {
+  PercentileData(params?: HttpParams) {
     this.service.GetPercentile(this.id, params).subscribe((res) => {
       this.percentileData = res;
       this.percentiledataLoaded = true;
     });
   }
 
-  AverageResvTimeData(params: HttpParams) {
+  AverageResvTimeData(params?: HttpParams) {
     this.service.GetAverageResponseVsTime(this.id, params).subscribe((res) => {
       this.averageResVTimeData = res;
       this.avgResdataLoaded = true;
     });
   }
 
-  ActualResvTime(params: HttpParams) {
+  ActualResvTime(params?: HttpParams) {
     this.spinner.show();
     this.service.GetActualResponseVsTime(this.id, params).subscribe(
       (res) => {
@@ -139,6 +139,7 @@ export class FileReaderComponent implements OnInit {
   }
 
   TimeFilter(){
+    this.spinner.show();
     let start = new Date(this.execStartTime).getTime();
     let end = new Date(this.execEndTime).getTime();
     console.log(this.execEndTime)
@@ -150,6 +151,17 @@ export class FileReaderComponent implements OnInit {
       params = params.append('end', end);
     }
     this.Fetch(params);
+    this.filtered = true;
+    this.spinner.hide();
+  }
+
+  ClearFilter(){
+    this.spinner.show();
+    this.filtered = false;
+    this.Fetch();
+    this.execStartTime  = "";
+    this.execEndTime  = "";
+    this.spinner.hide();
   }
 
   ngOnDestroy(): void {}

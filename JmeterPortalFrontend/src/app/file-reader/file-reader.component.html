@@ -10,6 +10,7 @@
         <input type="datetime-local" [(ngModel)]="execStartTime" name="start-date" [min]="timeRangeMin" [max]="timeRangeMax">
         <input type="datetime-local" [(ngModel)]="execEndTime" name="end-date"  [min]="timeRangeMin" [max]="timeRangeMax">
         <button class="btn" (click)="TimeFilter()" [disabled]="execStartTime.length <1 && execEndTime.length <1">Filter Range</button>
+        <button class="btn" (click)="ClearFilter()" *ngIf="filtered">Clear</button>
     </div>
 </div>
 <div class="chart-wrapper">
@@ -23,7 +24,9 @@
          [type]= "chartType.ActualResponseTimeOverTime"
          [xLabel]="'Elapsed Time'"
          [xAxisType]="'category'"
-         [yLabel]="'Actual Response Time (ms)'">
+         [yLabel]="'Actual Response Time (ms)'"
+         [startTime]="execStartTime"
+         [endTime]="execEndTime">
          <canvas id="actual-response-over-time"></canvas>
         </app-chart>
     </div>
@@ -38,7 +41,9 @@
          [type]= "chartType.ActualResponseTimeOverThread"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
-         [yLabel]="'Actual Response Time (ms)'">
+         [yLabel]="'Actual Response Time (ms)'"
+         [startTime]="execStartTime"
+         [endTime]="execEndTime">
          <canvas id="actual-response-over-thread"></canvas>
         </app-chart>
     </div>
@@ -54,7 +59,9 @@
          [xLabel]="'Percentile'"
          [xAxisType]="'linear'"
          [pointRadius]=0
-         [yLabel]="'Percentile value in ms'">
+         [yLabel]="'Actual Response Time (ms)'"
+         [startTime]="execStartTime"
+         [endTime]="execEndTime">
          <canvas id="responsetime-percentile"></canvas>
         </app-chart>
     </div>
@@ -69,7 +76,9 @@
          [type]= "chartType.AverageResponseOverTime"
          [xLabel]="'Elapsed Time (granularity: 1 min)'"
          [xAxisType]="'category'"
-         [yLabel]="'Average Response Time (ms)'">
+         [yLabel]="'Actual Response Time (ms)'"
+         [startTime]="execStartTime"
+         [endTime]="execEndTime">
          <canvas id="average-response-over-time"></canvas>
         </app-chart>    
     </div>
@@ -84,7 +93,9 @@
          [type]= "chartType.AverageResponseTimeOverThread"
          [xLabel]="'Thread Count'"
          [xAxisType]="'linear'"
-         [yLabel]="'Average Response Time (ms)'">
+         [yLabel]="'Actual Response Time (ms)'"
+         [startTime]="execStartTime"
+         [endTime]="execEndTime">
          <canvas id="average-response-over-thread"></canvas>
         </app-chart>
     </div> 

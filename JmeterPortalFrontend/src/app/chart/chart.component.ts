@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Chart, Decimation, registerables } from 'chart.js';
 import { ChartDatasets } from '../Models/chart-datasets';
 import zoomPlugin from 'chartjs-plugin-zoom';
@@ -31,6 +31,8 @@ export class ChartComponent implements OnInit {
   @Input() yLabel: string = '';
   @Input() pointRadius: number = 1;
   @Input() type: string = '';
+  @Input() startTime: string = '';
+  @Input() endTime: string = '';
 
   operatorType: typeof Operator = Operator;
   datasets: ChartDatasets[] = [];
@@ -65,14 +67,37 @@ export class ChartComponent implements OnInit {
   constructor(
     private router: ActivatedRoute,
     private httpService: HttpClient,
-    private spinner: NgxSpinnerService,
-    private service: HttpService
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
     this.Fetch();
     if (this.title.includes('Response Time Over Time')) {
       this.resposeTimeCharts = true;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(!changes.data.isFirstChange()){
+      this.spinner.show();
+      this.yFilter = false;
+      this.selectedYAxisOperatorValue = Operator.greater;
+      this.yAxisFilter = 0;
+      this.xFilter = false;
+      this.FromTimeDD = '';
+      this.FromTimeHH = '';
+      this.FromTimeMM = '';
+      this.FromTimeSS = '';
+      this.ToTimeDD = '';
+      this.ToTimeHH = '';
+      this.ToTimeMM = '';
+      this.ToTimeSS = '';
+      this.labelSearch = '';
+      this.filtered = false;
+      this.selectedItem = [];
+      this.chart.destroy();
+      this.Fetch();
+      this.spinner.hide();
     }
   }
 
@@ -196,7 +221,10 @@ export class ChartComponent implements OnInit {
   }
 
   ApplyYFilter(clear: boolean = false) {
-    this.ClearLabelFilter();
+    this.spinner.show();
+    this.labelSearch = '';
+    this.filtered = false;
+    this.selectedItem = [];
     this.yFilter = true;
     if (clear) {
       this.yFilter = false;
@@ -207,7 +235,10 @@ export class ChartComponent implements OnInit {
   }
 
   ApplyXFilter(clear: boolean = false) {
-    this.ClearLabelFilter();
+    this.spinner.show();
+    this.labelSearch = '';
+    this.filtered = false;
+    this.selectedItem = [];
     this.xFilter = true;
     if (clear) {
       this.xFilter = false;
@@ -229,6 +260,8 @@ export class ChartComponent implements OnInit {
     var toTime;
     var fromTimeValid;
     var toTimeValid;
+    let start = new Date(this.startTime).getTime();
+    let end = new Date(this.endTime).getTime();
 
     if (this.title == this.chartType.ActualResponseTimeOverTime) {
       regex = new RegExp('^\\d{2}, \\d{2}:\\d{2}:\\d{2}$');
@@ -262,6 +295,12 @@ export class ChartComponent implements OnInit {
     var id;
     this.router.params.subscribe((res) => (id = res.id));
     let params = new HttpParams();
+    if(!isNaN(start)){
+      params = params.append('start', start);
+    }
+    if(!isNaN(end)){
+      params = params.append('end', end);
+    }
     let op = Object.keys(Operator).filter((x) => !(parseInt(x) >= 0));
     params = params.append(
       'op',
@@ -279,7 +318,6 @@ export class ChartComponent implements OnInit {
       );
     }
     let url = APIURL.URL + this.type + id;
-    this.spinner.show();
     this.httpService
       .get<ChartDataSetModel>(url, { params: params })
       .pipe(
