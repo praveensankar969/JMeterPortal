@@ -218,6 +218,15 @@ namespace JmeterAPI.Controllers
             }
         }
 
+        [HttpGet("aggregratereport/{id}")]
+        public async Task<ActionResult<List<AggregrateModel>>> GetReport(string id){
+            DictionaryCreator service = new DictionaryCreator(this.config);
+            ChartData obj = await service.GetMap(id);
+            Dictionary<string, List<CsvModel>> dictionary = obj.data;
+
+            AggregateReportCreator report = new AggregateReportCreator();
+            return report.CreateReport(dictionary, dictionary.Keys.ToArray(),obj.startTime, obj.endTime);
+        }
 
         [HttpGet("all-results")]
         public async Task<ActionResult<List<AllTestRunsDTO>>> GetResults()

@@ -31,6 +31,7 @@ namespace JmeterPortalAPI.Services{
                     cm.timeStamp = Convert.ToInt64(record[0]);
                     cm.elapsed = Convert.ToInt32(record[1]);
                     cm.allThreads = Convert.ToInt32(record[12]);
+                    cm.errorCount = Convert.ToInt32(record[16]);
                     data.Add(cm);
 
                     if(dictionary.ContainsKey(label)){
