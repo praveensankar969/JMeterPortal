@@ -1,0 +1,81 @@
+<ngx-spinner *ngIf="dataloading" bdColor="rgba(51, 51, 51, 0.8)" size="medium" type="line-scale-pulse-out">
+    <p style="color: white">Please wait...</p>
+</ngx-spinner>
+<div class="filter">
+    <div class="info">
+        <label for="">the testrun starts from <strong>{{timeRangeMin}}</strong> and ends at
+            <strong>{{timeRangeMax}}</strong></label>
+    </div>
+    <div class="filter-input">
+        <label for="">Enter range: </label>
+        <input type="datetime-local" [(ngModel)]="execStartTime" name="start-date" [min]="timeRangeMin"
+            [max]="timeRangeMax">
+        <input type="datetime-local" [(ngModel)]="execEndTime" name="end-date" [min]="timeRangeMin"
+            [max]="timeRangeMax">
+    </div>
+    <div class="wrapper">
+        <div class="sibling-wrapper-one">
+            <span class="help-text">Choose lables to generate report from:</span>
+            <div class="checkBoxes">
+                <div style="display: block">
+                    <input class="checkbox-search" type="text" name="search" [(ngModel)]="labelSearch"
+                        (keyup)="SearchLabel()">
+                </div>
+                <div class="list">
+                    <label *ngIf="!labelSearch"><input type="checkbox" (click)="SelectAll($event)">Select All</label>
+                    <ng-container *ngFor="let i of labelsView">
+                        <label>
+                            <input [id]="i" type="checkbox" (click)="SelectMultiple($event)"> {{i}}
+                        </label>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="sibling-wrapper-two" *ngIf="reportGenerated">
+            <div class="report">
+                <table>
+                    <thead>
+                        <tr class="header">
+                            <th rowspan="2">Label</th>
+                            <th rowspan="2">Sample</th>
+                            <th rowspan="2">Avg</th>
+                            <th rowspan="2">Median</th>
+                            <th colspan="6">Percentile</th>
+                            <th rowspan="2">Min</th>
+                            <th rowspan="2">Max</th>
+                            <th rowspan="2">Err %</th>
+                        </tr>
+                        <tr class="sub-header">
+                            <th scope="col">60th</th>
+                            <th scope="col">70th</th>
+                            <th scope="col">80th</th>
+                            <th scope="col">85th</th>
+                            <th scope="col">90th</th>
+                            <th scope="col">97th</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of data">
+                            <td>{{item.label}}</td>
+                            <td>{{item.samples}}</td>
+                            <td>{{item.average}}</td>
+                            <td>{{item.median}}</td>
+                            <td>{{item.percentile.sixty}}</td>
+                            <td>{{item.percentile.seventy}}</td>
+                            <td>{{item.percentile.eighty}}</td>
+                            <td>{{item.percentile.eightyFive}}</td>
+                            <td>{{item.percentile.ninety}}</td>
+                            <td>{{item.percentile.ninetySeven}}</td>
+                            <td>{{item.min}}</td>
+                            <td>{{item.max}}</td>
+                            <td>{{item.error}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" *ngIf="selectedItem.length>0" (click)="GenerateReport()">Generate Report</button>
+</div>

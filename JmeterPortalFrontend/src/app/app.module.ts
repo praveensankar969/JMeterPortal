@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartComponent } from './chart/chart.component';
 import { FileReaderComponent } from './file-reader/file-reader.component';
 import { TestrunComponent } from './testrun/testrun.component';
+import { AggregrateReportComponent } from './aggregrate-report/aggregrate-report.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { TestrunComponent } from './testrun/testrun.component';
     ChartComponent,
     FileReaderComponent,
     TestrunComponent,
+    AggregrateReportComponent,
   ],
   imports: [
     BrowserModule,

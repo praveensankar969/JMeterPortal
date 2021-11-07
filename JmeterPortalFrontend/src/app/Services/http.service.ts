@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TestRun } from '../Models/test-run';
 import { catchError, first, tap} from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { AllTestRunModel } from '../Models/all-testruns-model';
 import { ChartDataSetModel } from '../Models/chart-dataset-model';
 import { TestRunModel } from '../Models/testrun-model';
 import { APIURL } from '../Models/api_url';
+import { AggregrateReport } from '../Models/aggregrate-report-model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,15 @@ export class HttpService {
 
   GetFile(id : string){
     return this.http.get<TestRunModel>(APIURL.URL+"testrun/"+id).
+        pipe(catchError(err=> {return throwError(err)}), first());
+  }
+
+  GetReport(id:string, labels: string[], params?:HttpParams){
+    let header = new HttpHeaders({'Content-Type' : 'tetx/plain'});
+    let obj = {
+      labels : labels.join(',')
+    };
+    return this.http.post<AggregrateReport[]>(APIURL.URL+"aggregratereport/"+id , obj, {params : params}).
         pipe(catchError(err=> {return throwError(err)}), first());
   }
 }

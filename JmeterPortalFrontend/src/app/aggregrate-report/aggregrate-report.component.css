@@ -1,0 +1,156 @@
+.checkBoxes {
+    width: 600px;
+    display: block;
+    border: 1px #8DF5E4 solid;
+    color: black;
+    border-radius: 5px;
+    background: white;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.help-text{
+    margin-left: 10px;
+    padding: 10px;
+    font-weight: 600;
+}
+.list {
+    overflow-y: auto;
+    height: 500px;
+}
+
+.sibling-wrapper-one{
+    flex:1
+}
+
+.sibling-wrapper-two{
+    flex: 3;
+    padding: 20px;
+}
+
+th{
+    height: 41px;
+}
+.report{
+    overflow-y: auto;
+    height: 500px;
+    position: relative;
+}
+
+.filter{
+    height: 82.5vh;
+}
+
+.checkbox-search {
+    width: 90%;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.checkbox input{
+    height: 20px;
+}
+
+.search-confirm {
+    width: 20%;
+    border: none;
+    margin: 15px;
+}
+
+.checkBoxes label {
+    padding: 5px;
+    display: block;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.checkBoxes label input {
+    margin: 10px
+}
+
+.checkBoxes label:hover {
+    background-color: #56a1f7;
+    color: white;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.material-icons {
+    margin-top: 5px
+}
+
+.inline-btn {
+    margin: 3px;
+    border: 0;
+    text-align: center;
+    display: inline-block;
+    color: #000000;
+    background-color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+label {
+    padding: 20px;
+    text-align: center;
+}
+
+.filter{
+    padding: 20px;
+    font-size: 1.2em;
+}
+
+.filter input{
+    margin-left: 10px;
+}
+
+.wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+table{
+    width: 100%;
+    height: 100%;
+    color : black;
+    border: 1px #FFFFFF solid;
+    text-align: center;
+    background: white;
+    table-layout: auto;
+    margin:auto;
+    border-radius: 5px;
+}
+
+table,
+td,
+th {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: solid 1px;
+  text-align: center;
+}
+
+.header{
+    position: sticky;
+    top :0;
+    background: white;
+    border: 1px #FFFFFF solid;
+}
+
+.sub-header{
+    position: sticky;
+    top :40px;
+    background: white;
+    border: 1px #FFFFFF solid;
+}
