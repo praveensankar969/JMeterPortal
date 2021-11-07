@@ -25,7 +25,7 @@ namespace JmeterPortalAPI.Services
             var random = new Random();
             foreach (var item in dictionary)
             {
-                List<CsvModel> sortedAllThread = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) <= 1)).ToList();
+                List<CsvModel> sortedAllThread = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
                 if (sortedAllThread.Count > 0)
                 {
                     labels[index] = item.Key;
@@ -138,7 +138,7 @@ namespace JmeterPortalAPI.Services
             {
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) <= 1)).ToList();
+                List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
                 if (sortedTimeStamp.Count > 0)
                 {
                     var data = sortedTimeStamp.Select(x => { return new long[] { x.timeStamp, x.elapsed }; }).ToArray();
@@ -282,7 +282,7 @@ namespace JmeterPortalAPI.Services
             {
                 labels[index] = item.Key;
                 color = String.Format("#{0:X6}", random.Next(0x1000000));
-                List<CsvModel> sortedPercentile = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) <= 1)).ToList();
+                List<CsvModel> sortedPercentile = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
                 sortedPercentile.Sort((x, y) => x.elapsed - y.elapsed);
                 PercentileChartDataSet dataset = new PercentileChartDataSet();
                 dataset.label = item.Key;

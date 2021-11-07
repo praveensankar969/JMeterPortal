@@ -21,6 +21,9 @@
             <div class="btn-hld">
                 <button class="download" (click)="DownloadFile()">Download Report</button>
             </div>
+            <div class="btn-hld">
+                <button class="download" (click)="router.navigate(['aggregratereport', testRunData.id])">Aggregrate Report</button>
+            </div>
         </div>
     </div>
     <div class='r_wrap'>

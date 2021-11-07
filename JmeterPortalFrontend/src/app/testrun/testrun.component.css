@@ -43,7 +43,7 @@ span {
 .front,
 .back {
   width: 380px;
-  height: 220px;
+  height: 240px;
   border-radius: 20px;
 }
 
@@ -146,5 +146,5 @@ span {
 }
 
 .btn-hld{
-    margin:25px
+    margin:10px
 }

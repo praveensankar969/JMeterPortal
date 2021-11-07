@@ -17,7 +17,7 @@ namespace JmeterPortalAPI.Services{
             {
                 var data = new AggregrateModel();
                 data.label = item.Key;
-                List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) <= 1)).ToList();
+                List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) < 1)).ToList();
                 data.samples = sortedTimeStamp.Count;
                 var elasped = sortedTimeStamp.Select(x=> x.elapsed).ToList();
                 data.average = (int)sortedTimeStamp.Select(x=> x.elapsed).Average();

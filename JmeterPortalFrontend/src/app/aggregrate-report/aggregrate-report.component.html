@@ -3,8 +3,8 @@
 </ngx-spinner>
 <div class="filter">
     <div class="info">
-        <label for="">the testrun starts from <strong>{{timeRangeMin}}</strong> and ends at
-            <strong>{{timeRangeMax}}</strong></label>
+        <label for="">The testrun starts from <strong>{{timeRangeMin}}</strong> and ends at
+            <strong>{{timeRangeMax}}</strong></label> <span class="help-text">Leave date range unselected to automatically select testrun start and end time.</span>
     </div>
     <div class="filter-input">
         <label for="">Enter range: </label>
@@ -22,7 +22,7 @@
                         (keyup)="SearchLabel()">
                 </div>
                 <div class="list">
-                    <label *ngIf="!labelSearch"><input type="checkbox" (click)="SelectAll($event)">Select All</label>
+                    <label *ngIf="!labelSearch"><input type="checkbox" (click)="SelectAll($event)">Select/UnSelect All</label>
                     <ng-container *ngFor="let i of labelsView">
                         <label>
                             <input [id]="i" type="checkbox" (click)="SelectMultiple($event)"> {{i}}
