@@ -32,6 +32,7 @@ canvas{
 
 .btn:hover{
     transform: scale(1.05);
+    background-color: blanchedalmond;
 }
 
 .btn:disabled, .btn[disabled]{

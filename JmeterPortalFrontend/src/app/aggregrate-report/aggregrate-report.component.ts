@@ -110,13 +110,6 @@ export class AggregrateReportComponent implements OnInit {
     return date;
   }
 
-  ClearFilter() {
-    this.spinner.show();
-    this.filtered = false;
-    this.execStartTime = '';
-    this.execEndTime = '';
-    this.spinner.hide();
-  }
 
   SelectMultiple(event: Event) {
     let val = event.target as HTMLInputElement;
@@ -125,12 +118,6 @@ export class AggregrateReportComponent implements OnInit {
     } else {
       this.selectedItem = this.selectedItem.filter((x) => x != val.id);
     }
-  }
-
-  ClearLabelFilter() {
-    this.labelSearch = '';
-    this.filtered = false;
-    this.selectedItem = [];
   }
 
   SelectAll(event: Event) {
@@ -167,8 +154,4 @@ export class AggregrateReportComponent implements OnInit {
     }
   }
 
-  FilterLabel() {
-    let selected = this.selectedItem;
-    this.filtered = true;
-  }
 }
