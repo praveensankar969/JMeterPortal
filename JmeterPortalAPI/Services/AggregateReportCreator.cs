@@ -8,13 +8,17 @@ namespace JmeterPortalAPI.Services{
         public List<AggregrateModel> CreateReport(Dictionary<string, List<CsvModel>> dictionary,string[] labels, long start, long end){
             
             List<AggregrateModel> datasets = new List<AggregrateModel>();
-            Dictionary<string, List<CsvModel>> dictionaryFiltered = dictionary.Where(data=> CheckPresence(labels, data.Key)).ToDictionary(x=> x.Key, x=> x.Value);
+            Dictionary<string, List<CsvModel>> dictionaryFiltered = new Dictionary<string, List<CsvModel>>();
+            foreach (var item in labels)
+            {
+                dictionaryFiltered.Add(item, dictionary[item]);
+            }
             foreach (var item in dictionaryFiltered)
             {
                 var data = new AggregrateModel();
                 data.label = item.Key;
-                data.samples = item.Value.Count;
                 List<CsvModel> sortedTimeStamp = item.Value.Where(_ => (_.timeStamp.CompareTo(start) >= 0 && _.timeStamp.CompareTo(end) <= 1)).ToList();
+                data.samples = sortedTimeStamp.Count;
                 var elasped = sortedTimeStamp.Select(x=> x.elapsed).ToList();
                 data.average = (int)sortedTimeStamp.Select(x=> x.elapsed).Average();
                 data.min = elasped.Min();

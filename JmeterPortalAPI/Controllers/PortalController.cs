@@ -218,14 +218,35 @@ namespace JmeterAPI.Controllers
             }
         }
 
-        [HttpGet("aggregratereport/{id}")]
-        public async Task<ActionResult<List<AggregrateModel>>> GetReport(string id){
+        [HttpPost("aggregratereport/{id}")]
+        public async Task<ActionResult<List<AggregrateModel>>> GetReport(string id, [FromBody] LabelModel labels, long start=0, long end =0){
             DictionaryCreator service = new DictionaryCreator(this.config);
             ChartData obj = await service.GetMap(id);
             Dictionary<string, List<CsvModel>> dictionary = obj.data;
-
+             if(start == 0){
+                if(end == 0){
+                    end = obj.endTime;
+                }
+                start = obj.startTime;
+            }
+            else if(start !=0){
+                if(end == 0){
+                    end = obj.endTime;
+                }
+            }
+            else if(end != 0){
+                if(start == 0){
+                    start = obj.startTime;
+                }
+            }
             AggregateReportCreator report = new AggregateReportCreator();
-            return report.CreateReport(dictionary, dictionary.Keys.ToArray(),obj.startTime, obj.endTime);
+            // if(lables == null){
+            //     return report.CreateReport(dictionary, dictionary.Keys.ToArray(), start, end);
+            // }
+            // else{
+                return report.CreateReport(dictionary, labels.labels.Split(','), start, end);
+            //}
+            
         }
 
         [HttpGet("all-results")]

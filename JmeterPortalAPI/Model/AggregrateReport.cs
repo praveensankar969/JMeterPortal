@@ -10,4 +10,8 @@ namespace Model{
         public double error { get; set; }
 
     }
+
+    public class LabelModel{
+        public string labels { get; set; }
+    }
 }
