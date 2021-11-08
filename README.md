@@ -13,7 +13,7 @@ The Jmeter Portal project can visualize 5 different types of chart.
 
 The generated charts can be filtered on Elapsed Time and Response Time.
 
-The Jmeter Portal can be used to generate Aggregrate Report from CSV input
+The Jmeter Portal can be used to generate Aggregate Report from CSV input
 * Filter desired samples 
 * Filter desired time range
 
