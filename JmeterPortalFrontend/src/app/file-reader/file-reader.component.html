@@ -26,7 +26,8 @@
          [xAxisType]="'category'"
          [yLabel]="'Actual Response Time (ms)'"
          [startTime]="execStartTime"
-         [endTime]="execEndTime">
+         [endTime]="execEndTime"
+         [zoomEnabled]="false">
          <canvas id="actual-response-over-time"></canvas>
         </app-chart>
     </div>
@@ -43,7 +44,8 @@
          [xAxisType]="'linear'"
          [yLabel]="'Actual Response Time (ms)'"
          [startTime]="execStartTime"
-         [endTime]="execEndTime">
+         [endTime]="execEndTime"
+         [zoomEnabled]="false">
          <canvas id="actual-response-over-thread"></canvas>
         </app-chart>
     </div>

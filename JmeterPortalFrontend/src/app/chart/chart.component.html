@@ -3,7 +3,7 @@
 </ngx-spinner>
 <div class="chart">
     <div class="btn-wrapper">
-        <button class="btn" (click)="ResetZoom()">Reset Zoom</button>
+        <button class="btn" *ngIf="zoomEnabled" (click)="ResetZoom()">Reset Zoom</button>
         <div class="dropdown">
             <div class="filter-label">
                 <button class="btn" (click)="dropdown =!dropdown">

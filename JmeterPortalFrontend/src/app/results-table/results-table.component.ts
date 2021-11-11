@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { AllTestRunModel } from '../Models/all-testruns-model';
 import { HttpService } from '../Services/http.service';
 
@@ -31,7 +31,9 @@ export class ResultsTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-    this.fileService.GetAllResults().subscribe(res => {
+    this.fileService.GetAllResults().pipe(map(res=> {
+      return res.sort((x,y)=> new Date(y.fileUploadDate).getTime() - new Date(x.fileUploadDate).getTime())
+    })).subscribe(res => {
       this.testRuns = res;
       this.dataLoaded = true;
       this.total = res.length;

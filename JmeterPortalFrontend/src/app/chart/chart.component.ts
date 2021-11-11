@@ -33,6 +33,7 @@ export class ChartComponent implements OnInit {
   @Input() type: string = '';
   @Input() startTime: string = '';
   @Input() endTime: string = '';
+  @Input() zoomEnabled: boolean = true;
 
   operatorType: typeof Operator = Operator;
   datasets: ChartDatasets[] = [];
@@ -102,6 +103,13 @@ export class ChartComponent implements OnInit {
   }
 
   Fetch() {
+    let counter=0;
+    this.data.datasets.forEach(ele =>{
+      counter += ele.data.length;
+    });
+    if(counter < 15000){
+      this.zoomEnabled = true;
+    }
     this.xAxisLabel = this.data.xAxisLabel;
     this.datasets = JSON.parse(JSON.stringify(this.data.datasets));
     this.labels = this.data.labels;
@@ -181,12 +189,12 @@ export class ChartComponent implements OnInit {
           zoom: {
             zoom: {
               wheel: {
-                enabled: true,
+                enabled: this.zoomEnabled,
               },
               mode: 'x',
             },
             pan: {
-              enabled: true,
+              enabled: this.zoomEnabled,
               mode: 'x',
               threshold: 10,
             },
